@@ -295,10 +295,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 // x, y, and z are joystick inputs from -1 to 1
 // x and y are speeds in m/s,  z is rotational rate in rad/sec    
     public Command driveFieldCentricCommand(RobotJoystick stickDriver) {
-        return runOnce(() -> this.DriveFieldCentric(stickDriver));
+        return runOnce(() -> this.driveFieldCentric(stickDriver));
     }
 
-    public  void DriveFieldCentric(RobotJoystick stickDriver) {
+    public  void driveFieldCentric(RobotJoystick stickDriver) {
         double x = -stickDriver.getY2()*MaxSpeed;
         double y = -stickDriver.getX2()*MaxSpeed;
         double z = -stickDriver.getRotate()*MaxAngularRate;
@@ -329,10 +329,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 SmartDashboard.putNumber("TargetHeading", targetHeading);
         }
 
+        driveFieldCentric(x, y, z);
+    }
+
+
+    public  void driveFieldCentric(double x,double y, double z) {
         this.setControl(driveFC
-            .withVelocityX(x)
-            .withVelocityY(y)
-            .withRotationalRate(z));
+        .withVelocityX(x)
+        .withVelocityY(y)
+        .withRotationalRate(z));
     }
 
 

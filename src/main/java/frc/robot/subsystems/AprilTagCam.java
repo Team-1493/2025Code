@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.VisionConstants;
 
 public class AprilTagCam extends SubsystemBase{
     public final PhotonCamera cameraB = new PhotonCamera("USB_GS_Camera");
