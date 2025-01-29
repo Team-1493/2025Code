@@ -10,6 +10,7 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -367,6 +368,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public Pose2d getPose() {
         return this.getState().Pose;
     }
+
+    //I need to finish writing the function below - Jacob
+    /*public void initializeAutoBuilder(){
+        AutoBuilder.configure(
+            ()->this.getState().Pose,
+            null,
+            
+
+        );
+    }*/
 
 
 }
