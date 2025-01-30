@@ -8,6 +8,7 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -49,11 +50,9 @@ public class Elevator extends SubsystemBase{
 
 // Simulation stuff
  // Simulation classes help us simulate what's going on, including gravity.
-
-
  public static final double kElevatorGearing = 30.0;
  public static final double kElevatorDrumRadius = Units.inchesToMeters(2.0);
- public static final double kCarriageMass = 6.0; // kg
+ public static final double kCarriageMass = 10; // kg
  public static final double kMinElevatorHeightMeters = 0.0;
  public static final double kMaxElevatorHeightMeters = 1.25;
 private final DCMotor m_elevatorGearbox = DCMotor.getFalcon500Foc(2);
@@ -103,12 +102,13 @@ public Elevator(){
     cfg.Feedback.SensorToMechanismRatio=1;
    // cfg.Feedback.RotorToSensorRatio=#;  set this value for synching or fusing to remote encoder
     
-    cfg.MotionMagic.MotionMagicCruiseVelocity=.5;
-    cfg.MotionMagic.MotionMagicAcceleration=2;
+    cfg.MotionMagic.MotionMagicCruiseVelocity=1;
+    cfg.MotionMagic.MotionMagicAcceleration=4;
     cfg.MotionMagic.MotionMagicJerk=100;   
 
-    cfg.Slot0.kG=2;
-    cfg.Slot0.kP=150;
+    cfg.Slot0.GravityType=GravityTypeValue.Elevator_Static;
+    cfg.Slot0.kG=3;
+    cfg.Slot0.kP=200;
     cfg.Slot0.kD=0;
     cfg.Slot0.kS=0;
     cfg.Slot0.kV=0;
