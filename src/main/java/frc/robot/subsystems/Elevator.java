@@ -8,6 +8,8 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
+import com.ctre.phoenix6.signals.ForwardLimitTypeValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -39,18 +41,17 @@ public class Elevator extends SubsystemBase{
     final DigitalInput limitUpper = new DigitalInput(9);
 
     private TalonFXConfiguration cfg = new TalonFXConfiguration();
-    private CANcoder encoder = new CANcoder(21);
-    private CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
     private MotionMagicTorqueCurrentFOC magicToPos= new MotionMagicTorqueCurrentFOC(0);
     private VoltageOut voltOutUp = new VoltageOut(6);
     private VoltageOut voltOutDown = new VoltageOut(-3);
     
     public double pos1=0,pos2=.5,pos3=.75,pos4=1.0,pos5=1.2;
+    private double currentLimit=30;
     boolean zeroed=false,atLowerLimit=false,atUpperLimit=false;
 
 // Simulation stuff
  // Simulation classes help us simulate what's going on, including gravity.
- public static final double kElevatorGearing = 30.0;
+ public static final double kElevatorGearing = 9.0;
  public static final double kElevatorDrumRadius = Units.inchesToMeters(2.0);
  public static final double kCarriageMass = 10; // kg
  public static final double kMinElevatorHeightMeters = 0.0;
@@ -70,8 +71,7 @@ private final DCMotor m_elevatorGearbox = DCMotor.getFalcon500Foc(2);
      0.01,
      0.0);
      
-private final CANcoderSimState encoderSim = encoder.getSimState();
-private final TalonFXSimState elevatorRightSim =elevatorRight.getSimState();
+private final TalonFXSimState elevatorRightSim = elevatorRight.getSimState();
 
 // Create a Mechanism2d visualization of the elevator
 private final Mechanism2d m_mech2d = new Mechanism2d(20, 50);
@@ -85,23 +85,12 @@ private final MechanismLigament2d m_elevatorMech2d =
 
 public Elevator(){
 
-    // Applyy encoder configurations
-    cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint=1;
-    cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    cc_cfg.MagnetSensor.MagnetOffset = 0;//  Set to correct value
-    encoder.getConfigurator().apply(cc_cfg);
-
-
     // Apply motor configurations
 
     cfg.MotorOutput.Inverted=InvertedValue.CounterClockwise_Positive;
     cfg.MotorOutput.NeutralMode=NeutralModeValue.Brake;
-
-    cfg.Feedback.FeedbackSensorSource=FeedbackSensorSourceValue.RemoteCANcoder;
-    cfg.Feedback.FeedbackRemoteSensorID=encoder.getDeviceID();
-    cfg.Feedback.SensorToMechanismRatio=1;
-   // cfg.Feedback.RotorToSensorRatio=#;  set this value for synching or fusing to remote encoder
     
+
     cfg.MotionMagic.MotionMagicCruiseVelocity=1;
     cfg.MotionMagic.MotionMagicAcceleration=4;
     cfg.MotionMagic.MotionMagicJerk=100;   
@@ -122,7 +111,6 @@ public Elevator(){
     cfg.TorqueCurrent.PeakForwardTorqueCurrent=300;
     cfg.TorqueCurrent.PeakReverseTorqueCurrent=-300;
 
-    //  TODO  - add remote limit switch using encoder
 
     elevatorRight.getConfigurator().apply(cfg);
 
@@ -131,16 +119,19 @@ public Elevator(){
 }
 
     public void periodic(){
-        SmartDashboard.putNumber("Elev Pos-Rem", elevatorRight.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("Elev Pos-Enc", encoder.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("Elev PosAbs-Enc", encoder.getAbsolutePosition().getValueAsDouble());
-        SmartDashboard.putNumber("Elev Volt", elevatorRight.getMotorVoltage().getValueAsDouble());
+        double v,i;
+        v=elevatorRight.getMotorVoltage().getValueAsDouble();
+        i=elevatorRight.getStatorCurrent().getValueAsDouble();
+        SmartDashboard.putNumber("Elev Pos", elevatorRight.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Elev Volt",v);
+        SmartDashboard.putNumber("Elev Current", i);
 
         atLowerLimit=limitLower.get();
         atUpperLimit=limitUpper.get();
         // check mag limit switches
-        if (atUpperLimit && elevatorRight.getMotorVoltage().getValueAsDouble()>0 ) stopElevator();
-        if (atLowerLimit && elevatorRight.getMotorVoltage().getValueAsDouble()<0 ) stopElevator();
+        if (atUpperLimit && v>0 ) stopElevator();
+        if (atLowerLimit && v<0 ) stopElevator();
+        if (i>currentLimit) stopElevator();
     
         updateTelemetry();
     }
@@ -194,7 +185,6 @@ public Elevator(){
         }
         stopElevator();
         zeroed=true;
-        encoder.setPosition(0);
         elevatorRight.setPosition(0);
     }
 
@@ -208,7 +198,7 @@ public Elevator(){
     m_elevatorSim.update(0.020);
 
     // Finally, we set our simulated encoder's readings and simulated battery voltage
-    encoderSim.setRawPosition(m_elevatorSim.getPositionMeters());
+    elevatorRightSim.setRawRotorPosition(m_elevatorSim.getPositionMeters());
     // SimBattery estimates loaded battery voltages
     RoboRioSim.setVInVoltage(
         BatterySim.calculateDefaultBatteryLoadedVoltage(m_elevatorSim.getCurrentDrawAmps()));
@@ -216,6 +206,6 @@ public Elevator(){
 
   public void updateTelemetry() {
     // Update elevator visualization with position
-    m_elevatorMech2d.setLength(encoder.getPosition().getValueAsDouble()*40);
+    m_elevatorMech2d.setLength(elevatorRight.getPosition().getValueAsDouble()*40);
   }
 }
