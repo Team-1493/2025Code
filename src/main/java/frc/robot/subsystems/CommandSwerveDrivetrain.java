@@ -388,7 +388,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return getState().Speeds;
     }
 
-    //I need to finish writing the function below - Jacob
+
     public void initializeAutoBuilder(){
         RobotConfig config;
         try{
