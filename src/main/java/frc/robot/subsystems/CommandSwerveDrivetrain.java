@@ -11,11 +11,15 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -30,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotJoystick;
 import frc.robot.generated.TunerConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
+
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
@@ -152,6 +157,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             startSimThread();
         }
 
+
+
     }
 
     /**
@@ -176,6 +183,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
+
+        initializeAutoBuilder();
     }
 
     /**
@@ -286,6 +295,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return runOnce(() -> this.driveRobotCentric(x,y,z));
     }
 
+    public  void driveRobotCentric(ChassisSpeeds speeds) {
+        this.setControl(driveRC.withVelocityX(speeds.vxMetersPerSecond)
+        .withVelocityY(speeds.vyMetersPerSecond)
+        .withRotationalRate(speeds.omegaRadiansPerSecond));
+}
+
     public  void driveRobotCentric(double x,double y,double z) {
             this.setControl(driveRC.withVelocityX(x)
             .withVelocityY(y)
@@ -369,15 +384,39 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return this.getState().Pose;
     }
 
-    //I need to finish writing the function below - Jacob
-    /*public void initializeAutoBuilder(){
-        AutoBuilder.configure(
-            ()->this.getState().Pose,
-            null,
-            
+    public ChassisSpeeds getChassisSpeed(){
+        return getState().Speeds;
+    }
 
+    //I need to finish writing the function below - Jacob
+    public void initializeAutoBuilder(){
+        RobotConfig config;
+        try{
+            config = RobotConfig.fromGUISettings();
+
+            AutoBuilder.configure(
+            this::getPose,
+            this::resetPose,
+            this::getChassisSpeed,
+            (speeds, feedforwards) -> driveRobotCentric(speeds),
+            new PPHolonomicDriveController(
+                new PIDConstants(5.0, 0.0, 0.0),
+                new PIDConstants(5.0, 0.0, 0.0)
+            ),
+            config,
+            () -> {
+                var alliance = DriverStation.getAlliance();
+                if (alliance.isPresent()){
+                    return alliance.get() == DriverStation.Alliance.Red;
+                }
+                return false;
+            },
+            this
         );
-    }*/
+        } catch (Exception e) {
+            DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", e.getStackTrace());
+        }
+    }
 
 
 }
