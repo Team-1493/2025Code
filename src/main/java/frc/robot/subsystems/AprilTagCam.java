@@ -54,7 +54,7 @@ public class AprilTagCam extends SubsystemBase{
     Optional <EstimatedRobotPose> estPoseB = null;
 
     // *** This is used for camera siumulation
-    VisionSystemSim visionSim = new VisionSystemSim("main");
+    VisionSystemSim visionSim = new VisionSystemSim("visionSim");
     TargetModel targetModel = TargetModel.kAprilTag36h11;
     SimCameraProperties cameraProp = new SimCameraProperties();
     PhotonCameraSim cameraSim;
@@ -95,6 +95,7 @@ public class AprilTagCam extends SubsystemBase{
         cameraSim = new PhotonCameraSim(cameraF, cameraProp);
 
         visionSim.addCamera(cameraSim, VisionConstants.ROBOT_TO_CAMERA_F);
+        visionSim.getDebugField();
 
         // ***
 
