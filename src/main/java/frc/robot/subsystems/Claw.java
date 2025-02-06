@@ -33,7 +33,7 @@ public double pos1=0,pos2=.5,pos3=.75,pos4=1.0,pos5=1.2;
 
 private DigitalInput limitLower = new DigitalInput(6);
 private DigitalInput limitUpper = new DigitalInput(5);
-private DigitalInput algaeSensor = new DigitalInput(7);
+private DigitalInput coralSensor = new DigitalInput(7);
 
 private boolean atLowerLimit=false,atUpperLimit=false;
 private double currentLimit=30;

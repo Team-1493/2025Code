@@ -58,6 +58,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentric()
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
             
+    static Pose2d robotpose;
+
 //
 
     private static final double kSimLoopPeriod = 0.005; // 5 ms
@@ -182,7 +184,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         super(drivetrainConstants, odometryUpdateFrequency, modules);
         if (Utils.isSimulation()) {
             startSimThread();
-        }
+        }       
 
         initializeAutoBuilder();
     }
@@ -270,6 +272,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+
+        // added this so AprilTagCamera can get the pose for simulation
+        robotpose=this.getPose();
+
     }
 
     private void startSimThread() {

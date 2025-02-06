@@ -8,13 +8,20 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.estimation.TargetModel;
+import org.photonvision.simulation.PhotonCameraSim;
+import org.photonvision.simulation.SimCameraProperties;
+import org.photonvision.simulation.VisionSystemSim;
+import org.photonvision.simulation.VisionTargetSim;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N3;
@@ -46,6 +53,13 @@ public class AprilTagCam extends SubsystemBase{
     Optional <EstimatedRobotPose> estPoseF = null;
     Optional <EstimatedRobotPose> estPoseB = null;
 
+    // *** This is used for camera siumulation
+    VisionSystemSim visionSim = new VisionSystemSim("main");
+    TargetModel targetModel = TargetModel.kAprilTag36h11;
+    SimCameraProperties cameraProp = new SimCameraProperties();
+    PhotonCameraSim cameraSim;
+    
+    //***
 
 
     public AprilTagCam(){
@@ -66,6 +80,24 @@ public class AprilTagCam extends SubsystemBase{
         poseEstimatorB = new PhotonPoseEstimator(fieldLayout,
         PoseStrategy.LOWEST_AMBIGUITY,
         VisionConstants.ROBOT_TO_CAMERA_B);        
+
+
+        // ***** For camera simulation
+        visionSim.addAprilTags(fieldLayout);
+        cameraProp.setCalibration(640,
+                                 480,
+                                Rotation2d.fromDegrees(100));
+        cameraProp.setCalibError(0.25, 0.08);
+        cameraProp.setFPS(20);
+        cameraProp.setAvgLatencyMs(35);
+        cameraProp.setLatencyStdDevMs(5);
+
+        cameraSim = new PhotonCameraSim(cameraF, cameraProp);
+
+        visionSim.addCamera(cameraSim, VisionConstants.ROBOT_TO_CAMERA_F);
+
+        // ***
+
     }
 
     public void periodic(){
@@ -142,6 +174,11 @@ public class AprilTagCam extends SubsystemBase{
 
         }
 
+    }
+
+    public void simulatedPeriodic(){
+
+        visionSim.update(CommandSwerveDrivetrain.robotpose);
     }
 
 
