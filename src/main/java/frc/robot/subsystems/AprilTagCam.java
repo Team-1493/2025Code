@@ -23,8 +23,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.VisionConstants;
 
 public class AprilTagCam extends SubsystemBase{
-    public final PhotonCamera cameraB = new PhotonCamera("USB_GS_Camera");
-    public final PhotonCamera cameraF = new PhotonCamera("ArducamBW1");
+    public final PhotonCamera cameraB = new PhotonCamera("OV9281_2");
+    public final PhotonCamera cameraF = new PhotonCamera("OV9281_1");
     public final AprilTagFieldLayout fieldLayout;
 
     public final PhotonPoseEstimator poseEstimatorF,poseEstimatorB;
@@ -96,6 +96,8 @@ public class AprilTagCam extends SubsystemBase{
         // Determine which camera has closest target, use that one for vision measurement
         // and calculate SD (proportional to distance)
         FRONT=false;BACK=false;
+        SmartDashboard.putBoolean("Vision Has MeasurementF", hasVisionMeasurementF);
+        SmartDashboard.putBoolean("Vision Has MeasurementB", hasVisionMeasurementB);
         if (hasVisionMeasurementB || hasVisionMeasurementF) {
             distF=999;
             distB=999;
@@ -104,10 +106,11 @@ public class AprilTagCam extends SubsystemBase{
             if(hasVisionMeasurementB) distB = latestResultB.getBestTarget().
                 getBestCameraToTarget().getTranslation().getNorm();
             leastDist=Math.min(distF, distB);
+            SmartDashboard.putNumber("leastDist", leastDist);
 
 // if closest target is more than 2 meters aways don't use vision measurement
 // could also change to an ambiguity threshold            
-            if (leastDist<4){
+            if (leastDist<6){
             
                 visionStdDevs = VecBuilder.fill(
                     visionLeastDistance * VisionConstants.visionStdDevFactor,
@@ -128,9 +131,11 @@ public class AprilTagCam extends SubsystemBase{
                     transformTagToRobot=transformTagToRobotF;
                 }
                 hasVisionMeasurement=true;
-                SmartDashboard.putNumber("Vision Pose", visionPose.getX());
-                SmartDashboard.putNumber("Vision Pose", visionPose.getY());
-                SmartDashboard.putNumber("Vision Pose", visionPose.getRotation().getDegrees());  
+                SmartDashboard.putBoolean("Vision B", BACK);
+                SmartDashboard.putBoolean("Vision F", FRONT);
+                SmartDashboard.putNumber("Vision PoseX", visionPose.getX());
+                SmartDashboard.putNumber("Vision PoseY", visionPose.getY());
+                SmartDashboard.putNumber("Vision PoseZ", visionPose.getRotation().getDegrees());  
                 SmartDashboard.putNumber("TransformTagToRobot X",transformTagToRobot.getX());
             }
             else hasVisionMeasurement=false;

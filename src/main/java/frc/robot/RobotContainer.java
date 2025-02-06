@@ -15,11 +15,15 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.AprilTagCam;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
 
 public class RobotContainer {
     private Elevator elevator = new Elevator();
+//    private Claw claw = new Claw();
+
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
@@ -35,7 +39,8 @@ public class RobotContainer {
     private final RobotJoystick stickDriver = new RobotJoystick(0);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    
+    public final AprilTagCam aprilTagCam = new AprilTagCam();
+
     public RobotContainer() {
         drivetrain.setupHeadingController();
         configureBindings();

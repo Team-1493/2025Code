@@ -90,7 +90,6 @@ public Elevator(){
     cfg.MotorOutput.Inverted=InvertedValue.CounterClockwise_Positive;
     cfg.MotorOutput.NeutralMode=NeutralModeValue.Brake;
     
-
     cfg.MotionMagic.MotionMagicCruiseVelocity=1;
     cfg.MotionMagic.MotionMagicAcceleration=4;
     cfg.MotionMagic.MotionMagicJerk=100;   
@@ -108,8 +107,8 @@ public Elevator(){
     cfg.CurrentLimits.StatorCurrentLimitEnable=true;
     cfg.CurrentLimits.SupplyCurrentLimit=40;
     cfg.CurrentLimits.SupplyCurrentLimitEnable=true;
-    cfg.TorqueCurrent.PeakForwardTorqueCurrent=300;
-    cfg.TorqueCurrent.PeakReverseTorqueCurrent=-300;
+    cfg.TorqueCurrent.PeakForwardTorqueCurrent=100;
+    cfg.TorqueCurrent.PeakReverseTorqueCurrent=-100;
 
 
     elevatorRight.getConfigurator().apply(cfg);
