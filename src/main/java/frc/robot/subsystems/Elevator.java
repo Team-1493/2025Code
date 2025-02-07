@@ -1,21 +1,15 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import org.w3c.dom.ElementTraversal;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
-import com.ctre.phoenix6.signals.ForwardLimitTypeValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.ctre.phoenix6.sim.CANcoderSimState;
-import com.ctre.phoenix6.sim.TalonFXSSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -24,8 +18,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
-import edu.wpi.first.wpilibj.simulation.EncoderSim;
-import edu.wpi.first.wpilibj.simulation.PWMSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -85,33 +77,20 @@ private final MechanismLigament2d m_elevatorMech2d =
 
 public Elevator(){
 
-    // Apply motor configurations
+    SmartDashboard.putNumber("Elevator kG", 0);
+    SmartDashboard.putNumber("Elevator kP", 20);
+    SmartDashboard.putNumber("Elevator MMacc", 3);
+    SmartDashboard.putNumber("Elevator MMvel", 0.8);
+    SmartDashboard.putNumber("Elevator MMjerk", 50);
+    SmartDashboard.putNumber("Elevator StatorCL", 60);
+    SmartDashboard.putNumber("Elevator SupplyCL", 40);
+    SmartDashboard.putNumber("Elevator TorqueCL", 100);
 
-    cfg.MotorOutput.Inverted=InvertedValue.CounterClockwise_Positive;
-    cfg.MotorOutput.NeutralMode=NeutralModeValue.Brake;
-    
-    cfg.MotionMagic.MotionMagicCruiseVelocity=1;
-    cfg.MotionMagic.MotionMagicAcceleration=4;
-    cfg.MotionMagic.MotionMagicJerk=100;   
-
-    cfg.Slot0.GravityType=GravityTypeValue.Elevator_Static;
-    cfg.Slot0.kG=3;
-    cfg.Slot0.kP=200;
-    cfg.Slot0.kD=0;
-    cfg.Slot0.kS=0;
-    cfg.Slot0.kV=0;
-    cfg.Slot0.kI=0;
-    cfg.Slot0.kA=0;
-
-    cfg.CurrentLimits.StatorCurrentLimit=120;
-    cfg.CurrentLimits.StatorCurrentLimitEnable=true;
-    cfg.CurrentLimits.SupplyCurrentLimit=40;
-    cfg.CurrentLimits.SupplyCurrentLimitEnable=true;
-    cfg.TorqueCurrent.PeakForwardTorqueCurrent=100;
-    cfg.TorqueCurrent.PeakReverseTorqueCurrent=-100;
-
-
-    elevatorRight.getConfigurator().apply(cfg);
+    SmartDashboard.putNumber("Elevator Pos1", pos1);
+    SmartDashboard.putNumber("Elevator Pos2", pos2);
+    SmartDashboard.putNumber("Elevator Pos3", pos3);
+    SmartDashboard.putNumber("Elevator Pos4", pos4);
+    SmartDashboard.putNumber("Elevator Pos5", pos5);
 
     SmartDashboard.putData("Elevator Sim", m_mech2d);
 
@@ -207,4 +186,54 @@ public Elevator(){
     // Update elevator visualization with position
     m_elevatorMech2d.setLength(elevatorRight.getPosition().getValueAsDouble()*40);
   }
+
+  
+  public void configure(){
+    double elevatorkG = SmartDashboard.getNumber("Elevator kG", 0);
+    double elevatorKp = SmartDashboard.getNumber("Elevator kP", 20);
+    double elevatorMMacc = SmartDashboard.getNumber("Elevator MMacc", 3);
+    double elevatorMMvel = SmartDashboard.getNumber("Elevator MMvel", 0.8);
+    double elevatorMMjerk = SmartDashboard.getNumber("Elevator MMjerk", 50);
+    double elevatorStatorCL = SmartDashboard.getNumber("Elevator StatorCL", 60);
+    double elevatorSupplyCL = SmartDashboard.getNumber("Elevator SupplyCL", 40);
+    double elevatorTorqueCL = SmartDashboard.getNumber("Elevator TorqueCL", 100);
+    pos1= SmartDashboard.getNumber("Elevator Pos1", pos1);
+    pos2= SmartDashboard.getNumber("Elevator Pos2", pos2);
+    pos3= SmartDashboard.getNumber("Elevator Pos3", pos3);
+    pos4= SmartDashboard.getNumber("Elevator Pos4", pos4);
+    pos5= SmartDashboard.getNumber("Elevator Pos5", pos5);
+
+
+    // Apply motor configurations
+
+    cfg.MotorOutput.Inverted=InvertedValue.CounterClockwise_Positive;
+    cfg.MotorOutput.NeutralMode=NeutralModeValue.Brake;
+    
+    cfg.MotionMagic.MotionMagicCruiseVelocity=elevatorMMvel;
+    cfg.MotionMagic.MotionMagicAcceleration=elevatorMMacc;
+    cfg.MotionMagic.MotionMagicJerk=elevatorMMjerk;   
+
+    cfg.Slot0.GravityType=GravityTypeValue.Elevator_Static;
+    cfg.Slot0.kG=elevatorkG;
+    cfg.Slot0.kP=elevatorKp;
+    cfg.Slot0.kD=0;
+    cfg.Slot0.kS=0;
+    cfg.Slot0.kV=0;
+    cfg.Slot0.kI=0;
+    cfg.Slot0.kA=0;
+
+    cfg.CurrentLimits.StatorCurrentLimit=elevatorStatorCL;
+    cfg.CurrentLimits.StatorCurrentLimitEnable=true;
+    cfg.CurrentLimits.SupplyCurrentLimit=elevatorSupplyCL;
+    cfg.CurrentLimits.SupplyCurrentLimitEnable=true;
+    cfg.TorqueCurrent.PeakForwardTorqueCurrent=elevatorTorqueCL;
+    cfg.TorqueCurrent.PeakReverseTorqueCurrent=-elevatorTorqueCL;
+
+
+    elevatorRight.getConfigurator().apply(cfg);
+
+  }
+
+
+
 }

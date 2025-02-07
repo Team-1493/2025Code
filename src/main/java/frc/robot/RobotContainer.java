@@ -22,7 +22,7 @@ import frc.robot.subsystems.Elevator;
 
 public class RobotContainer {
     private Elevator elevator = new Elevator();
-//    private Claw claw = new Claw();
+    private Claw claw = new Claw();
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -37,6 +37,7 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final RobotJoystick stickDriver = new RobotJoystick(0);
+    private final RobotJoystick stickOperator = new RobotJoystick(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public final AprilTagCam aprilTagCam = new AprilTagCam();
@@ -58,7 +59,7 @@ public class RobotContainer {
         
 
 
-// Driver Joystick Bindings
+    //***& Driver Joystick Bindings ***
 
 
         //  allow driver to switch between fast and slow mode 
@@ -84,27 +85,48 @@ public class RobotContainer {
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
+        /* 
         stickDriver.back().and(stickDriver.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
         stickDriver.back().and(stickDriver.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         stickDriver.start().and(stickDriver.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         stickDriver.start().and(stickDriver.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        */
 
         // reset the field-centric heading on left bumper press
         stickDriver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
+
+        // *** Operator Joystick Bindings ***
+
         // manual control of elevator          
-/*        stickDriver.povDown().whileTrue(elevator.manualDownCommand());
-        stickDriver.povDown().onFalse(elevator.stopElevatorCommand());
-        stickDriver.povUp().whileTrue(elevator.manualUpCommand());
-        stickDriver.povUp().onFalse(elevator.stopElevatorCommand());
-*/
-        
+        stickOperator.button(9).whileTrue(elevator.manualDownCommand());
+        stickOperator.button(9).onFalse(elevator.stopElevatorCommand());
+        stickOperator.button(10).whileTrue(elevator.manualUpCommand());
+        stickOperator.button(10).onFalse(elevator.stopElevatorCommand());
+
 
         // elevator to preset positions
-        stickDriver.povUp().onTrue(elevator.toPositionCommand(elevator.pos5));
-        stickDriver.povDown().onTrue(elevator.toPositionCommand(elevator.pos1));
-        stickDriver.povRight().onTrue(elevator.toPositionCommand(elevator.pos2));
-        stickDriver.povLeft().onTrue(elevator.toPositionCommand(elevator.pos3));
+//        stickDriver.povUp().onTrue(elevator.toPositionCommand(elevator.pos5));
+//        stickDriver.povDown().onTrue(elevator.toPositionCommand(elevator.pos1));
+//        stickDriver.povRight().onTrue(elevator.toPositionCommand(elevator.pos2));
+//        stickDriver.povLeft().onTrue(elevator.toPositionCommand(elevator.pos3));
+
+
+        // manual control of claw          
+        stickOperator.button(7).whileTrue(claw.manualDownCommand());
+        stickOperator.button(8).onFalse(claw.stopClawCommand());
+        stickOperator.button(7).whileTrue(claw.manualUpCommand());
+        stickOperator.button(8).onFalse(claw.stopClawCommand());
+
+         // claw to preset positions
+//         stickDriver.button(1).onTrue(claw.toPositionCommand(claw.pos1));
+//         stickDriver.button(2).onTrue(claw.toPositionCommand(claw.pos2));
+
+        // manual control of rollers          
+        stickOperator.button(3).whileTrue(claw.manualFrontRollerForCommand());
+        stickOperator.button(3).onFalse(claw.stopRollerFrontCommand());
+        stickOperator.button(4).whileTrue(claw.manualRearRollerForCommand());
+        stickOperator.button(4).onFalse(claw.stopRollerRearCommand());
 
 
         drivetrain.registerTelemetry(logger::telemeterize);

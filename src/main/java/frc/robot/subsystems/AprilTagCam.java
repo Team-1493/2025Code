@@ -15,6 +15,8 @@ import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.simulation.VisionTargetSim;
 import org.photonvision.targeting.PhotonPipelineResult;
 
+import com.ctre.phoenix6.Utils;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
@@ -84,8 +86,8 @@ public class AprilTagCam extends SubsystemBase{
 
         // ***** For camera simulation
         visionSim.addAprilTags(fieldLayout);
-        cameraProp.setCalibration(640,
-                                 480,
+        cameraProp.setCalibration(960,
+                                 540,
                                 Rotation2d.fromDegrees(100));
         cameraProp.setCalibError(0.25, 0.08);
         cameraProp.setFPS(20);
@@ -93,9 +95,12 @@ public class AprilTagCam extends SubsystemBase{
         cameraProp.setLatencyStdDevMs(5);
 
         cameraSim = new PhotonCameraSim(cameraF, cameraProp);
-
+        cameraSim.enableRawStream(true);
+        cameraSim.enableProcessedStream(true);
+        cameraSim.enableDrawWireframe(true);
         visionSim.addCamera(cameraSim, VisionConstants.ROBOT_TO_CAMERA_F);
         visionSim.getDebugField();
+
 
         // ***
 
@@ -177,10 +182,14 @@ public class AprilTagCam extends SubsystemBase{
 
     }
 
-    public void simulatedPeriodic(){
 
-        visionSim.update(CommandSwerveDrivetrain.robotpose);
+    // *** For Sim
+    @Override
+    public void simulationPeriodic(){
+
+            visionSim.update(CommandSwerveDrivetrain.robotpose);            
     }
+    // ***
 
 
 

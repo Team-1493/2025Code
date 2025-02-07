@@ -58,7 +58,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentric()
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
             
-    static Pose2d robotpose;
+    static Pose2d robotpose = new Pose2d(0,0,new Rotation2d(0));
 
 //
 
