@@ -37,7 +37,9 @@ public class Elevator extends SubsystemBase{
     private VoltageOut voltOutUp = new VoltageOut(6);
     private VoltageOut voltOutDown = new VoltageOut(-3);
     
-    public double pos1=0,pos2=.5,pos3=.75,pos4=1.0,pos5=1.2;
+    public double positionGround=0,positionCoral1=.5,
+            positionCoral2=.75,positionCoral3=1.0,
+            positionCoral4=1.2, positionIntake=1.1;
     private double currentLimit=30;
     boolean zeroed=false,atLowerLimit=false,atUpperLimit=false;
 
@@ -77,8 +79,10 @@ private final MechanismLigament2d m_elevatorMech2d =
 
 public Elevator(){
 
+
     SmartDashboard.putNumber("Elevator kG", 0);
     SmartDashboard.putNumber("Elevator kP", 20);
+    SmartDashboard.putNumber("Elevator kD", 0);
     SmartDashboard.putNumber("Elevator MMacc", 3);
     SmartDashboard.putNumber("Elevator MMvel", 0.8);
     SmartDashboard.putNumber("Elevator MMjerk", 50);
@@ -86,13 +90,19 @@ public Elevator(){
     SmartDashboard.putNumber("Elevator SupplyCL", 40);
     SmartDashboard.putNumber("Elevator TorqueCL", 100);
 
-    SmartDashboard.putNumber("Elevator Pos1", pos1);
-    SmartDashboard.putNumber("Elevator Pos2", pos2);
-    SmartDashboard.putNumber("Elevator Pos3", pos3);
-    SmartDashboard.putNumber("Elevator Pos4", pos4);
-    SmartDashboard.putNumber("Elevator Pos5", pos5);
+    SmartDashboard.putNumber("Elevator positionGround", positionGround);
+    SmartDashboard.putNumber("Elevator positionIntake", positionIntake);
+    SmartDashboard.putNumber("Elevator positionCoral1", positionCoral1);
+    SmartDashboard.putNumber("Elevator positionCoral2", positionCoral2);
+    SmartDashboard.putNumber("Elevator positionCoral3", positionCoral3);
+    SmartDashboard.putNumber("Elevator positionCoral4", positionCoral4);
 
     SmartDashboard.putData("Elevator Sim", m_mech2d);
+
+    configure();
+    stopElevator();
+    //  zeroElevator();
+  
 
 }
 
@@ -115,29 +125,27 @@ public Elevator(){
     }
 
 
-    public Command manualUpCommand() {
+    public Command ManualUp() {
         return runOnce( () -> {manualUp();});
         }
 
     public void manualUp(){
-        SmartDashboard.putString("Man Dir", "up");
         if (!atUpperLimit)  elevatorRight.setControl(voltOutUp);
         else stopElevator();
     }
 
 
-    public Command manualDownCommand() {
+    public Command ManualDown() {
         return runOnce( () -> {manualDown();});
         }
 
     public void manualDown(){
-        SmartDashboard.putString("Man Dir", "down");
         if (!atLowerLimit) elevatorRight.setControl(voltOutDown);
         else stopElevator();
     }
 
 
-    public Command toPositionCommand(double pos) {
+    public Command ToPosition(double pos) {
         return runOnce( () -> {toPosition(pos);});
         }
 
@@ -147,7 +155,7 @@ public Elevator(){
     }
 
 
-    public Command stopElevatorCommand() {
+    public Command StopElevator() {
         return runOnce( () -> {stopElevator();});
         }
 
@@ -184,24 +192,26 @@ public Elevator(){
 
   public void updateTelemetry() {
     // Update elevator visualization with position
-    m_elevatorMech2d.setLength(elevatorRight.getPosition().getValueAsDouble()*40);
+    m_elevatorMech2d.setLength(elevatorRight.getPosition().getValueAsDouble());
   }
 
   
   public void configure(){
     double elevatorkG = SmartDashboard.getNumber("Elevator kG", 0);
-    double elevatorKp = SmartDashboard.getNumber("Elevator kP", 20);
+    double elevatorkP = SmartDashboard.getNumber("Elevator kP", 20);
+    double elevatorkD = SmartDashboard.getNumber("Elevator kD", 0);
     double elevatorMMacc = SmartDashboard.getNumber("Elevator MMacc", 3);
     double elevatorMMvel = SmartDashboard.getNumber("Elevator MMvel", 0.8);
     double elevatorMMjerk = SmartDashboard.getNumber("Elevator MMjerk", 50);
     double elevatorStatorCL = SmartDashboard.getNumber("Elevator StatorCL", 60);
     double elevatorSupplyCL = SmartDashboard.getNumber("Elevator SupplyCL", 40);
     double elevatorTorqueCL = SmartDashboard.getNumber("Elevator TorqueCL", 100);
-    pos1= SmartDashboard.getNumber("Elevator Pos1", pos1);
-    pos2= SmartDashboard.getNumber("Elevator Pos2", pos2);
-    pos3= SmartDashboard.getNumber("Elevator Pos3", pos3);
-    pos4= SmartDashboard.getNumber("Elevator Pos4", pos4);
-    pos5= SmartDashboard.getNumber("Elevator Pos5", pos5);
+    positionGround= SmartDashboard.getNumber("Elevator positionGround", positionGround);
+    positionIntake= SmartDashboard.getNumber("Elevator positionIntake", positionIntake);
+    positionCoral1= SmartDashboard.getNumber("Elevator positionCoral1", positionCoral1);
+    positionCoral2= SmartDashboard.getNumber("Elevator positionCoral2", positionCoral2);
+    positionCoral3= SmartDashboard.getNumber("Elevator positionCoral3", positionCoral3);
+    positionCoral4= SmartDashboard.getNumber("Elevator positionCoral4", positionCoral4);
 
 
     // Apply motor configurations
@@ -215,7 +225,8 @@ public Elevator(){
 
     cfg.Slot0.GravityType=GravityTypeValue.Elevator_Static;
     cfg.Slot0.kG=elevatorkG;
-    cfg.Slot0.kP=elevatorKp;
+    cfg.Slot0.kP=elevatorkP;
+    cfg.Slot0.kD=elevatorkD;
     cfg.Slot0.kD=0;
     cfg.Slot0.kS=0;
     cfg.Slot0.kV=0;

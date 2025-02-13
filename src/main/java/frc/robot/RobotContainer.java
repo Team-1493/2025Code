@@ -13,16 +13,25 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-
+import frc.robot.commands.IntakeCoral;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.AprilTagCam;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.VisionSystem;
 
 public class RobotContainer {
     private Elevator elevator = new Elevator();
     private Claw claw = new Claw();
+    private int b_IntakeCoral=5;
+    private int b_SpitCoral=6;
+    private int b_toReef1=1;
+    private int b_toReef2=2;
+    private int b_toReef3=3;
+    private int b_toReef4=4;
+    private int b_ElevatorToGround=7;
+    
+
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -40,7 +49,10 @@ public class RobotContainer {
     private final RobotJoystick stickOperator = new RobotJoystick(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    public final AprilTagCam aprilTagCam = new AprilTagCam();
+    public final VisionSystem vision = new VisionSystem(drivetrain);
+
+    public IntakeCoral intakeCoral=new IntakeCoral(elevator, claw);
+
 
     public RobotContainer() {
         drivetrain.setupHeadingController();
@@ -64,11 +76,11 @@ public class RobotContainer {
 
         //  allow driver to switch between fast and slow mode 
         // changes stick scale factor on joystock
-        stickDriver.axisGreaterThan(3, .1).onTrue(
+        stickDriver.button(6).onTrue(
             new InstantCommand(() ->stickDriver.setSlowScaleFactor()  )  );
     
-        stickDriver.axisGreaterThan(3, .1).onFalse(
-                new InstantCommand(() ->stickDriver.setSlowScaleFactor()  )  );
+        stickDriver.button(6).onFalse(
+                new InstantCommand(() ->stickDriver.setFastScaleFactor()  )  );
 
         
 //        stickDriver.a().whileTrue(drivetrain.applyRequest(() -> brake));
@@ -93,41 +105,74 @@ public class RobotContainer {
         */
 
         // reset the field-centric heading on left bumper press
-        stickDriver.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        stickDriver.button(5).onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyro()));
 
 
         // *** Operator Joystick Bindings ***
 
+     // **** TEST BINDINGS ***   
         // manual control of elevator          
-        stickOperator.button(9).whileTrue(elevator.manualDownCommand());
-        stickOperator.button(9).onFalse(elevator.stopElevatorCommand());
-        stickOperator.button(10).whileTrue(elevator.manualUpCommand());
-        stickOperator.button(10).onFalse(elevator.stopElevatorCommand());
+        stickOperator.button(9).whileTrue(elevator.ManualDown());
+        stickOperator.button(9).onFalse(elevator.StopElevator());
+        stickOperator.button(10).whileTrue(elevator.ManualUp());
+        stickOperator.button(10).onFalse(elevator.StopElevator());
 
 
         // elevator to preset positions
-//        stickDriver.povUp().onTrue(elevator.toPositionCommand(elevator.pos5));
-//        stickDriver.povDown().onTrue(elevator.toPositionCommand(elevator.pos1));
-//        stickDriver.povRight().onTrue(elevator.toPositionCommand(elevator.pos2));
-//        stickDriver.povLeft().onTrue(elevator.toPositionCommand(elevator.pos3));
+        stickOperator.povUp().onTrue(elevator.ToPosition(elevator.positionCoral4));
+        stickOperator.povDown().onTrue(elevator.ToPosition(elevator.positionCoral2));
+        stickOperator.povRight().onTrue(elevator.ToPosition(elevator.positionGround));
+        stickOperator.povLeft().onTrue(elevator.ToPosition(elevator.positionIntake));
 
 
         // manual control of claw          
-        stickOperator.button(7).whileTrue(claw.manualDownCommand());
-        stickOperator.button(8).onFalse(claw.stopClawCommand());
-        stickOperator.button(7).whileTrue(claw.manualUpCommand());
-        stickOperator.button(8).onFalse(claw.stopClawCommand());
+        stickOperator.button(7).whileTrue(claw.ClawDown());
+        stickOperator.button(8).onFalse(claw.StopClaw());
+        stickOperator.button(7).whileTrue(claw.ClawUp());
+        stickOperator.button(8).onFalse(claw.StopClaw());
 
          // claw to preset positions
-//         stickDriver.button(1).onTrue(claw.toPositionCommand(claw.pos1));
-//         stickDriver.button(2).onTrue(claw.toPositionCommand(claw.pos2));
+        stickDriver.button(1).onTrue(claw.ToPosition(claw.positionCoralIn));
+        stickDriver.button(2).onTrue(claw.ToPosition(claw.positionCoralOut));
 
         // manual control of rollers          
-        stickOperator.button(3).whileTrue(claw.manualFrontRollerForCommand());
-        stickOperator.button(3).onFalse(claw.stopRollerFrontCommand());
-        stickOperator.button(4).whileTrue(claw.manualRearRollerForCommand());
-        stickOperator.button(4).onFalse(claw.stopRollerRearCommand());
+        stickOperator.button(3).whileTrue(claw.FrontRollerFor());
+        stickOperator.button(3).onFalse(claw.StopRollers());
+        stickOperator.button(4).whileTrue(claw.RearRollerFor());
+        stickOperator.button(4).onFalse(claw.StopRollers());
 
+        stickOperator.button(12).onTrue(new InstantCommand( () -> {
+            claw.configure();
+            elevator.configure();}));
+
+
+//** COMPETITION BINDINGS
+
+        stickOperator.button(b_IntakeCoral).whileTrue(intakeCoral);
+
+        stickOperator.button(b_toReef1).
+            onTrue(claw.ToPosition(claw.positionCoralOut).
+            andThen(elevator.ToPosition(elevator.positionCoral1)));
+
+        stickOperator.button(b_toReef2).
+            onTrue(claw.ToPosition(claw.positionCoralOut).
+            andThen(elevator.ToPosition(elevator.positionCoral2)));
+
+        stickOperator.button(b_toReef3).
+            onTrue(claw.ToPosition(claw.positionCoralOut).
+            andThen(elevator.ToPosition(elevator.positionCoral3)));                
+
+            stickOperator.button(b_toReef4).
+            onTrue(claw.ToPosition(claw.positionCoralOut).
+            andThen(elevator.ToPosition(elevator.positionCoral4)));    
+                
+            
+        stickOperator.button(b_SpitCoral).onTrue(claw.RollersForward());
+        stickOperator.button(b_SpitCoral).onFalse(claw.StopRollers());
+  
+        stickOperator.button(b_ElevatorToGround).
+        onTrue(claw.ToPosition(claw.positionMid).
+        andThen(elevator.ToPosition(elevator.positionGround)));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

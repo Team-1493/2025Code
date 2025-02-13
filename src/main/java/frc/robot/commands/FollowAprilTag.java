@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.AprilTagCam;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.VisionSystem;
 
 public class FollowAprilTag extends FollowPoseDirect {
   public FollowAprilTag(CommandSwerveDrivetrain m_sd){
@@ -19,7 +20,9 @@ public class FollowAprilTag extends FollowPoseDirect {
 
   @Override
   public void execute(){
-    if (AprilTagCam.hasVisionMeasurement){
+
+   /*  
+    if (VisionSystem.hasVisionMeasure){
       hasFirstTarget=true;
       hasTarget=true;
 
@@ -33,5 +36,7 @@ public class FollowAprilTag extends FollowPoseDirect {
           SmartDashboard.putNumber("TargetTransmfor",temp.getX());
     }
     super.execute();
-  }
+ */
+    }
+    
 }

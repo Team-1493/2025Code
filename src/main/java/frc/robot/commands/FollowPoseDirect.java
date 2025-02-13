@@ -55,6 +55,9 @@ public class FollowPoseDirect extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    /* 
+
     if (hasFirstTarget){
 
       if (hasTarget){
@@ -95,6 +98,7 @@ public class FollowPoseDirect extends Command {
     // System.out.println(AprilTagCam.visionPose.getX()+","+AprilTagCam.visionPose.getY());
       SmartDashboard.putBoolean("FollowPose hasTarget",hasTarget);
 
+      */
   }
 
   @Override

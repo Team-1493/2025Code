@@ -17,6 +17,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -45,7 +46,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 //  ***Added to default code!    
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-    private double targetHeading=0, targetHeadingPrev=0,headingRateDeadband=15;
+    private double targetHeading=0, targetHeadingPrev=0,headingRateDeadband=1;
     boolean pointInDirection=false;
 
     private TrapezoidProfile.Constraints tp =
@@ -60,8 +61,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             
     static Pose2d robotpose = new Pose2d(0,0,new Rotation2d(0));
 
-//
+ 
+    // States:  
+    //      driving cam guided to reef = 1. use only front cams  
+    //      driving cam guided to intake = 2, use only rear cams
+    //      other = 3, use both cams
 
+    public int camState = 0;
+
+    // Simulation stuff
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
@@ -273,8 +281,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
 
-        // added this so AprilTagCamera can get the pose for simulation
+        // added static robotpose  so AprilTagCamera can get the pose for simulation
         robotpose=this.getPose();
+        SmartDashboard.putNumber("Pose X",robotpose.getX());
+        SmartDashboard.putNumber("Pose Y",robotpose.getY());
+        SmartDashboard.putNumber("Pose Z",robotpose.getRotation().getDegrees());
 
     }
 
@@ -332,7 +343,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("Drive Heading", heading);
 
 
-        if(Math.abs(z)>0 ){//&& Math.abs(headingRate)>headingRateDeadband) {
+        if(Math.abs(z)>0 || (Math.abs(headingRate)>headingRateDeadband && !pointInDirection)) {
             targetHeadingPrev=targetHeading;
             targetHeading=heading; 
             pointInDirection=false;
@@ -385,6 +396,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         headingController.setGoal(0);      
 
     }
+
+    public void zeroGyro(){
+        seedFieldCentric();
+        resetHeadingController(this.getPose().getRotation().getRadians());        
+
+    }
+
 
     public Pose2d getPose() {
         return this.getState().Pose;
