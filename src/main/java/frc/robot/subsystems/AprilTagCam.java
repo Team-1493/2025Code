@@ -54,12 +54,12 @@ import com.ctre.phoenix6.Utils;
 
  
  public class AprilTagCam {
-    private final PhotonCamera camera;
+    public final PhotonCamera camera;
     private final PhotonPoseEstimator photonEstimator;
     private CommandSwerveDrivetrain dt;
      public double closestTargetDist,closestTargetX,closestTargetY,closestTargetRot;
     public int closestTargetID=0;
-    private Matrix<N3, N1> curStdDevs,kSingleTagStdDevs,kMultiTagStdDevs;
+    private Matrix<N3, N1> curStdDevs;
     private String  labelX,labelY,labelRot,labelHas,
                     labelDevX,labelDevY,labelDevRot, labelClosestID, 
                     labelClosestDist; 
@@ -72,9 +72,14 @@ import com.ctre.phoenix6.Utils;
      private VisionSystemSim visionSim;
     // ***
      
-     public AprilTagCam(String kCameraName, Transform3d kRobotToCam,
-        Matrix<N3,N1> mSingleTagStdDevs, Matrix<N3,N1> mMultiTagStdDevs,CommandSwerveDrivetrain m_dt) {
-            
+     public AprilTagCam(
+                String kCameraName, 
+                Transform3d kRobotToCam,
+                CommandSwerveDrivetrain m_dt,
+                VisionSystemSim m_visionSystemSim) {
+
+        visionSim = m_visionSystemSim;
+
         dt=m_dt;
 
         labelX=kCameraName+" X";
@@ -88,10 +93,6 @@ import com.ctre.phoenix6.Utils;
         labelClosestDist=kCameraName+" ClosestDist";
         
 
-
-        kSingleTagStdDevs=mSingleTagStdDevs;
-        kMultiTagStdDevs=mMultiTagStdDevs;
-
         camera = new PhotonCamera(kCameraName);
         
  
@@ -101,11 +102,7 @@ import com.ctre.phoenix6.Utils;
                  photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
  
          // ----- Simulation
-         if (Robot.isSimulation()) {
-             // Create the vision system simulation which handles cameras and targets on the field.
-             visionSim = new VisionSystemSim("visionSim");
-             // Add all the AprilTags inside the tag layout as visible targets to this simulated field.
-             visionSim.addAprilTags(VisionConstants.FieldLayout);
+         if(Robot.isSimulation()){
              // Create simulated camera properties. These can be set to mimic your actual camera.
              var cameraProp = new SimCameraProperties();
              cameraProp.setCalibration(960, 720, Rotation2d.fromDegrees(90));
@@ -184,11 +181,11 @@ import com.ctre.phoenix6.Utils;
              Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
          if (estimatedPose.isEmpty()) {
              // No pose input. Default to single-tag std devs
-             curStdDevs = kSingleTagStdDevs;
+             curStdDevs = VisionSystem.kSingleTagStdDevs;
  
          } else {
              // Pose present. Start running Heuristic
-             var estStdDevs = kSingleTagStdDevs;
+             var estStdDevs = VisionSystem.kSingleTagStdDevs;
              int numTags = 0;
              double avgDist = 0;
              double dist;
@@ -217,12 +214,12 @@ import com.ctre.phoenix6.Utils;
  
              if (numTags == 0) {
                  // No tags visible. Default to single-tag std devs
-                 curStdDevs = kSingleTagStdDevs;
+                 curStdDevs = VisionSystem.kSingleTagStdDevs;
              } else {
                  // One or more tags visible, run the full heuristic.
                  avgDist /= numTags;
                  // Decrease std devs if multiple targets are visible
-                 if (numTags > 1) estStdDevs = kMultiTagStdDevs;
+                 if (numTags > 1) estStdDevs = VisionSystem.kMultiTagStdDevs;
                  // Increase std devs based on (average) distance
                  if (numTags == 1 && avgDist > 4)
                      estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
@@ -244,9 +241,6 @@ import com.ctre.phoenix6.Utils;
  
      // ----- Simulation
  
-     public void updateVisionSim(Pose2d robotSimPose){
-        visionSim.update(robotSimPose);
-     }
 
      public void simulationPeriodic(Pose2d robotSimPose) {
 
