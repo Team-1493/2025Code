@@ -27,7 +27,7 @@ public class IntakeCoral extends Command {
   @Override
   public void initialize() {
     elevator.toPosition(elevator.positionIntake);
-    claw.toPosition(claw.positionCoralIn);
+    claw.toPosition(claw.positionIntake);
     claw.rearRollerFor();
 
   }
@@ -41,8 +41,8 @@ public class IntakeCoral extends Command {
   public void end(boolean interrupted) {
     claw.stopRollerRear();
     if (claw.hasCoral) {
-        claw.toPosition(claw.positionCoralOut);
-        elevator.toPosition(elevator.positionCoral1);
+        claw.toPosition(claw.positionIntake);
+        elevator.toPosition(elevator.positionIntake);
     }
   }
 

@@ -6,6 +6,9 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
@@ -167,6 +170,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             startSimThread();
         }
 
+        writeInitialConstants();        writeInitialConstants();
+        initializeAutoBuilder();
+
+        initializeAutoBuilder();
+
+
 
 
     }
@@ -194,6 +203,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             startSimThread();
         }       
 
+        writeInitialConstants();
         initializeAutoBuilder();
     }
 
@@ -431,7 +441,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             () -> {
                 var alliance = DriverStation.getAlliance();
                 if (alliance.isPresent()){
-                    return alliance.get() == DriverStation.Alliance.Red;
+                    return alliance.get() == DriverStation.Alliance.Red;  
                 }
                 return false;
             },
@@ -442,6 +452,28 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
 
+    public void writeInitialConstants(){
+
+        // Default constants for open loop voltage control
+        SmartDashboard.putNumber("Drive kP",0.1);  // 3 for TC
+        SmartDashboard.putNumber("Drive kV",0.124);  // 0 for TC
+        SmartDashboard.putNumber("Drive kA",0.0);  // 0 for TC
+
+
+    }
+
+
+    public void updateConstants(){
+        Slot0Configs slot0config = new Slot0Configs();
+        slot0config.kP=SmartDashboard.getNumber("Drive kP", 0);
+        slot0config.kV=SmartDashboard.getNumber("Drive kV", 0);
+        slot0config.kA=SmartDashboard.getNumber("Drive kA", 0);
+        this.getModule(0).getDriveMotor().getConfigurator().apply(slot0config);
+        this.getModule(1).getDriveMotor().getConfigurator().apply(slot0config);
+        this.getModule(2).getDriveMotor().getConfigurator().apply(slot0config);
+        this.getModule(3).getDriveMotor().getConfigurator().apply(slot0config);
+     
+    }
 
 }
 

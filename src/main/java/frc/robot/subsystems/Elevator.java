@@ -37,9 +37,11 @@ public class Elevator extends SubsystemBase{
     private VoltageOut voltOutUp = new VoltageOut(6);
     private VoltageOut voltOutDown = new VoltageOut(-3);
     
-    public double positionGround=0,positionCoral1=.5,
-            positionCoral2=.75,positionCoral3=1.0,
-            positionCoral4=1.2, positionIntake=1.1;
+    public double 
+            positionAlgae1=.2,positionAlgae2 = 0.3, positionNet, 
+            positionCoral1=.5, positionCoral2=.75,
+            positionCoral3=1.0,positionCoral4=1.2,
+            positionIntake=1.1;
     private double currentLimit=30;
     boolean zeroed=false,atLowerLimit=false,atUpperLimit=false;
 
@@ -82,6 +84,7 @@ public Elevator(){
 
     SmartDashboard.putNumber("Elevator kG", 0);
     SmartDashboard.putNumber("Elevator kP", 20);
+    SmartDashboard.putNumber("Elevator kI", 0);
     SmartDashboard.putNumber("Elevator kD", 0);
     SmartDashboard.putNumber("Elevator MMacc", 3);
     SmartDashboard.putNumber("Elevator MMvel", 0.8);
@@ -90,7 +93,9 @@ public Elevator(){
     SmartDashboard.putNumber("Elevator SupplyCL", 40);
     SmartDashboard.putNumber("Elevator TorqueCL", 100);
 
-    SmartDashboard.putNumber("Elevator positionGround", positionGround);
+    SmartDashboard.putNumber("Elevator positionAlgae1", positionAlgae1);
+    SmartDashboard.putNumber("Elevator positionAlgae2", positionAlgae2);
+    SmartDashboard.putNumber("Elevator positionNet", positionNet);
     SmartDashboard.putNumber("Elevator positionIntake", positionIntake);
     SmartDashboard.putNumber("Elevator positionCoral1", positionCoral1);
     SmartDashboard.putNumber("Elevator positionCoral2", positionCoral2);
@@ -199,6 +204,7 @@ public Elevator(){
   public void configure(){
     double elevatorkG = SmartDashboard.getNumber("Elevator kG", 0);
     double elevatorkP = SmartDashboard.getNumber("Elevator kP", 20);
+    double elevatorkI = SmartDashboard.getNumber("Elevator kP", 0);
     double elevatorkD = SmartDashboard.getNumber("Elevator kD", 0);
     double elevatorMMacc = SmartDashboard.getNumber("Elevator MMacc", 3);
     double elevatorMMvel = SmartDashboard.getNumber("Elevator MMvel", 0.8);
@@ -206,7 +212,9 @@ public Elevator(){
     double elevatorStatorCL = SmartDashboard.getNumber("Elevator StatorCL", 60);
     double elevatorSupplyCL = SmartDashboard.getNumber("Elevator SupplyCL", 40);
     double elevatorTorqueCL = SmartDashboard.getNumber("Elevator TorqueCL", 100);
-    positionGround= SmartDashboard.getNumber("Elevator positionGround", positionGround);
+    positionAlgae1= SmartDashboard.getNumber("Elevator positionAlgae1", positionAlgae1);
+    positionAlgae2= SmartDashboard.getNumber("Elevator positionAlgae2", positionAlgae2);
+    positionNet= SmartDashboard.getNumber("Elevator positionNet", positionNet);
     positionIntake= SmartDashboard.getNumber("Elevator positionIntake", positionIntake);
     positionCoral1= SmartDashboard.getNumber("Elevator positionCoral1", positionCoral1);
     positionCoral2= SmartDashboard.getNumber("Elevator positionCoral2", positionCoral2);
@@ -226,6 +234,7 @@ public Elevator(){
     cfg.Slot0.GravityType=GravityTypeValue.Elevator_Static;
     cfg.Slot0.kG=elevatorkG;
     cfg.Slot0.kP=elevatorkP;
+    cfg.Slot0.kI=elevatorkI;
     cfg.Slot0.kD=elevatorkD;
     cfg.Slot0.kD=0;
     cfg.Slot0.kS=0;

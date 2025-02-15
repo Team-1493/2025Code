@@ -54,7 +54,7 @@ public class VisionSystem extends SubsystemBase {
 
         SmartDashboard.putNumber("std factor", 30);
 
-        configureConstants();
+        updateConstants();
 
 
         if (Robot.isSimulation()) {
@@ -96,7 +96,7 @@ public class VisionSystem extends SubsystemBase {
     }
 
 
-    public void configureConstants(){
+    public void updateConstants(){
         kSingleTagStdDevs = VecBuilder.fill(
                 SmartDashboard.getNumber("std single X", 0), 
                 SmartDashboard.getNumber("std single Y", 0),  

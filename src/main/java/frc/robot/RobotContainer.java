@@ -121,7 +121,7 @@ public class RobotContainer {
         // elevator to preset positions
         stickOperator.povUp().onTrue(elevator.ToPosition(elevator.positionCoral4));
         stickOperator.povDown().onTrue(elevator.ToPosition(elevator.positionCoral2));
-        stickOperator.povRight().onTrue(elevator.ToPosition(elevator.positionGround));
+        stickOperator.povRight().onTrue(elevator.ToPosition(elevator.positionIntake));
         stickOperator.povLeft().onTrue(elevator.ToPosition(elevator.positionIntake));
 
 
@@ -132,8 +132,8 @@ public class RobotContainer {
         stickOperator.button(8).onFalse(claw.StopClaw());
 
          // claw to preset positions
-        stickDriver.button(1).onTrue(claw.ToPosition(claw.positionCoralIn));
-        stickDriver.button(2).onTrue(claw.ToPosition(claw.positionCoralOut));
+        stickDriver.button(1).onTrue(claw.ToPosition(claw.positionIntake));
+        stickDriver.button(2).onTrue(claw.ToPosition(claw.positionCoral2));
 
         // manual control of rollers          
         stickOperator.button(3).whileTrue(claw.FrontRollerFor());
@@ -151,19 +151,19 @@ public class RobotContainer {
         stickOperator.button(b_IntakeCoral).whileTrue(intakeCoral);
 
         stickOperator.button(b_toReef1).
-            onTrue(claw.ToPosition(claw.positionCoralOut).
+            onTrue(claw.ToPosition(claw.positionCoral1).
             andThen(elevator.ToPosition(elevator.positionCoral1)));
 
         stickOperator.button(b_toReef2).
-            onTrue(claw.ToPosition(claw.positionCoralOut).
+            onTrue(claw.ToPosition(claw.positionCoral2).
             andThen(elevator.ToPosition(elevator.positionCoral2)));
 
         stickOperator.button(b_toReef3).
-            onTrue(claw.ToPosition(claw.positionCoralOut).
+            onTrue(claw.ToPosition(claw.positionCoral3).
             andThen(elevator.ToPosition(elevator.positionCoral3)));                
 
             stickOperator.button(b_toReef4).
-            onTrue(claw.ToPosition(claw.positionCoralOut).
+            onTrue(claw.ToPosition(claw.positionCoral4).
             andThen(elevator.ToPosition(elevator.positionCoral4)));    
                 
             
@@ -171,8 +171,8 @@ public class RobotContainer {
         stickOperator.button(b_SpitCoral).onFalse(claw.StopRollers());
   
         stickOperator.button(b_ElevatorToGround).
-        onTrue(claw.ToPosition(claw.positionMid).
-        andThen(elevator.ToPosition(elevator.positionGround)));
+        onTrue(claw.ToPosition(claw.positionCoral2).
+        andThen(elevator.ToPosition(elevator.positionIntake)));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

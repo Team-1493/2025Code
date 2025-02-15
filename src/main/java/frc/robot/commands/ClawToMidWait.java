@@ -24,7 +24,7 @@ public class ClawToMidWait extends Command {
 
   @Override
   public void initialize() {
-    claw.toPosition(claw.positionMid);
+    claw.toPosition(claw.positionCoral2);
 
   }
 

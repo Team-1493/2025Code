@@ -36,9 +36,14 @@ private VoltageOut  voltOutFrontForward= new VoltageOut(4);
 private VoltageOut  voltOutFrontReverse= new VoltageOut(-4);
 
     
-public double positionCoralIn=.2,positionCoralOut=.5, 
-    positionAlgae=0.7,positionMid=0.45;
-public double maxClawToLower=positionMid-.05;
+
+public double 
+        positionAlgae1=.2,positionAlgae2 = 0.3, positionNet, 
+        positionCoral1=.5, positionCoral2=.75,
+        positionCoral3=1.0,positionCoral4=1.2,
+        positionIntake=1.1;   
+
+public double maxClawToLower=positionCoral2-.05;
 
 private DigitalInput limitLower = new DigitalInput(6);
 private DigitalInput limitUpper = new DigitalInput(5);
@@ -56,14 +61,20 @@ public Claw(){
     SmartDashboard.putNumber("Claw MMvel", 0.8);
     SmartDashboard.putNumber("Claw MMjerk", 50);
     SmartDashboard.putNumber("Claw kP", 20);
+    SmartDashboard.putNumber("Claw kI", 0);
     SmartDashboard.putNumber("Claw kD", 0);
     SmartDashboard.putNumber("Claw StatorCL", 60);
     SmartDashboard.putNumber("Claw SupplyCL", 40);
     SmartDashboard.putNumber("Claw TorqueCL", 100);
-    SmartDashboard.putNumber("Claw Pos CoralIn", positionCoralIn);
-    SmartDashboard.putNumber("Claw Pos CoralOut", positionCoralOut);
-    SmartDashboard.putNumber("Claw Pos Algae", positionAlgae );
-    SmartDashboard.putNumber("Claw Pos Mid", positionMid );
+    SmartDashboard.putNumber("Claw Pos Algae1", positionAlgae1);
+    SmartDashboard.putNumber("Claw Pos Algae2", positionAlgae2);
+    SmartDashboard.putNumber("Claw Pos Net", positionNet);
+    SmartDashboard.putNumber("Claw Pos Coral1", positionCoral1);
+    SmartDashboard.putNumber("Claw Pos Coral2", positionCoral2);
+    SmartDashboard.putNumber("Claw Pos Coral3", positionCoral3);
+    SmartDashboard.putNumber("Claw Pos Coral4", positionCoral4);
+    SmartDashboard.putNumber("Claw Pos Intake", positionIntake);
+
 
 
     configureClaw();
@@ -80,7 +91,7 @@ public Claw(){
         atLowerLimit=limitLower.get();
         atUpperLimit=limitUpper.get();
 
-        // check mag limit switches
+        // check mag limit switch
         if (atUpperLimit && voltage>0 ) stopClaw();
         if (atLowerLimit && voltage<0 ) stopClaw();
         if (current>currentLimit) stopClaw();
@@ -89,7 +100,7 @@ public Claw(){
 
         SmartDashboard.putNumber("Claw Enc AbsPos", encPosition);    
 
-        SmartDashboard.putNumber("Claw Volt",voltage);
+        SmartDashboard.putNumber("Claw Voltqqq",voltage);
         SmartDashboard.putNumber("Claw Current", current);
         SmartDashboard.putNumber("Roller Current", rearRollerCurrent);
 
@@ -210,6 +221,7 @@ public Claw(){
 
     double clawkG = SmartDashboard.getNumber("Claw kG", 0);
     double clawkP = SmartDashboard.getNumber("Claw kP", 20);
+    double clawkI = SmartDashboard.getNumber("Claw kI", 0);
     double clawkD = SmartDashboard.getNumber("Claw kD", 0);
     double clawMMacc = SmartDashboard.getNumber("Claw MMacc", 3);
     double clawMMvel = SmartDashboard.getNumber("Claw MMvel", 0.8);
@@ -217,12 +229,15 @@ public Claw(){
     double clawStatorCL = SmartDashboard.getNumber("Claw StatorCL", 60);
     double clawSupplyCL = SmartDashboard.getNumber("Claw SupplyCL", 40);
     double clawTorqueCL = SmartDashboard.getNumber("Claw TorqueCL", 100);
-    positionCoralIn= SmartDashboard.getNumber("Claw Pos CoralIn", positionCoralIn);
-    positionCoralOut= SmartDashboard.getNumber("Claw Pos CoralOut", positionCoralOut);
-    positionAlgae= SmartDashboard.getNumber("Claw Pos Algae", positionAlgae );
-    positionMid= SmartDashboard.getNumber("Claw Pos Mid", positionMid );
-
-
+    
+    positionAlgae1 = SmartDashboard.getNumber("Claw Pos Algae1", positionAlgae1);
+    positionAlgae2 = SmartDashboard.getNumber("Claw Pos Algae2", positionAlgae2);
+    positionNet = SmartDashboard.getNumber("Claw Pos Net", positionNet);
+    positionCoral1 = SmartDashboard.getNumber("Claw Pos Coral1", positionCoral1);
+    positionCoral2 = SmartDashboard.getNumber("Claw Pos Coral2", positionCoral2);
+    positionCoral3 = SmartDashboard.getNumber("Claw Pos Coral3", positionCoral3);
+    positionCoral4 = SmartDashboard.getNumber("Claw Pos Coral4", positionCoral4);
+    positionIntake = SmartDashboard.getNumber("Claw Pos Intake", positionIntake);
 
 
     cfg.MotorOutput.Inverted=InvertedValue.CounterClockwise_Positive;
@@ -239,6 +254,7 @@ public Claw(){
     cfg.Slot0.GravityType=GravityTypeValue.Arm_Cosine;
     cfg.Slot0.kG = clawkG;
     cfg.Slot0.kP = clawkP;
+    cfg.Slot0.kI = clawkI;
     cfg.Slot0.kD = clawkD;
     cfg.Slot0.kD=0;
     cfg.Slot0.kS=0;
