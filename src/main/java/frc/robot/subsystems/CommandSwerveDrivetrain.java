@@ -170,9 +170,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             startSimThread();
         }
 
-        writeInitialConstants();        writeInitialConstants();
-        initializeAutoBuilder();
-
+        writeInitialConstants();
         initializeAutoBuilder();
 
 
