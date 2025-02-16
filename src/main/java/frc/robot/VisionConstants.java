@@ -25,7 +25,7 @@ public class VisionConstants {
    
 
     
-    private static List<AprilTag> AprilTagList = new ArrayList<AprilTag>(Arrays.asList(
+    public static List<AprilTag> AprilTagList = new ArrayList<AprilTag>(Arrays.asList(
 
     new AprilTag(1, new Pose3d(16.697,	0.655, 1.486, new Rotation3d(0.000, 0.000, 2.199))),
     new AprilTag(2, new Pose3d(16.697,	7.396, 1.486, new Rotation3d(0.000, 0.000, 4.084))),
