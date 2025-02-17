@@ -1,0 +1,121 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4C-Path1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "simIntakeAlgae"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4C-Path2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "simIntakeAlgae"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4C-Path3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "simScoreCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4C-Path4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "simIntakeCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4C-Path5"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "simScoreCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4C-Path6"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "simIntakeCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4C-Path7"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "simScoreCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4C-Path8"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "simIntakeCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4C-Path9"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "simScoreCoral"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
