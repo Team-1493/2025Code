@@ -59,9 +59,12 @@ public class RobotContainer {
 
     public IntakeCoral intakeCoral=new IntakeCoral(elevator, claw);
 
-    public AutoGenerator autoGenerator = new AutoGenerator(elevator, claw);
-    public ActionCommands actions = new ActionCommands(drivetrain,elevator,claw,vision); 
-    private DriveReefLeft driveReefLeft = new DriveReefLeft(drivetrain);
+    //The auto generator was originally defined just as public, but I changed that, may need to be changed back?
+    private final AutoGenerator autoGenerator = new AutoGenerator(elevator, claw);
+    private final SendableChooser<Command> autoChooser = autoGenerator.autoChooser;
+
+    public ActionCommands actions = new ActionCommands(drivetrain,elevator,claw); 
+    public DriveReefLeft driveReefLeft;
 
     public RobotContainer() {
         drivetrain.setupHeadingController();
@@ -194,6 +197,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return  autoGenerator.autoChooser.getSelected();
+        return autoChooser.getSelected();
     }
 }

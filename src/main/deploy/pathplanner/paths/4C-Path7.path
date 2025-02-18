@@ -3,45 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 7.0
+        "x": 1.261666666666666,
+        "y": 7.1624358974358975
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.881345743415465,
-        "y": 6.8366212593273925
+        "x": 2.5807099094061523,
+        "y": 6.3244622316211325
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Coral_Intake_1"
     },
     {
       "anchor": {
-        "x": 5.090576923076923,
-        "y": 6.594807692307693
+        "x": 3.868977272727273,
+        "y": 5.515752840909091
       },
       "prevControl": {
-        "x": 4.245387521889571,
-        "y": 6.885425261219499
-      },
-      "nextControl": {
-        "x": 5.326991373406443,
-        "y": 6.513516809206385
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 6.452884615384615,
-        "y": 5.067371794871795
-      },
-      "prevControl": {
-        "x": 6.680036458998763,
-        "y": 4.7770177148795385
+        "x": 3.188855628944485,
+        "y": 5.947633825959505
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Coral_Score_K"
     }
   ],
   "rotationTargets": [],
@@ -58,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 45.0
+    "rotation": -58.642999999999994
   },
   "reversed": false,
-  "folder": null,
+  "folder": "4 Coral Auto Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -52.49585763972985
   },
   "useDefaultConstraints": true
 }

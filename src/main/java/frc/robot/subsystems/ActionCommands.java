@@ -23,7 +23,7 @@ public class ActionCommands {
     
     
 
-public  ActionCommands(CommandSwerveDrivetrain m_sd,Elevator elevator,Claw claw,VisionSystem m_vision){
+public  ActionCommands(CommandSwerveDrivetrain m_sd,Elevator elevator,Claw claw){
 
     sd=m_sd;
 
