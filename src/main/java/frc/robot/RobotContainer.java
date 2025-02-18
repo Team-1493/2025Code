@@ -64,7 +64,7 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser = autoGenerator.autoChooser;
 
     public ActionCommands actions = new ActionCommands(drivetrain,elevator,claw); 
-    public DriveReefLeft driveReefLeft;
+    public DriveReefLeft driveReefLeft = new DriveReefLeft(drivetrain);
 
     public RobotContainer() {
         drivetrain.setupHeadingController();
