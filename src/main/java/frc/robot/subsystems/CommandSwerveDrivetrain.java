@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotJoystick;
@@ -397,6 +398,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         headingController.setGoal(targetHeading);
       }
 
+      public void resetHeadingController(){
+        resetHeadingController
+        (this.getPose().getRotation().getRadians());
+    }
+      
+      public Command ResetHeadingController(){
+        return runOnce( () -> {  resetHeadingController
+            (this.getPose().getRotation().getRadians()); });
+      }
+
     public void setupHeadingController(){
         headingController.enableContinuousInput(-Math.PI, Math.PI);
         headingController.setTolerance(0.017);  //1 degree
@@ -471,6 +482,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         this.getModule(2).getDriveMotor().getConfigurator().apply(slot0config);
         this.getModule(3).getDriveMotor().getConfigurator().apply(slot0config);
      
+    }
+
+    public Command Stop(){
+        return driveRobotCentricCommand(0, 0, 0);
+    }
+
+    public void stop(){
+        driveRobotCentricCommand(0, 0, 0);
     }
 
 }

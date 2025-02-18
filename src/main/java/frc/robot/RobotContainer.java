@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.DriveReefLeft;
 import frc.robot.commands.IntakeCoral;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ActionCommands;
@@ -59,7 +60,8 @@ public class RobotContainer {
     public IntakeCoral intakeCoral=new IntakeCoral(elevator, claw);
 
     public AutoGenerator autoGenerator = new AutoGenerator(elevator, claw);
-    public ActionCommands actions = new ActionCommands(drivetrain,elevator,claw); 
+    public ActionCommands actions = new ActionCommands(drivetrain,elevator,claw,vision); 
+    private DriveReefLeft driveReefLeft = new DriveReefLeft(drivetrain);
 
     public RobotContainer() {
         drivetrain.setupHeadingController();
@@ -79,7 +81,13 @@ public class RobotContainer {
 
     //***& Driver Joystick Bindings ***
 
-    stickDriver.button(1).onTrue(ActionCommands.driveReefLeft);
+    stickDriver.button(1).whileTrue(
+        driveReefLeft);
+
+    stickDriver.button(1).onFalse(
+        new InstantCommand( ()-> drivetrain.ResetHeadingController()));
+        
+    
 
         //  allow driver to switch between fast and slow mode 
         // changes stick scale factor on joystock
@@ -140,8 +148,8 @@ public class RobotContainer {
         stickOperator.button(8).onFalse(claw.StopClaw());
 
          // claw to preset positions
-        stickDriver.button(1).onTrue(claw.ToPosition(claw.positionIntake));
-        stickDriver.button(2).onTrue(claw.ToPosition(claw.positionCoral2));
+//        stickOperator.button(1).onTrue(claw.ToPosition(claw.positionIntake));
+//        stickOperator.button(2).onTrue(claw.ToPosition(claw.positionCoral2));
 
         // manual control of rollers          
         stickOperator.button(3).whileTrue(claw.FrontRollerFor());

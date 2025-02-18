@@ -132,17 +132,21 @@ import com.ctre.phoenix6.Utils;
       *     used for estimation.
       */
      public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
-        hasVisionMeasure=false;
-        closestTargetDist=9999;
-        closestTargetID=0;
          Optional<EstimatedRobotPose> visionEst = Optional.empty();
 //         System.out.println("size "+camera.getAllUnreadResults().size());
-         for (var change : camera.getAllUnreadResults()) {
-
+        var pipelineResults = camera.getAllUnreadResults();
+        if(pipelineResults.size()>0){
+            closestTargetDist=9999;
+            closestTargetID=0;
+             hasVisionMeasure=false;    
+        }
+         for (var change : pipelineResults) {
             visionEst = photonEstimator.update(change);
 //            System.out.println("*****   "+visionEst.isPresent());
             if (visionEst.isPresent()) 
-                {hasVisionMeasure=true;
+                {
+                if (change.hasTargets()) hasVisionMeasure=true;
+
                 updateEstimationStdDevs(visionEst, change.getTargets());
                 dt.addVisionMeasurement(
                     visionEst.get().estimatedPose.toPose2d(),
@@ -259,8 +263,10 @@ import com.ctre.phoenix6.Utils;
 
 
     private void printResults(Optional<EstimatedRobotPose> visionEst){
-
+        
         if(hasVisionMeasure){
+        SmartDashboard.putBoolean(labelHas, hasVisionMeasure);
+
         Pose2d estpose2d = visionEst.get().estimatedPose.toPose2d();
         SmartDashboard.putNumber(
             labelX,

@@ -20,7 +20,10 @@ public class VisionSystem extends SubsystemBase {
 
     AprilTagCam camFL,camFR,camB;
 
-    public static boolean hasVisionMeasure=false;
+    public static boolean hasSysVisionMeasure=false;
+    public static boolean hasReefTarget;
+    public static int closestReefID=0;
+    public static double closestReefDist=999;
 
     Transform3d camFR_RobotToCam = 
         new Transform3d(.1,.1,.22,new Rotation3d(0,0,Math.toRadians(30)));
@@ -64,7 +67,6 @@ public class VisionSystem extends SubsystemBase {
              visionSim.addAprilTags(VisionConstants.FieldLayout);
         }
 
-        hasVisionMeasure=false;
         dt=m_dt;
 
         camFL = new AprilTagCam("Spinel_1", camFL_RobotToCam,
@@ -84,15 +86,28 @@ public class VisionSystem extends SubsystemBase {
         
 
   @Override
-  public void periodic() {
-       if (dt.camState!=2) {
-            camFL.getEstimatedGlobalPose();
+  public void periodic(){ 
+              camFL.getEstimatedGlobalPose();
             camFR.getEstimatedGlobalPose();
             camB.getEstimatedGlobalPose();
             visionSim.update(dt.getPose());
-       }
 
-    //   if (dt.camState!=1) addVisionMeas(camFL);
+            if (camFL.closestTargetDist<camFR.closestTargetDist){
+                closestReefDist=camFL.closestTargetDist;
+                closestReefID=camFL.closestTargetID;
+            }
+            else {
+                closestReefDist=camFR.closestTargetDist;
+                closestReefID=camFR.closestTargetID;
+            }
+
+            if (closestReefID>=17 && closestReefID<=22) hasReefTarget=true;
+            else hasReefTarget=false;
+            SmartDashboard.putNumber("ClosestReefDist", closestReefDist);
+            SmartDashboard.putNumber("ClosestReefID", closestReefID);
+            SmartDashboard.putBoolean("hasReefTarget", hasReefTarget);
+
+
     }
 
 
