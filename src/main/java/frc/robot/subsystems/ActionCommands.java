@@ -22,7 +22,12 @@ public class ActionCommands {
     private CommandSwerveDrivetrain sd;
     private Elevator elevator;
     private Claw claw;
-    
+    public SequentialCommandGroup elevatorToReef1, elevatorToReef2,elevatorToReef3,
+        elevatorToReef4, elevatorToIntake,elevatorToAlgae1,elevatorToAlgae2;
+    public  SequentialCommandGroup spitCoral;
+    public Command intakeCoral,bumpIntoWall;
+
+
     
     
 
@@ -38,56 +43,52 @@ public  ActionCommands(CommandSwerveDrivetrain m_sd,Elevator m_elevator,Claw m_c
         Units.degreesToRadians(360),
         Units.degreesToRadians(450));
                 
-        }
+        
+        elevatorToIntake = new SequentialCommandGroup( 
+            claw.ToPosition(claw.positionIntake), 
+            new InstantCommand(()->Timer.delay(.5)),
+            elevator.ToPosition(elevator.positionIntake));
 
-        private Command delay05=new InstantCommand(()->Timer.delay(.5));
-        private Command delay1=new InstantCommand(()->Timer.delay(1));
-
-        public Command elevatorToIntake = 
-            claw.ToPosition(claw.positionIntake).
-            andThen(delay05).
-            andThen(elevator.ToPosition(elevator.positionIntake));
-
-        public Command elevatorToReef1 = 
-            claw.ToPosition(claw.positionCoral1).
-            andThen(delay05).
-            andThen(elevator.ToPosition(elevator.positionCoral1));
+        elevatorToReef1 = new SequentialCommandGroup( 
+            claw.ToPosition(claw.positionCoral1),
+            new InstantCommand(()->Timer.delay(.5)), 
+            elevator.ToPosition(elevator.positionCoral1));
         
 
-        public Command elevatorToReef2 = 
-            claw.ToPosition(claw.positionCoral2).
-            andThen(delay05).
-            andThen(elevator.ToPosition(elevator.positionCoral2));
+        elevatorToReef2 = new SequentialCommandGroup( 
+            claw.ToPosition(claw.positionCoral2),
+            new InstantCommand(()->Timer.delay(.5)),
+             elevator.ToPosition(elevator.positionCoral2));
 
-        public Command elevatorToReef3 = 
-            claw.ToPosition(claw.positionCoral3).
-            andThen(delay05).
-            andThen(elevator.ToPosition(elevator.positionCoral3));
+        elevatorToReef3 = new SequentialCommandGroup( 
+            claw.ToPosition(claw.positionCoral3),
+            new InstantCommand(()->Timer.delay(.5)), 
+            elevator.ToPosition(elevator.positionCoral3));
             
-        public Command elevatorToReef4 = 
-            claw.ToPosition(claw.positionCoral4).
-            andThen(delay05).
-            andThen(elevator.ToPosition(elevator.positionCoral4));
+        elevatorToReef4 = new SequentialCommandGroup( 
+            claw.ToPosition(claw.positionCoral4),
+            new InstantCommand(()->Timer.delay(.5)),
+            elevator.ToPosition(elevator.positionCoral4));
 
             
-        public Command elevatorToAlgae1 = 
-            claw.ToPosition(claw.positionAlgae1).
-            andThen(delay05).
-            andThen(elevator.ToPosition(elevator.positionAlgae1));
+        elevatorToAlgae1 = new SequentialCommandGroup( 
+            claw.ToPosition(claw.positionAlgae1),
+            new InstantCommand(()->Timer.delay(.5)), 
+            elevator.ToPosition(elevator.positionAlgae1));
 
-        public Command elevatorToAlgae2 = 
-            claw.ToPosition(claw.positionAlgae2).
-            andThen(delay05).
-            andThen(elevator.ToPosition(elevator.positionAlgae2));
+        elevatorToAlgae2 = new SequentialCommandGroup( 
+            claw.ToPosition(claw.positionAlgae2),
+            new InstantCommand(()->Timer.delay(.5)),
+            elevator.ToPosition(elevator.positionAlgae2));
 
-        public Command intakeCoral = new frc.robot.commands.IntakeCoral(elevator,claw);
+        intakeCoral = new frc.robot.commands.IntakeCoral(elevator,claw);
 
-        public Command spitCoral=claw.RollersForward().
-        andThen(delay1).
-        andThen(claw.StopRollers());
+        spitCoral= new SequentialCommandGroup(
+        claw.RollersForward(),
+        new InstantCommand(()->Timer.delay(1.5)),claw.StopRollers());
 
-        public Command bumpIntoWall = new BumpIntoWall(sd);
+        bumpIntoWall = new BumpIntoWall(sd);
 }
-
+}
 
 

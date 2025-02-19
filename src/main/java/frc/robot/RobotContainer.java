@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveReefLeft;
+import frc.robot.commands.DriveReefRight;
 import frc.robot.commands.IntakeCoral;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ActionCommands;
@@ -65,6 +66,7 @@ public class RobotContainer {
 
     public ActionCommands actions = new ActionCommands(drivetrain,elevator,claw); 
     public DriveReefLeft driveReefLeft = new DriveReefLeft(drivetrain);
+    public DriveReefRight driveReefRight = new DriveReefRight(drivetrain);
 
     public RobotContainer() {
         drivetrain.setupHeadingController();
@@ -84,12 +86,13 @@ public class RobotContainer {
 
     //***& Driver Joystick Bindings ***
 
-    stickDriver.button(1).whileTrue(
-        driveReefLeft);
-
+    stickDriver.button(1).whileTrue(driveReefLeft);
     stickDriver.button(1).onFalse(
         new InstantCommand( ()-> drivetrain.ResetHeadingController()));
-        
+
+    stickDriver.button(2).whileTrue(driveReefRight);
+    stickDriver.button(2).onFalse(
+            new InstantCommand( ()-> drivetrain.ResetHeadingController()));        
     
 
         //  allow driver to switch between fast and slow mode 
@@ -103,9 +106,8 @@ public class RobotContainer {
         
 //        stickDriver.a().whileTrue(drivetrain.applyRequest(() -> brake));
         
-        stickDriver.button(2).onTrue(new InstantCommand(() 
-        ->
-            drivetrain.setTargetHeading(Math.toRadians(-90))  )  );
+//        stickDriver.button(2).onTrue(new InstantCommand(() 
+//        -> drivetrain.setTargetHeading(Math.toRadians(-90))  )  );
 //        stickDriver.button(1).onTrue(new InstantCommand(() ->
 //            drivetrain.setTargetHeading(Math.toRadians( 179.9))  )  );
         stickDriver.button(3).onTrue(new InstantCommand(() ->
