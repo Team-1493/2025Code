@@ -34,6 +34,7 @@ private VoltageOut  voltOutRearForward= new VoltageOut(4);
 private VoltageOut  voltOutRearReverse= new VoltageOut(-4);
 private VoltageOut  voltOutFrontForward= new VoltageOut(4);
 private VoltageOut  voltOutFrontReverse= new VoltageOut(-4);
+private VoltageOut  voltOutFrontHold= new VoltageOut(-1);
 
     
 
@@ -52,6 +53,8 @@ private DigitalInput coralSensor = new DigitalInput(7);
 private boolean atLowerLimit=false,atUpperLimit=false;
 private double currentLimit=30;
 public boolean hasCoral = false;
+public boolean hasAlgae=false;
+int coralCounter=0,algaeCounter=0;
 private double voltage,current,motorPosition;
 public double encPosition,rearRollerCurrent;
 
@@ -97,6 +100,7 @@ public Claw(){
         if (current>currentLimit) stopClaw();
 
         checkForCoral();
+        checkForAlgae();
 
         SmartDashboard.putNumber("Claw Enc AbsPos", encPosition);    
 
@@ -184,6 +188,14 @@ public Claw(){
         clawFrontRoller.setControl(voltOutFrontReverse);
     }
 
+    public void frontRollerHoldAlgae(){
+        clawFrontRoller.setControl(voltOutFrontHold);
+    }
+
+    public void frontRollerStop(){
+        clawFrontRoller.stopMotor();
+    }
+    
 
     public Command StopRollers() {
         return runOnce( () -> {
@@ -200,7 +212,6 @@ public Claw(){
         return runOnce( () -> {rearRollerRev();frontRollerRev();});
     }
 
-
     public Command configure() {
         return runOnce( () -> {configureClaw();});
     }
@@ -209,10 +220,28 @@ public Claw(){
     // Check if we have Coral
     private void checkForCoral(){
 //        hasCoral=coralSensor.get();
-        if (clawRearRoller.getVelocity().getValueAsDouble()>1 ) {
+
+/*         if (clawRearRoller.getVelocity().getValueAsDouble()>1 ) {
             if(clawRearRoller.getStatorCurrent().getValueAsDouble()>4) hasCoral=true;
                 else hasCoral=false;
-        }         
+        }
+*/
+        if(Math.abs(clawFrontRoller.getVelocity().getValueAsDouble())>0.01)
+           hasCoral=true;
+    }
+
+    private void checkForAlgae(){
+
+        if( (Math.abs(clawFrontRoller.getStatorCurrent().getValueAsDouble())>1)
+        && Math.abs(clawFrontRoller.getVelocity().getValueAsDouble())<0.01){
+            algaeCounter ++;
+            if (algaeCounter>3) hasAlgae=true;
+            }
+
+        else {
+            hasAlgae=false;
+            algaeCounter=0;
+        } 
     }
 
 
