@@ -13,9 +13,9 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.DriveIntake;
 import frc.robot.commands.DriveReefLeft;
 import frc.robot.commands.DriveReefRight;
 import frc.robot.commands.IntakeCoral;
@@ -67,6 +67,7 @@ public class RobotContainer {
     public ActionCommands actions = new ActionCommands(drivetrain,elevator,claw); 
     public DriveReefLeft driveReefLeft = new DriveReefLeft(drivetrain);
     public DriveReefRight driveReefRight = new DriveReefRight(drivetrain);
+    public DriveIntake driveIntake = new DriveIntake(drivetrain);
 
     public RobotContainer() {
         drivetrain.setupHeadingController();
@@ -94,6 +95,11 @@ public class RobotContainer {
     stickDriver.button(2).onFalse(
             new InstantCommand( ()-> drivetrain.ResetHeadingController()));        
     
+    stickDriver.button(3).whileTrue(driveIntake);
+    stickDriver.button(3).onFalse(
+            new InstantCommand( ()-> drivetrain.ResetHeadingController()));        
+        
+
 
         //  allow driver to switch between fast and slow mode 
         // changes stick scale factor on joystock
@@ -110,8 +116,8 @@ public class RobotContainer {
 //        -> drivetrain.setTargetHeading(Math.toRadians(-90))  )  );
 //        stickDriver.button(1).onTrue(new InstantCommand(() ->
 //            drivetrain.setTargetHeading(Math.toRadians( 179.9))  )  );
-        stickDriver.button(3).onTrue(new InstantCommand(() ->
-            drivetrain.setTargetHeading(Math.toRadians(90))  )  );            
+//        stickDriver.button(3).onTrue(new InstantCommand(() ->
+//            drivetrain.setTargetHeading(Math.toRadians(90))  )  );            
         stickDriver.button(4).onTrue(new InstantCommand(() ->
             drivetrain.setTargetHeading(Math.toRadians(0))  )  );      
 
