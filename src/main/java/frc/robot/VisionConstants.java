@@ -22,12 +22,6 @@ public class VisionConstants {
     
     private static double fieldLength=16.54,fieldWidth=8.21;
 
-    public static double reefOffsetX=0.25;
-    public static double reefOffsetY=0.75;
-    public static double intakeOffsetX=0;
-    public static double intakeOffsetY=.75;
-
-
 
     
     public static List<AprilTag> AprilTagList = new ArrayList<AprilTag>(Arrays.asList(

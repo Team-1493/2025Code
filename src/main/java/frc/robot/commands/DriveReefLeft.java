@@ -23,7 +23,6 @@ public class DriveReefLeft extends Command {
     private PathConstraints constraints;
     double rotTarget,rotRobot;
     Pose2d targetPose;
-    private  double reefOffsetX=.25,reefOffsetY=.75;
     private CommandSwerveDrivetrain sd;
     private Command drivePath;
 
@@ -47,27 +46,28 @@ public class DriveReefLeft extends Command {
 
   @Override
   public void initialize() {
+    double reefOffsetX = VisionSystem.reefOffsetX;
+    double reefOffsetY = VisionSystem.reefOffsetY;
+    if(VisionSystem.hasReefTarget){
+      int index=  VisionSystem.closestReefID-1;
+      targetPose = VisionConstants.AprilTagList.get(index).pose.toPose2d();
+      rotTarget = targetPose.getRotation().getRadians();
+      rotRobot=rotTarget+Math.PI;
+      targetPose = new Pose2d(
+          targetPose.getX()+reefOffsetX*Math.sin(rotTarget)+reefOffsetY*Math.cos(rotTarget),
+          targetPose.getY()-reefOffsetX*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
+          new Rotation2d(rotRobot));
+      }
 
-            if(VisionSystem.hasReefTarget){
-            int index=  VisionSystem.closestReefID-1;
-            targetPose = VisionConstants.AprilTagList.get(index).pose.toPose2d();
-            rotTarget = targetPose.getRotation().getRadians();
-            rotRobot=rotTarget+Math.PI;
-            targetPose = new Pose2d(
-                targetPose.getX()+reefOffsetX*Math.sin(rotTarget)+reefOffsetY*Math.cos(rotTarget),
-                targetPose.getY()-reefOffsetX*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
-                new Rotation2d(rotRobot));
-            }
+      if(VisionSystem.hasReefTarget){
+        drivePath= AutoBuilder.pathfindToPose(
+          targetPose,
+          constraints,
+          0.0).andThen( 
+          new InstantCommand( ()->sd.resetHeadingController(rotRobot)));}
+          else drivePath= sd.Stop();
 
-          if(VisionSystem.hasReefTarget){
-            drivePath= AutoBuilder.pathfindToPose(
-                targetPose,
-                constraints,
-                0.0).andThen( 
-                  new InstantCommand( ()->sd.resetHeadingController(rotRobot)));}
-            else drivePath= sd.Stop();
-
-            drivePath.initialize();
+      drivePath.initialize();
 
             
   }

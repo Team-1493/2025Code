@@ -168,9 +168,7 @@ public class RobotContainer {
         stickOperator.button(4).whileTrue(claw.RearRollerFor());
         stickOperator.button(4).onFalse(claw.StopRollers());
 
-        stickOperator.button(12).onTrue(new InstantCommand( () -> {
-            claw.configure();
-            elevator.configure();}));
+        stickOperator.button(12).onTrue(new InstantCommand( () -> {configure();}));
 
 
 //** COMPETITION BINDINGS
@@ -207,4 +205,11 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
     }
-}
+
+    private void configure(){
+        claw.configure();
+//        elevator.configure();
+//        vision.configure();
+//        drivetrain.configure();
+        }
+    }

@@ -24,6 +24,10 @@ public class VisionSystem extends SubsystemBase {
     public static boolean hasReefTarget;
     public static int closestReefID=0;
     public static double closestReefDist=999;
+    public static double reefOffsetX=0.25;
+    public static double reefOffsetY=0.75;
+    public static double intakeOffsetX=0;
+    public static double intakeOffsetY=.75;
 
     Transform3d camFR_RobotToCam = 
         new Transform3d(.1,.1,.22,new Rotation3d(0,0,Math.toRadians(30)));
@@ -53,11 +57,14 @@ public class VisionSystem extends SubsystemBase {
         SmartDashboard.putNumber("std multi X", .25);    
         SmartDashboard.putNumber("std multi Y", .25);    
         SmartDashboard.putNumber("std multi Rot", 2);
-        
-
         SmartDashboard.putNumber("std factor", 30);
 
-        updateConstants();
+        SmartDashboard.putNumber("ReefOffsetX", reefOffsetX);
+        SmartDashboard.putNumber("ReefOffsetY", reefOffsetY);
+        SmartDashboard.putNumber("IntakeOffsetX", intakeOffsetX);
+        SmartDashboard.putNumber("IntakeOffsetY", intakeOffsetY);
+
+        configure();
 
 
         if (Robot.isSimulation()) {
@@ -111,7 +118,7 @@ public class VisionSystem extends SubsystemBase {
     }
 
 
-    public void updateConstants(){
+    public void configure(){
         kSingleTagStdDevs = VecBuilder.fill(
                 SmartDashboard.getNumber("std single X", 0), 
                 SmartDashboard.getNumber("std single Y", 0),  
@@ -121,6 +128,11 @@ public class VisionSystem extends SubsystemBase {
                     SmartDashboard.getNumber("std multi X", 0), 
                     SmartDashboard.getNumber("std multi Y", 0),  
                     SmartDashboard.getNumber("std multi Rot", 0));
+
+        reefOffsetX = SmartDashboard.getNumber("ReefOffsetX", reefOffsetX);
+        reefOffsetY = SmartDashboard.getNumber("ReefOffsetY", reefOffsetY);
+        intakeOffsetX = SmartDashboard.getNumber("IntakeOffsetX", intakeOffsetX);
+        intakeOffsetY = SmartDashboard.getNumber("IntakeOffsetY", intakeOffsetY);                    
                     
     }
 
