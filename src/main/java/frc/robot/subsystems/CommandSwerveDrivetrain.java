@@ -435,6 +435,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public void initializeAutoBuilder(){
         RobotConfig config;
         try{
+            double kPAuto=SmartDashboard.getNumber("Drive Auto kP", 0);
+            double kDAuto=SmartDashboard.getNumber("Drive Auto kD", 0);
+            double kProtAuto=SmartDashboard.getNumber("Drive Auto rot kP", 0);
+            double kDrotAuto=SmartDashboard.getNumber("Drive Auto rot kD", 0);
             config = RobotConfig.fromGUISettings();
 
             AutoBuilder.configure(
@@ -443,8 +447,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             this::getChassisSpeed,
             (speeds, feedforwards) -> driveRobotCentric(speeds),
             new PPHolonomicDriveController(
-                new PIDConstants(5.0, 0.0, 0.0),
-                new PIDConstants(5.0, 0.0, 0.0)
+                new PIDConstants(kPAuto, 0.0, kDAuto),
+                new PIDConstants(kProtAuto, 0.0, kDrotAuto)
             ),
             config,
             () -> {
@@ -468,20 +472,30 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("Drive kV",0.124);  // 0 for TC
         SmartDashboard.putNumber("Drive kA",0.0);  // 0 for TC
 
+        SmartDashboard.putNumber("Drive Auto kP",5); 
+        SmartDashboard.putNumber("Drive Auto kD",0);         
+        SmartDashboard.putNumber("Drive Auto rot kP", 5);
+        SmartDashboard.putNumber("Drive Auto rot kD", 0);
+
+
 
     }
 
 
-    public void updateConstants(){
+    public void configure(){
         Slot0Configs slot0config = new Slot0Configs();
         slot0config.kP=SmartDashboard.getNumber("Drive kP", 0);
         slot0config.kV=SmartDashboard.getNumber("Drive kV", 0);
         slot0config.kA=SmartDashboard.getNumber("Drive kA", 0);
+
+
         this.getModule(0).getDriveMotor().getConfigurator().apply(slot0config);
         this.getModule(1).getDriveMotor().getConfigurator().apply(slot0config);
         this.getModule(2).getDriveMotor().getConfigurator().apply(slot0config);
         this.getModule(3).getDriveMotor().getConfigurator().apply(slot0config);
      
+        initializeAutoBuilder();
+
     }
 
     public Command Stop(){

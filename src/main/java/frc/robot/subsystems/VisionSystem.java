@@ -87,7 +87,7 @@ public class VisionSystem extends SubsystemBase {
 
   @Override
   public void periodic(){ 
-              camFL.getEstimatedGlobalPose();
+            camFL.getEstimatedGlobalPose();
             camFR.getEstimatedGlobalPose();
             camB.getEstimatedGlobalPose();
             visionSim.update(dt.getPose());

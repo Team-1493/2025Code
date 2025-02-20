@@ -86,6 +86,8 @@ public Elevator(){
     SmartDashboard.putNumber("Elevator kP", 20);
     SmartDashboard.putNumber("Elevator kI", 0);
     SmartDashboard.putNumber("Elevator kD", 0);
+    SmartDashboard.putNumber("Elevator kS", 0);
+    SmartDashboard.putNumber("Elevator kA", 0);
     SmartDashboard.putNumber("Elevator MMacc", 3);
     SmartDashboard.putNumber("Elevator MMvel", 0.8);
     SmartDashboard.putNumber("Elevator MMjerk", 50);
@@ -204,8 +206,11 @@ public Elevator(){
   public void configure(){
     double elevatorkG = SmartDashboard.getNumber("Elevator kG", 0);
     double elevatorkP = SmartDashboard.getNumber("Elevator kP", 20);
-    double elevatorkI = SmartDashboard.getNumber("Elevator kP", 0);
+    double elevatorkI = SmartDashboard.getNumber("Elevator kI", 0);
     double elevatorkD = SmartDashboard.getNumber("Elevator kD", 0);
+    double elevatorkS = SmartDashboard.getNumber("Elevator kS", 0);
+    double elevatorkA = SmartDashboard.getNumber("Elevator kA", 0);
+
     double elevatorMMacc = SmartDashboard.getNumber("Elevator MMacc", 3);
     double elevatorMMvel = SmartDashboard.getNumber("Elevator MMvel", 0.8);
     double elevatorMMjerk = SmartDashboard.getNumber("Elevator MMjerk", 50);
@@ -236,11 +241,9 @@ public Elevator(){
     cfg.Slot0.kP=elevatorkP;
     cfg.Slot0.kI=elevatorkI;
     cfg.Slot0.kD=elevatorkD;
-    cfg.Slot0.kD=0;
-    cfg.Slot0.kS=0;
+    cfg.Slot0.kS=elevatorkS;
     cfg.Slot0.kV=0;
-    cfg.Slot0.kI=0;
-    cfg.Slot0.kA=0;
+    cfg.Slot0.kA=elevatorkA;
 
     cfg.CurrentLimits.StatorCurrentLimit=elevatorStatorCL;
     cfg.CurrentLimits.StatorCurrentLimitEnable=true;

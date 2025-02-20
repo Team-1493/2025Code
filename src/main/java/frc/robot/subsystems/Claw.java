@@ -59,13 +59,16 @@ private double voltage,current,motorPosition;
 public double encPosition,rearRollerCurrent;
 
 public Claw(){
-    SmartDashboard.putNumber("Claw kG", 0);
     SmartDashboard.putNumber("Claw MMacc", 3);
     SmartDashboard.putNumber("Claw MMvel", 0.8);
     SmartDashboard.putNumber("Claw MMjerk", 50);
+    SmartDashboard.putNumber("Claw kG", 0);
     SmartDashboard.putNumber("Claw kP", 20);
     SmartDashboard.putNumber("Claw kI", 0);
     SmartDashboard.putNumber("Claw kD", 0);
+    SmartDashboard.putNumber("Claw kS", 0);
+    SmartDashboard.putNumber("Claw kA", 0);
+
     SmartDashboard.putNumber("Claw StatorCL", 60);
     SmartDashboard.putNumber("Claw SupplyCL", 40);
     SmartDashboard.putNumber("Claw TorqueCL", 100);
@@ -80,7 +83,7 @@ public Claw(){
 
 
 
-    configureClaw();
+    configure();
 
 }
 
@@ -212,10 +215,6 @@ public Claw(){
         return runOnce( () -> {rearRollerRev();frontRollerRev();});
     }
 
-    public Command configure() {
-        return runOnce( () -> {configureClaw();});
-    }
-
 
     // Check if we have Coral
     private void checkForCoral(){
@@ -246,12 +245,14 @@ public Claw(){
 
 
     // Configure claw motor
-    public void configureClaw(){
+    public void configure(){
 
     double clawkG = SmartDashboard.getNumber("Claw kG", 0);
     double clawkP = SmartDashboard.getNumber("Claw kP", 20);
     double clawkI = SmartDashboard.getNumber("Claw kI", 0);
     double clawkD = SmartDashboard.getNumber("Claw kD", 0);
+    double clawkS = SmartDashboard.getNumber("Claw kS", 0);
+    double clawkA = SmartDashboard.getNumber("Claw kA", 0);
     double clawMMacc = SmartDashboard.getNumber("Claw MMacc", 3);
     double clawMMvel = SmartDashboard.getNumber("Claw MMvel", 0.8);
     double clawMMjerk = SmartDashboard.getNumber("Claw MMjerk", 50);
@@ -285,11 +286,9 @@ public Claw(){
     cfg.Slot0.kP = clawkP;
     cfg.Slot0.kI = clawkI;
     cfg.Slot0.kD = clawkD;
-    cfg.Slot0.kD=0;
-    cfg.Slot0.kS=0;
+    cfg.Slot0.kS=clawkS;
     cfg.Slot0.kV=0;
-    cfg.Slot0.kI=0;
-    cfg.Slot0.kA=0;
+    cfg.Slot0.kA=clawkA;
 
     cfg.CurrentLimits.StatorCurrentLimit=clawStatorCL;
     cfg.CurrentLimits.StatorCurrentLimitEnable=true;
