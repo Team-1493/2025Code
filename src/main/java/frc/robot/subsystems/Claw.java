@@ -111,6 +111,9 @@ public Claw(){
         SmartDashboard.putNumber("Claw Current", current);
         SmartDashboard.putNumber("Roller Current", rearRollerCurrent);
 
+        SmartDashboard.putBoolean("Claw LLS",atLowerLimit);
+        SmartDashboard.putBoolean("Claw ULS",atUpperLimit);
+
 
         SmartDashboard.putBoolean("Coral Sensor", hasCoral);
     }

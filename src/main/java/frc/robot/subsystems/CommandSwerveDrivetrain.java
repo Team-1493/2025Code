@@ -296,6 +296,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("Pose Y",robotpose.getY());
         SmartDashboard.putNumber("Pose Z",robotpose.getRotation().getDegrees());
 
+
     }
 
     private void startSimThread() {
@@ -471,6 +472,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("Drive kP",0.1);  // 3 for TC
         SmartDashboard.putNumber("Drive kV",0.124);  // 0 for TC
         SmartDashboard.putNumber("Drive kA",0.0);  // 0 for TC
+        SmartDashboard.putNumber("Drive kS",0.0);  // 0 for TC
+
 
         SmartDashboard.putNumber("Drive Auto kP",5); 
         SmartDashboard.putNumber("Drive Auto kD",0);         
@@ -487,6 +490,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         slot0config.kP=SmartDashboard.getNumber("Drive kP", 0);
         slot0config.kV=SmartDashboard.getNumber("Drive kV", 0);
         slot0config.kA=SmartDashboard.getNumber("Drive kA", 0);
+        slot0config.kS=SmartDashboard.getNumber("Drive kS", 0);
 
 
         this.getModule(0).getDriveMotor().getConfigurator().apply(slot0config);

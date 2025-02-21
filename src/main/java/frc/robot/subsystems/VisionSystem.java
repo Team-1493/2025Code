@@ -28,6 +28,8 @@ public class VisionSystem extends SubsystemBase {
     public static double reefOffsetY=0.75;
     public static double intakeOffsetX=0;
     public static double intakeOffsetY=.75;
+    public static double stdFactor=30;
+
 
     Transform3d camFR_RobotToCam = 
         new Transform3d(.1,.1,.22,new Rotation3d(0,0,Math.toRadians(30)));
@@ -41,7 +43,6 @@ public class VisionSystem extends SubsystemBase {
     public static Matrix<N3, N1> kSingleTagStdDevs;
     public static Matrix<N3, N1> kMultiTagStdDevs;
 
-    static public double visionStdDevFactor = 0.5;
 
     private VisionSystemSim visionSim;
 
@@ -57,7 +58,7 @@ public class VisionSystem extends SubsystemBase {
         SmartDashboard.putNumber("std multi X", .25);    
         SmartDashboard.putNumber("std multi Y", .25);    
         SmartDashboard.putNumber("std multi Rot", 2);
-        SmartDashboard.putNumber("std factor", 30);
+        SmartDashboard.putNumber("std factor", stdFactor);
 
         SmartDashboard.putNumber("ReefOffsetX", reefOffsetX);
         SmartDashboard.putNumber("ReefOffsetY", reefOffsetY);
@@ -128,6 +129,8 @@ public class VisionSystem extends SubsystemBase {
                     SmartDashboard.getNumber("std multi X", 0), 
                     SmartDashboard.getNumber("std multi Y", 0),  
                     SmartDashboard.getNumber("std multi Rot", 0));
+
+        stdFactor = SmartDashboard.getNumber("std factor", stdFactor);
 
         reefOffsetX = SmartDashboard.getNumber("ReefOffsetX", reefOffsetX);
         reefOffsetY = SmartDashboard.getNumber("ReefOffsetY", reefOffsetY);

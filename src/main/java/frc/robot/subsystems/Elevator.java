@@ -114,13 +114,19 @@ public Elevator(){
 }
 
     public void periodic(){
-        double v,i;
+        double v,i,a,c;
         v=elevatorRight.getMotorVoltage().getValueAsDouble();
         i=elevatorRight.getStatorCurrent().getValueAsDouble();
-        SmartDashboard.putNumber("Elev Pos", elevatorRight.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("Elev Volt",v);
-        SmartDashboard.putNumber("Elev Current", i);
+        a=elevatorRight.getAcceleration().getValueAsDouble();
+        
+        SmartDashboard.putNumber("Elevator Pos", elevatorRight.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Elevator Volt",v);
+        SmartDashboard.putNumber("Elevator Current", i);
+        SmartDashboard.putNumber("Elevator accel;", a);
 
+
+        SmartDashboard.putBoolean("Elevator LLS",atLowerLimit);
+        SmartDashboard.putBoolean("Elevator ULS",atUpperLimit);
         atLowerLimit=limitLower.get();
         atUpperLimit=limitUpper.get();
         // check mag limit switches

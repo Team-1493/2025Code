@@ -49,7 +49,7 @@ public class DriveReefRight extends Command {
             double reefOffsetX = -VisionSystem.reefOffsetX;
             double reefOffsetY = VisionSystem.reefOffsetY;
 
-            if(VisionSystem.hasReefTarget){
+//            if(VisionSystem.hasReefTarget){
 
             Pose2d robotPose = sd.getPose();
             double xr=robotPose.getX();
@@ -61,7 +61,7 @@ public class DriveReefRight extends Command {
             xr=xr - 4.058;
             yr=yr - 4.055;  
 
-            id=0;
+            id=13;
             if (yr>xr/2 && yr<-xr/2) id=18;
             if (xr<0 && yr<xr/2) id = 17;
             if (xr<0 && yr>-xr/2 ) id = 19;
@@ -79,7 +79,7 @@ public class DriveReefRight extends Command {
                 targetPose.getX()+reefOffsetX*Math.sin(rotTarget)+reefOffsetY*Math.cos(rotTarget),
                 targetPose.getY()-reefOffsetX*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
                 new Rotation2d(rotRobot));
-            }
+ //           }
 
 //          if(VisionSystem.hasReefTarget){
             drivePath= AutoBuilder.pathfindToPose(

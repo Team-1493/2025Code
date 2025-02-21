@@ -48,8 +48,31 @@ public class DriveReefLeft extends Command {
   public void initialize() {
     double reefOffsetX = VisionSystem.reefOffsetX;
     double reefOffsetY = VisionSystem.reefOffsetY;
-    if(VisionSystem.hasReefTarget){
-      int index=  VisionSystem.closestReefID-1;
+
+    Pose2d robotPose = sd.getPose();
+    double xr=robotPose.getX();
+    double yr=robotPose.getY();
+    int id;
+
+    // y = -1/2x  ,  y = 1/2 x  ,   x = 0
+    // coord reef center 4.508,4.055
+    xr=xr - 4.058;
+    yr=yr - 4.055;  
+
+    id=13;
+    if (yr>xr/2 && yr<-xr/2) id=18;
+    if (xr<0 && yr<xr/2) id = 17;
+    if (xr<0 && yr>-xr/2 ) id = 19;
+    if (xr>0 && yr>xr/2) id = 20;    
+    if (yr<xr/2 && yr>-xr/2) id = 21;
+    if (xr>0 && yr<-xr/2 ) id = 22;
+
+
+
+
+//    if(VisionSystem.hasReefTarget){
+//      int index=  VisionSystem.closestReefID-1;
+    int index = id-1;
       targetPose = VisionConstants.AprilTagList.get(index).pose.toPose2d();
       rotTarget = targetPose.getRotation().getRadians();
       rotRobot=rotTarget+Math.PI;
@@ -57,15 +80,15 @@ public class DriveReefLeft extends Command {
           targetPose.getX()+reefOffsetX*Math.sin(rotTarget)+reefOffsetY*Math.cos(rotTarget),
           targetPose.getY()-reefOffsetX*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
           new Rotation2d(rotRobot));
-      }
+ //     }
 
-      if(VisionSystem.hasReefTarget){
+ //     if(VisionSystem.hasReefTarget){
         drivePath= AutoBuilder.pathfindToPose(
           targetPose,
           constraints,
           0.0).andThen( 
-          new InstantCommand( ()->sd.resetHeadingController(rotRobot)));}
-          else drivePath= sd.Stop();
+          new InstantCommand( ()->sd.resetHeadingController(rotRobot)));
+   //       else drivePath= sd.Stop();
 
       drivePath.initialize();
 
