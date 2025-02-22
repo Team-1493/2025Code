@@ -56,7 +56,7 @@ public class RobotContainer {
     private final RobotJoystick stickOperator = new RobotJoystick(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    public final VisionSystem vision = new VisionSystem(drivetrain);
+    //public final VisionSystem vision = new VisionSystem(drivetrain);
 
     public IntakeCoral intakeCoral=new IntakeCoral(elevator, claw);
 
@@ -87,7 +87,7 @@ public class RobotContainer {
 
     //***& Driver Joystick Bindings ***
 
-    stickDriver.button(1).whileTrue(driveReefLeft);
+/*     stickDriver.button(1).whileTrue(driveReefLeft);
     stickDriver.button(1).onFalse(
         new InstantCommand( ()-> drivetrain.ResetHeadingController()));
 
@@ -98,17 +98,17 @@ public class RobotContainer {
     stickDriver.button(3).whileTrue(driveIntake);
     stickDriver.button(3).onFalse(
             new InstantCommand( ()-> drivetrain.ResetHeadingController()));        
-        
+  */      
 
 
         //  allow driver to switch between fast and slow mode 
         // changes stick scale factor on joystock
-        stickDriver.button(6).onTrue(
+  /*       stickDriver.button(6).onTrue(
             new InstantCommand(() ->stickDriver.setSlowScaleFactor()  )  );
     
         stickDriver.button(6).onFalse(
                 new InstantCommand(() ->stickDriver.setFastScaleFactor()  )  );
-
+*/
         
 //        stickDriver.a().whileTrue(drivetrain.applyRequest(() -> brake));
         
@@ -118,8 +118,8 @@ public class RobotContainer {
 //            drivetrain.setTargetHeading(Math.toRadians( 179.9))  )  );
 //        stickDriver.button(3).onTrue(new InstantCommand(() ->
 //            drivetrain.setTargetHeading(Math.toRadians(90))  )  );            
-        stickDriver.button(4).onTrue(new InstantCommand(() ->
-            drivetrain.setTargetHeading(Math.toRadians(0))  )  );      
+//        stickDriver.button(4).onTrue(new InstantCommand(() ->
+//            drivetrain.setTargetHeading(Math.toRadians(0))  )  );      
 
 
         // Run SysId routines when holding back/start and X/Y.
@@ -132,35 +132,35 @@ public class RobotContainer {
         */
 
         // reset the field-centric heading on left bumper press
-        stickDriver.button(5).onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyro()));
+//        stickDriver.button(5).onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyro()));
 
 
         // *** Operator Joystick Bindings ***
 
-     // **** TEST BINDINGS ***   
+     // **** TEST BINDINGS ***    
         // manual control of elevator          
-        stickOperator.button(9).whileTrue(elevator.ManualDown());
-        stickOperator.button(9).onFalse(elevator.StopElevator());
-        stickOperator.button(10).whileTrue(elevator.ManualUp());
-        stickOperator.button(10).onFalse(elevator.StopElevator());
-
+/*         stickDriver.button(9).whileTrue(elevator.ManualDown());
+        stickDriver.button(9).onFalse(elevator.StopElevator());
+        stickDriver.button(10).whileTrue(elevator.ManualUp());
+        stickDriver.button(10).onFalse(elevator.StopElevator());
+*/
 
         // elevator to preset positions
-        stickOperator.povUp().onTrue(elevator.ToPosition(elevator.positionCoral4));
-        stickOperator.povDown().onTrue(elevator.ToPosition(elevator.positionCoral2));
-        stickOperator.povRight().onTrue(elevator.ToPosition(elevator.positionIntake));
-        stickOperator.povLeft().onTrue(elevator.ToPosition(elevator.positionIntake));
+//        stickDriver.povUp().onTrue(elevator.ToPosition(elevator.positionCoral4));
+//        stickDriver.povDown().onTrue(elevator.ToPosition(elevator.positionCoral2));
+//        stickDriver.povRight().onTrue(elevator.ToPosition(elevator.positionIntake));
+//        stickDriver.povLeft().onTrue(elevator.ToPosition(elevator.positionIntake));
 
 
         // manual control of claw          
-        stickOperator.button(7).whileTrue(claw.ClawDown());
-        stickOperator.button(8).onFalse(claw.StopClaw());
-        stickOperator.button(7).whileTrue(claw.ClawUp());
-        stickOperator.button(8).onFalse(claw.StopClaw());
+         stickDriver.button(7).whileTrue(claw.ClawDown());
+        stickDriver.button(7).onFalse(claw.StopClaw());
+        stickDriver.button(8).whileTrue(claw.ClawUp());
+        stickDriver.button(8).onFalse(claw.StopClaw());
 
          // claw to preset positions
-//        stickOperator.button(1).onTrue(claw.ToPosition(claw.positionIntake));
-//        stickOperator.button(2).onTrue(claw.ToPosition(claw.positionCoral2));
+        stickDriver.button(1).onTrue(claw.ToPosition(claw.positionIntake));
+        stickDriver.button(2).onTrue(claw.ToPosition(claw.positionCoral3));
 
         // manual control of rollers          
         stickOperator.button(3).whileTrue(claw.FrontRollerFor());
@@ -168,11 +168,11 @@ public class RobotContainer {
         stickOperator.button(4).whileTrue(claw.RearRollerFor());
         stickOperator.button(4).onFalse(claw.StopRollers());
 
-        stickOperator.button(12).onTrue(new InstantCommand( () -> {configure();}));
+        stickDriver.button(14).onTrue(new InstantCommand( () -> {configure();}));
 
 
 //** COMPETITION BINDINGS
-
+/* 
         stickOperator.button(b_IntakeCoral).whileTrue(intakeCoral);
 
         stickOperator.button(b_toReef1).
@@ -198,7 +198,7 @@ public class RobotContainer {
         stickOperator.button(b_ElevatorToGround).
         onTrue(claw.ToPosition(claw.positionCoral2).
         andThen(elevator.ToPosition(elevator.positionIntake)));
-
+*/
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 

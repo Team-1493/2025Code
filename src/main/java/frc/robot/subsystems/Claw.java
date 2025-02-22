@@ -19,17 +19,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Claw extends SubsystemBase {
 
-private TalonFX clawMotor = new TalonFX(11);
-private TalonFX clawFrontRoller = new TalonFX(12);
-private TalonFX clawRearRoller = new TalonFX(13);
+private TalonFX clawMotor = new TalonFX(23);
+private TalonFX clawFrontRoller = new TalonFX(24);
+private TalonFX clawRearRoller = new TalonFX(25);
 private TalonFXConfiguration cfgRollers = new TalonFXConfiguration();
 private TalonFXConfiguration cfg = new TalonFXConfiguration();
 private CANcoderConfiguration cfgEnc = new CANcoderConfiguration();
-private CANcoder clawEncoder = new CANcoder(21);
+private CANcoder clawEncoder = new CANcoder(27);
 
 private MotionMagicTorqueCurrentFOC magicToPos= new MotionMagicTorqueCurrentFOC(0);
-private VoltageOut voltOutUp = new VoltageOut(6);
-private VoltageOut voltOutDown = new VoltageOut(-3);
+private VoltageOut voltOutUp = new VoltageOut(1);
+private VoltageOut voltOutDown = new VoltageOut(-.5);
 private VoltageOut  voltOutRearForward= new VoltageOut(4);
 private VoltageOut  voltOutRearReverse= new VoltageOut(-4);
 private VoltageOut  voltOutFrontForward= new VoltageOut(4);
@@ -40,14 +40,14 @@ private VoltageOut  voltOutFrontHold= new VoltageOut(-1);
 
 public double 
         positionAlgae1=.2,positionAlgae2 = 0.3, positionNet, 
-        positionCoral1=.5, positionCoral2=.75,
-        positionCoral3=1.0,positionCoral4=1.2,
-        positionIntake=1.1;   
+        positionCoral1=-0.3, positionCoral2=-0.2,
+        positionCoral3=-.1,positionCoral4=0.05,
+        positionIntake=0.1;   
 
 public double maxClawToLower=positionCoral2-.05;
 
-private DigitalInput limitLower = new DigitalInput(6);
-private DigitalInput limitUpper = new DigitalInput(5);
+private DigitalInput limitLower = new DigitalInput(4);
+private DigitalInput limitUpper = new DigitalInput(1);
 private DigitalInput coralSensor = new DigitalInput(7);
 
 private boolean atLowerLimit=false,atUpperLimit=false;
@@ -59,15 +59,15 @@ private double voltage,current,motorPosition;
 public double encPosition,rearRollerCurrent;
 
 public Claw(){
-    SmartDashboard.putNumber("Claw MMacc", 3);
-    SmartDashboard.putNumber("Claw MMvel", 0.8);
-    SmartDashboard.putNumber("Claw MMjerk", 50);
+    SmartDashboard.putNumber("Claw MMacc", 1);
+    SmartDashboard.putNumber("Claw MMvel", 0.3);
+    SmartDashboard.putNumber("Claw MMjerk", 10);
     SmartDashboard.putNumber("Claw kG", 0);
-    SmartDashboard.putNumber("Claw kP", 20);
+    SmartDashboard.putNumber("Claw kP", 1);
     SmartDashboard.putNumber("Claw kI", 0);
     SmartDashboard.putNumber("Claw kD", 0);
     SmartDashboard.putNumber("Claw kS", 0);
-    SmartDashboard.putNumber("Claw kA", 0);
+    SmartDashboard.putNumber("Claw kA", 1);
 
     SmartDashboard.putNumber("Claw StatorCL", 60);
     SmartDashboard.putNumber("Claw SupplyCL", 40);
@@ -94,8 +94,8 @@ public Claw(){
         encPosition=clawEncoder.getAbsolutePosition().getValueAsDouble();
         rearRollerCurrent=clawFrontRoller.getStatorCurrent().getValueAsDouble();
 
-        atLowerLimit=limitLower.get();
-        atUpperLimit=limitUpper.get();
+        atLowerLimit=!limitLower.get()|| encPosition<-.3;
+        atUpperLimit=!limitUpper.get();
 
         // check mag limit switch
         if (atUpperLimit && voltage>0 ) stopClaw();
@@ -140,7 +140,8 @@ public Claw(){
 
 
     public Command ToPosition(double pos) {
-        return runOnce( () -> {toPosition(pos);});
+        return runOnce( () -> {toPosition(pos);
+        SmartDashboard.putNumber("toPos", pos);});
     }
 
     public void toPosition(double pos){
@@ -273,17 +274,17 @@ public Claw(){
     positionIntake = SmartDashboard.getNumber("Claw Pos Intake", positionIntake);
 
 
-    cfg.MotorOutput.Inverted=InvertedValue.CounterClockwise_Positive;
+    cfg.MotorOutput.Inverted=InvertedValue.Clockwise_Positive;
     cfg.MotorOutput.NeutralMode=NeutralModeValue.Brake;
 
     cfg.Feedback.FeedbackSensorSource=FeedbackSensorSourceValue.RemoteCANcoder;
-    cfg.Feedback.FeedbackRemoteSensorID=21;
+    cfg.Feedback.FeedbackRemoteSensorID=27;
     cfg.Feedback.FeedbackRotorOffset=0;
 
     cfg.MotionMagic.MotionMagicCruiseVelocity = clawMMvel;
     cfg.MotionMagic.MotionMagicAcceleration = clawMMacc;
     cfg.MotionMagic.MotionMagicJerk=clawMMjerk;   
-
+        SmartDashboard.putNumber("clawpk", clawkP);
     cfg.Slot0.GravityType=GravityTypeValue.Arm_Cosine;
     cfg.Slot0.kG = clawkG;
     cfg.Slot0.kP = clawkP;
@@ -292,6 +293,10 @@ public Claw(){
     cfg.Slot0.kS=clawkS;
     cfg.Slot0.kV=0;
     cfg.Slot0.kA=clawkA;
+    cfg.TorqueCurrent.PeakForwardTorqueCurrent=100;
+    cfg.TorqueCurrent.PeakReverseTorqueCurrent=-100;
+    
+
 
     cfg.CurrentLimits.StatorCurrentLimit=clawStatorCL;
     cfg.CurrentLimits.StatorCurrentLimitEnable=true;
@@ -314,9 +319,12 @@ public Claw(){
     clawRearRoller.getConfigurator().apply(cfgRollers);
 
 
+    // top possible position: 0.00708
+    // lowest possible position: -0.
+
     // Cponfigure encoder
-    cfgEnc.MagnetSensor.AbsoluteSensorDiscontinuityPoint=1;
-    cfgEnc.MagnetSensor.MagnetOffset=0;
+    cfgEnc.MagnetSensor.AbsoluteSensorDiscontinuityPoint=0.3;
+    cfgEnc.MagnetSensor.MagnetOffset=0.11084;
     cfgEnc.MagnetSensor.SensorDirection=SensorDirectionValue.Clockwise_Positive;
     
     clawEncoder.getConfigurator().apply(cfgEnc);

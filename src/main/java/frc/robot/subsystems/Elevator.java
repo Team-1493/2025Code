@@ -27,10 +27,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase{
-    final TalonFX elevatorRight = new TalonFX(9); 
-    final Follower elevatorLeft = new Follower(10,true );
-    final DigitalInput limitLower = new DigitalInput(8);
-    final DigitalInput limitUpper = new DigitalInput(9);
+    final TalonFX elevatorRight = new TalonFX(21); 
+    final Follower elevatorLeft = new Follower(22,true );
+    final DigitalInput limitLower = new DigitalInput(0);
+    final DigitalInput limitUpper = new DigitalInput(2);
 
     private TalonFXConfiguration cfg = new TalonFXConfiguration();
     private MotionMagicTorqueCurrentFOC magicToPos= new MotionMagicTorqueCurrentFOC(0);
@@ -83,7 +83,7 @@ public Elevator(){
 
 
     SmartDashboard.putNumber("Elevator kG", 0);
-    SmartDashboard.putNumber("Elevator kP", 20);
+    SmartDashboard.putNumber("Elevator kP", 0);
     SmartDashboard.putNumber("Elevator kI", 0);
     SmartDashboard.putNumber("Elevator kD", 0);
     SmartDashboard.putNumber("Elevator kS", 0);
@@ -114,6 +114,10 @@ public Elevator(){
 }
 
     public void periodic(){
+
+        atLowerLimit=!limitLower.get();
+        atUpperLimit=!limitUpper.get();
+
         double v,i,a,c;
         v=elevatorRight.getMotorVoltage().getValueAsDouble();
         i=elevatorRight.getStatorCurrent().getValueAsDouble();
@@ -127,8 +131,6 @@ public Elevator(){
 
         SmartDashboard.putBoolean("Elevator LLS",atLowerLimit);
         SmartDashboard.putBoolean("Elevator ULS",atUpperLimit);
-        atLowerLimit=limitLower.get();
-        atUpperLimit=limitUpper.get();
         // check mag limit switches
         if (atUpperLimit && v>0 ) stopElevator();
         if (atLowerLimit && v<0 ) stopElevator();
@@ -205,7 +207,7 @@ public Elevator(){
 
   public void updateTelemetry() {
     // Update elevator visualization with position
-    m_elevatorMech2d.setLength(elevatorRight.getPosition().getValueAsDouble());
+    m_elevatorMech2d.setLength(100*elevatorRight.getPosition().getValueAsDouble());
   }
 
   
