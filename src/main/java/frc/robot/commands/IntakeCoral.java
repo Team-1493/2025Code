@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
@@ -26,15 +25,15 @@ public class IntakeCoral extends Command {
 
   @Override
   public void initialize() {
-    elevator.toPosition(elevator.positionIntake);
+//    elevator.toPosition(elevator.positionIntake);
     claw.toPosition(claw.positionIntake);
-    claw.rearRollerFor();
+    claw.rearRollerRev();
 
   }
 
   @Override
   public void execute() {
-    if (claw.hasCoral) claw.stopRollerRear(); 
+//    if (claw.hasCoral) claw.stopRollerRear(); 
   }
 
   @Override

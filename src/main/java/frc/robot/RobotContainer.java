@@ -152,21 +152,22 @@ public class RobotContainer {
 //        stickDriver.povLeft().onTrue(elevator.ToPosition(elevator.positionIntake));
 
 
-        // manual control of claw          
-         stickDriver.button(7).whileTrue(claw.ClawDown());
-        stickDriver.button(7).onFalse(claw.StopClaw());
-        stickDriver.button(8).whileTrue(claw.ClawUp());
-        stickDriver.button(8).onFalse(claw.StopClaw());
 
          // claw to preset positions
         stickDriver.button(1).onTrue(claw.ToPosition(claw.positionIntake));
-        stickDriver.button(2).onTrue(claw.ToPosition(claw.positionCoral3));
+        stickDriver.button(2).onTrue(claw.ToPosition(claw.positionCoral1));
+        stickDriver.button(3).onTrue(claw.ToPosition(claw.positionCoral3));
+        stickDriver.button(4).onTrue(claw.ToPosition(claw.positionCoral4));
 
         // manual control of rollers          
-        stickOperator.button(3).whileTrue(claw.FrontRollerFor());
-        stickOperator.button(3).onFalse(claw.StopRollers());
-        stickOperator.button(4).whileTrue(claw.RearRollerFor());
-        stickOperator.button(4).onFalse(claw.StopRollers());
+        stickDriver.button(7).whileTrue(elevator.ManualDown());
+        stickDriver.button(7).onFalse(elevator.StopElevator());
+        stickDriver.button(8).whileTrue(elevator.ManualUp());
+        stickDriver.button(8).onFalse(elevator.StopElevator());
+
+
+        stickDriver.povUp().onTrue(intakeCoral);
+        stickDriver.povDown().onTrue(actions.spitCoral);
 
         stickDriver.button(14).onTrue(new InstantCommand( () -> {configure();}));
 

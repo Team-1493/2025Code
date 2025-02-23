@@ -30,19 +30,19 @@ public class Elevator extends SubsystemBase{
     final TalonFX elevatorRight = new TalonFX(21); 
     final Follower elevatorLeft = new Follower(22,true );
     final DigitalInput limitLower = new DigitalInput(0);
-    final DigitalInput limitUpper = new DigitalInput(2);
+    final DigitalInput limitUpper = new DigitalInput(3);
 
     private TalonFXConfiguration cfg = new TalonFXConfiguration();
     private MotionMagicTorqueCurrentFOC magicToPos= new MotionMagicTorqueCurrentFOC(0);
-    private VoltageOut voltOutUp = new VoltageOut(6);
-    private VoltageOut voltOutDown = new VoltageOut(-3);
+    private VoltageOut voltOutUp = new VoltageOut(2.5);
+    private VoltageOut voltOutDown = new VoltageOut(-1);
     
     public double 
             positionAlgae1=.2,positionAlgae2 = 0.3, positionNet, 
             positionCoral1=.5, positionCoral2=.75,
             positionCoral3=1.0,positionCoral4=1.2,
             positionIntake=1.1;
-    private double currentLimit=30;
+    private double currentLimit=100;
     boolean zeroed=false,atLowerLimit=false,atUpperLimit=false;
 
 // Simulation stuff
@@ -134,7 +134,7 @@ public Elevator(){
         // check mag limit switches
         if (atUpperLimit && v>0 ) stopElevator();
         if (atLowerLimit && v<0 ) stopElevator();
-        if (i>currentLimit) stopElevator();
+//        if (i>currentLimit) stopElevator();
     
         updateTelemetry();
     }
@@ -157,6 +157,31 @@ public Elevator(){
     public void manualDown(){
         if (!atLowerLimit) elevatorRight.setControl(voltOutDown);
         else stopElevator();
+    }
+
+
+    public Command RampUp() {
+        return runOnce( () -> {rampUp();});
+    }
+
+    public void rampUp(){
+        double v = elevatorRight.getMotorVoltage().getValueAsDouble();
+        v=v+.1;        
+        if (!atUpperLimit) elevatorRight.setControl(new VoltageOut(v));
+        else stopElevator();
+        SmartDashboard.putNumber("Elevator PeakVolt", v);
+    }
+
+    public Command RampDown() {
+        return runOnce( () -> {rampDown();});
+    }
+    
+    public void rampDown(){
+        double v = elevatorRight.getMotorVoltage().getValueAsDouble();
+        v=v-.1;
+        if (!atLowerLimit) elevatorRight.setControl(new VoltageOut(v));
+        else stopElevator();
+        SmartDashboard.putNumber("Elevator PeakVolt", v);
     }
 
 
@@ -212,8 +237,8 @@ public Elevator(){
 
   
   public void configure(){
-    double elevatorkG = SmartDashboard.getNumber("Elevator kG", 0);
-    double elevatorkP = SmartDashboard.getNumber("Elevator kP", 20);
+    double elevatorkG = SmartDashboard.getNumber("Elevator kG", 0.56);
+    double elevatorkP = SmartDashboard.getNumber("Elevator kP", 0);
     double elevatorkI = SmartDashboard.getNumber("Elevator kI", 0);
     double elevatorkD = SmartDashboard.getNumber("Elevator kD", 0);
     double elevatorkS = SmartDashboard.getNumber("Elevator kS", 0);

@@ -37,6 +37,6 @@ public class ClawToMidWait extends Command {
 
   @Override
   public boolean isFinished() {
-    return claw.encPosition<claw.maxClawToLower;
+    return claw.encPosition<claw.positionIntake-.1;
   }
 }
