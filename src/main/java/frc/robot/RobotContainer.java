@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveIntake;
 import frc.robot.commands.DriveReefLeft;
 import frc.robot.commands.DriveReefRight;
+import frc.robot.commands.ElevatorToReef;
+import frc.robot.commands.IntakeAlgae1;
 import frc.robot.commands.IntakeCoral;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ActionCommands;
@@ -59,6 +61,7 @@ public class RobotContainer {
     //public final VisionSystem vision = new VisionSystem(drivetrain);
 
     public IntakeCoral intakeCoral=new IntakeCoral(elevator, claw);
+    public ElevatorToReef elevatorToReef;
 
     //The auto generator was originally defined just as public, but I changed that, may need to be changed back?
     private final AutoGenerator autoGenerator = new AutoGenerator(elevator, claw);
@@ -154,20 +157,40 @@ public class RobotContainer {
 
 
          // claw to preset positions
-        stickDriver.button(1).onTrue(claw.ToPosition(claw.positionIntake));
+         stickDriver.button(1).whileTrue(
+            new ElevatorToReef(elevator,claw, elevator.positionCoral1));
+
+
+//         stickDriver.button(1).onTrue(claw.ToPosition(claw.positionIntake));
         stickDriver.button(2).onTrue(claw.ToPosition(claw.positionCoral1));
         stickDriver.button(3).onTrue(claw.ToPosition(claw.positionCoral3));
         stickDriver.button(4).onTrue(claw.ToPosition(claw.positionCoral4));
 
         // manual control of rollers          
-        stickDriver.button(7).whileTrue(elevator.ManualDown());
-        stickDriver.button(7).onFalse(elevator.StopElevator());
-        stickDriver.button(8).whileTrue(elevator.ManualUp());
-        stickDriver.button(8).onFalse(elevator.StopElevator());
+//       stickDriver.button(7).whileTrue(elevator.ManualDown());
+//        stickDriver.button(7).onFalse(elevator.StopElevator());
+//        stickDriver.button(8).whileTrue(elevator.ManualUp());
+//        stickDriver.button(8).onFalse(elevator.StopElevator());
 
 
-        stickDriver.povUp().onTrue(intakeCoral);
+        stickDriver.button(7).whileTrue(new IntakeCoral(elevator,claw));
+        stickDriver.button(7).onFalse(claw.StopRollers());
+        stickDriver.button(8).whileTrue
+                (new IntakeAlgae1(claw));
+
+        stickDriver.button(6).onTrue(
+                (new ElevatorToReef(elevator,claw, elevator.positionCoral1)).andThen(
+                claw.SpitAlgae()));
+
+        stickDriver.button(6).onFalse(claw.StopRollers());
+
         stickDriver.povDown().onTrue(actions.spitCoral);
+
+        stickDriver.povLeft().onTrue(elevator.ToPosition(elevator.positionCoral1));
+        stickDriver.povRight().onTrue(elevator.ToPosition(elevator.positionCoral2));
+        stickDriver.button(9).onTrue(elevator.ToPosition(elevator.positionCoral3));
+        stickDriver.button(10).onTrue(elevator.ToPosition(elevator.positionCoral4));
+
 
         stickDriver.button(14).onTrue(new InstantCommand( () -> {configure();}));
 
@@ -208,8 +231,8 @@ public class RobotContainer {
     }
 
     private void configure(){
-        claw.configure();
-//        elevator.configure();
+//        claw.configure();
+          elevator.configure();
 //        vision.configure();
 //        drivetrain.configure();
         }

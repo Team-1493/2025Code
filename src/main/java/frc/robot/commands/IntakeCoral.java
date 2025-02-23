@@ -13,6 +13,7 @@ public class IntakeCoral extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Elevator elevator;
   private final Claw claw;
+  boolean elevFlag=false;
 
   /**
    * @param subsystem The subsystem used by this command.
@@ -20,25 +21,38 @@ public class IntakeCoral extends Command {
   public IntakeCoral(Elevator m_elevator,Claw m_claw) {
     claw=m_claw;
     elevator=m_elevator;
+    elevFlag=false;
     addRequirements(claw,elevator);
   }
 
   @Override
   public void initialize() {
-//    elevator.toPosition(elevator.positionIntake);
-    claw.toPosition(claw.positionIntake);
+    elevFlag=false;
+    if(elevator.elevatorPos>0.15 && claw.encPosition>.20) claw.toPosition(.20);
     claw.rearRollerRev();
+
+
+
+    //claw.toPosition(claw.positionIntake);
+    
 
   }
 
   @Override
   public void execute() {
-//    if (claw.hasCoral) claw.stopRollerRear(); 
+    if (claw.encPosition<0.215 && !elevFlag) {
+      elevator.toPosition(elevator.positionIntake);
+      elevFlag=true;}   
+    if (elevator.elevatorPos<0.15)claw.toPosition(claw.positionIntake); 
+
+
+
   }
 
   @Override
   public void end(boolean interrupted) {
     claw.stopRollerRear();
+    claw.toPosition(claw.positionCoral1);
   }
 
   @Override

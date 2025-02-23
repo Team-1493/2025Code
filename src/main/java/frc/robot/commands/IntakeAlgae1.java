@@ -12,23 +12,21 @@ import edu.wpi.first.wpilibj2.command.Command;
 /** An example command that uses an example subsystem. */
 public class IntakeAlgae1 extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Elevator elevator;
   private final Claw claw;
+  private Elevator elevator;
 
   /**
    * @param subsystem The subsystem used by this command.
    */
-  public IntakeAlgae1(Elevator m_elevator,Claw m_claw) {
+  public IntakeAlgae1(Claw m_claw) {
     claw=m_claw;
-    elevator=m_elevator;
-    addRequirements(claw,elevator);
+    addRequirements(claw);
   }
 
   @Override
   public void initialize() {
-    elevator.toPosition(elevator.positionAlgae1);
     claw.toPosition(claw.positionAlgae1);
-    claw.frontRollerRev();
+    claw.rollersRun(-1, 1);
 
   }
 
@@ -39,8 +37,8 @@ public class IntakeAlgae1 extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    if(interrupted) claw.frontRollerStop(); 
-    else claw.frontRollerHoldAlgae();
+    if(interrupted) claw.stopRollers(); 
+    else claw.holdAlgae();
   }
 
   @Override

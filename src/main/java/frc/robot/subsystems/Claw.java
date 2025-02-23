@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.time.Period;
+
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
@@ -35,17 +37,21 @@ private PositionVoltage positionVolt = new PositionVoltage(0);
 private VoltageOut voltOutUp = new VoltageOut(1);
 private VoltageOut voltOutDown = new VoltageOut(-.5);
 private VoltageOut  voltOutRearForward= new VoltageOut(4);
-private VoltageOut  voltOutRearReverse= new VoltageOut(-4);
+private VoltageOut  voltOutRearReverse= new VoltageOut(-3);
 private VoltageOut  voltOutFrontForward= new VoltageOut(4);
 private VoltageOut  voltOutFrontReverse= new VoltageOut(-4);
-private VoltageOut  voltOutFrontHold= new VoltageOut(-1);
+private VoltageOut  voltOutFrontHold= new VoltageOut(-.3);
+private VoltageOut  voltOutRearHold= new VoltageOut(.3);
+private VoltageOut  voltOutFrontSpitAlgae= new VoltageOut(4);
+private VoltageOut  voltOutRearSpitAlgae= new VoltageOut(-4);
+
 
     
 
 public double 
-        positionAlgae1=.2,positionAlgae2 = 0.3, positionNet, 
-        positionCoral1=-.05, positionCoral2=0,
-        positionCoral3=.1,positionCoral4=.2,
+        positionAlgae1=0,positionAlgae2 = 0, positionNet, 
+        positionCoral1=.18, positionCoral2=.18,
+        positionCoral3=.18,positionCoral4=.18,
         positionIntake=0.365;   
 
 
@@ -62,8 +68,8 @@ private double voltage,current;
 public double encPosition,rearRollerCurrent;
 
 public Claw(){
-    SmartDashboard.putNumber("Claw MMacc", 1);
-    SmartDashboard.putNumber("Claw MMvel", 0.3);
+    SmartDashboard.putNumber("Claw MMacc", 1.5);
+    SmartDashboard.putNumber("Claw MMvel", .6);
     SmartDashboard.putNumber("Claw MMjerk", 30);
 
     SmartDashboard.putNumber("Claw kG", .305);
@@ -114,13 +120,15 @@ public Claw(){
 
         SmartDashboard.putNumber("Claw Voltqqq",voltage);
         SmartDashboard.putNumber("Claw Current", current);
-        SmartDashboard.putNumber("Roller Current", rearRollerCurrent);
+        SmartDashboard.putNumber("Roller Current", clawRearRoller.getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("Roller Vel", clawRearRoller.getVelocity().getValueAsDouble());
 
         SmartDashboard.putBoolean("Claw LLS",atLowerLimit);
         SmartDashboard.putBoolean("Claw ULS",atUpperLimit);
 
 
         SmartDashboard.putBoolean("Coral Sensor", hasCoral);
+        SmartDashboard.putBoolean("Algae Sensor", hasAlgae);
     }
 
 
@@ -203,14 +211,36 @@ public Claw(){
         clawFrontRoller.setControl(voltOutFrontReverse);
     }
 
-    public void frontRollerHoldAlgae(){
+    public void holdAlgae(){
         clawFrontRoller.setControl(voltOutFrontHold);
+        clawRearRoller.setControl(voltOutRearHold);
+    }
+
+
+    public Command SpitAlgae() {
+        return runOnce( () -> {spitAlgae();});
+    }
+
+    public void spitAlgae(){
+        clawFrontRoller.setControl(voltOutFrontSpitAlgae);
+        clawRearRoller.setControl(voltOutRearSpitAlgae);
+        hasAlgae=false;
+    }
+
+    public void rollersRun(double front,double rear){
+        clawFrontRoller.setControl(new VoltageOut(front));
+        clawRearRoller.setControl(new VoltageOut(rear));
     }
 
     public void frontRollerStop(){
         clawFrontRoller.stopMotor();
     }
     
+    public void stopRollers(){
+        clawFrontRoller.stopMotor();
+        clawRearRoller.stopMotor();
+    }
+
 
     public Command StopRollers() {
         return runOnce( () -> {
@@ -236,8 +266,8 @@ public Claw(){
 
     private void checkForAlgae(){
 
-        if( (Math.abs(clawFrontRoller.getStatorCurrent().getValueAsDouble())>1)
-        && Math.abs(clawFrontRoller.getVelocity().getValueAsDouble())<0.01){
+        if( (Math.abs(clawRearRoller.getStatorCurrent().getValueAsDouble())>1)
+        && Math.abs(clawRearRoller.getVelocity().getValueAsDouble())<0.1){
             algaeCounter ++;
             if (algaeCounter>3) hasAlgae=true;
             }

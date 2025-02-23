@@ -10,15 +10,16 @@ import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class IntakeAlgae2 extends Command {
+public class SpitAlgae extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Elevator elevator;
   private final Claw claw;
+  private Elevator elevator;
+  boolean elevatorFlag=false;
 
   /**
    * @param subsystem The subsystem used by this command.
    */
-  public IntakeAlgae2(Elevator m_elevator,Claw m_claw) {
+  public SpitAlgae(Claw m_claw, Elevator m_elevator) {
     claw=m_claw;
     elevator=m_elevator;
     addRequirements(claw,elevator);
@@ -26,20 +27,28 @@ public class IntakeAlgae2 extends Command {
 
   @Override
   public void initialize() {
-    elevator.toPosition(elevator.positionAlgae2);
-    claw.toPosition(claw.positionAlgae2);
-    claw.frontRollerRev();
+    claw.toPosition(claw.positionNet);
+    
 
   }
 
   @Override
   public void execute() {
+    if(!elevatorFlag && claw.encPosition<.215){
+        elevator.toPosition(elevator.positionNet);
+        elevatorFlag=true;
+    }
+    if (Math.abs(elevator.elevatorPos-elevator.positionNet)<.03){
+        claw.spitAlgae();
+    }
+
+
      
   }
 
   @Override
   public void end(boolean interrupted) {
-    if(interrupted) claw.frontRollerStop(); 
+    if(interrupted) claw.stopRollers(); 
     else claw.holdAlgae();
   }
 

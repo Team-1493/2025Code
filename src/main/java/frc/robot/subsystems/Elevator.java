@@ -5,6 +5,8 @@ import org.w3c.dom.ElementTraversal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
@@ -16,6 +18,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
@@ -25,76 +28,51 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 
 public class Elevator extends SubsystemBase{
     final TalonFX elevatorRight = new TalonFX(21); 
-    final Follower elevatorLeft = new Follower(22,true );
+    final TalonFX elevatorFollower = new TalonFX(22);
     final DigitalInput limitLower = new DigitalInput(0);
     final DigitalInput limitUpper = new DigitalInput(3);
 
     private TalonFXConfiguration cfg = new TalonFXConfiguration();
-    private MotionMagicTorqueCurrentFOC magicToPos= new MotionMagicTorqueCurrentFOC(0);
-    private VoltageOut voltOutUp = new VoltageOut(2.5);
-    private VoltageOut voltOutDown = new VoltageOut(-1);
+    private MotionMagicVoltage  magicToPos= new MotionMagicVoltage(0);
+    private VoltageOut voltOutUp = new VoltageOut(.75);
+    private VoltageOut voltOutDown = new VoltageOut(-.20);
     
     public double 
-            positionAlgae1=.2,positionAlgae2 = 0.3, positionNet, 
-            positionCoral1=.5, positionCoral2=.75,
-            positionCoral3=1.0,positionCoral4=1.2,
-            positionIntake=1.1;
+            positionAlgae1=.2,positionAlgae2 = 0.3, positionNet=1, 
+            positionCoral1=25, positionCoral2=12,
+            positionCoral3=18,positionCoral4=25,
+            positionIntake=.03;
     private double currentLimit=100;
+    public double elevatorPos=0;
     boolean zeroed=false,atLowerLimit=false,atUpperLimit=false;
 
-// Simulation stuff
- // Simulation classes help us simulate what's going on, including gravity.
- public static final double kElevatorGearing = 9.0;
- public static final double kElevatorDrumRadius = Units.inchesToMeters(2.0);
- public static final double kCarriageMass = 10; // kg
- public static final double kMinElevatorHeightMeters = 0.0;
- public static final double kMaxElevatorHeightMeters = 1.25;
-private final DCMotor m_elevatorGearbox = DCMotor.getFalcon500Foc(2);
-
- private final ElevatorSim m_elevatorSim =
- new ElevatorSim(
-     m_elevatorGearbox,
-     kElevatorGearing,
-     kCarriageMass,
-     kElevatorDrumRadius,
-     kMinElevatorHeightMeters,
-     kMaxElevatorHeightMeters,
-     true,
-     0,
-     0.01,
-     0.0);
      
 private final TalonFXSimState elevatorRightSim = elevatorRight.getSimState();
-
-// Create a Mechanism2d visualization of the elevator
-private final Mechanism2d m_mech2d = new Mechanism2d(20, 50);
-private final MechanismRoot2d m_mech2dRoot = m_mech2d.getRoot("Elevator Root", 10, 0);
-private final MechanismLigament2d m_elevatorMech2d =
- m_mech2dRoot.append(
-     new MechanismLigament2d("Elevator", m_elevatorSim.getPositionMeters(), 90));
 
 
 
 
 public Elevator(){
 
+    elevatorFollower.setControl(new Follower(21,true));
 
-    SmartDashboard.putNumber("Elevator kG", 0);
-    SmartDashboard.putNumber("Elevator kP", 0);
+    SmartDashboard.putNumber("Elevator kG", 0.465);
+    SmartDashboard.putNumber("Elevator kP", 2);
     SmartDashboard.putNumber("Elevator kI", 0);
     SmartDashboard.putNumber("Elevator kD", 0);
     SmartDashboard.putNumber("Elevator kS", 0);
     SmartDashboard.putNumber("Elevator kA", 0);
-    SmartDashboard.putNumber("Elevator MMacc", 3);
-    SmartDashboard.putNumber("Elevator MMvel", 0.8);
-    SmartDashboard.putNumber("Elevator MMjerk", 50);
+    SmartDashboard.putNumber("Elevator MMacc", 70);
+    SmartDashboard.putNumber("Elevator MMvel", 50);
+    SmartDashboard.putNumber("Elevator MMjerk", 160);
     SmartDashboard.putNumber("Elevator StatorCL", 60);
     SmartDashboard.putNumber("Elevator SupplyCL", 40);
     SmartDashboard.putNumber("Elevator TorqueCL", 100);
-
+    System.out.println("************************************************"+positionCoral1);
     SmartDashboard.putNumber("Elevator positionAlgae1", positionAlgae1);
     SmartDashboard.putNumber("Elevator positionAlgae2", positionAlgae2);
     SmartDashboard.putNumber("Elevator positionNet", positionNet);
@@ -104,29 +82,28 @@ public Elevator(){
     SmartDashboard.putNumber("Elevator positionCoral3", positionCoral3);
     SmartDashboard.putNumber("Elevator positionCoral4", positionCoral4);
 
-    SmartDashboard.putData("Elevator Sim", m_mech2d);
-
+    
     configure();
     stopElevator();
-    //  zeroElevator();
   
 
 }
 
     public void periodic(){
-
+        if (!Robot.enabled) zeroed=false;
+        if(!zeroed)zeroElevator();
         atLowerLimit=!limitLower.get();
         atUpperLimit=!limitUpper.get();
 
-        double v,i,a,c;
+        double v,i,c;
         v=elevatorRight.getMotorVoltage().getValueAsDouble();
         i=elevatorRight.getStatorCurrent().getValueAsDouble();
-        a=elevatorRight.getAcceleration().getValueAsDouble();
+        double vel=elevatorRight.getVelocity().getValueAsDouble();
+        elevatorPos=elevatorRight.getPosition().getValueAsDouble();
         
-        SmartDashboard.putNumber("Elevator Pos", elevatorRight.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("Elevator Volt",v);
+        SmartDashboard.putNumber("Elevator Pos", elevatorPos);
+        SmartDashboard.putNumber("Elevator Volt",vel);
         SmartDashboard.putNumber("Elevator Current", i);
-        SmartDashboard.putNumber("Elevator accel;", a);
 
 
         SmartDashboard.putBoolean("Elevator LLS",atLowerLimit);
@@ -135,8 +112,10 @@ public Elevator(){
         if (atUpperLimit && v>0 ) stopElevator();
         if (atLowerLimit && v<0 ) stopElevator();
 //        if (i>currentLimit) stopElevator();
-    
-        updateTelemetry();
+        
+        SmartDashboard.putNumber("Elevator set", elevatorRight.getClosedLoopReference().getValueAsDouble());
+        SmartDashboard.putNumber("Elevator CLE",elevatorRight.getClosedLoopError().getValueAsDouble()); 
+        SmartDashboard.putNumber("Elevator MMrun",elevatorRight.getMotionMagicIsRunning().getValueAsDouble());
     }
 
 
@@ -206,8 +185,17 @@ public Elevator(){
 
 
     public void zeroElevator(){
-        while(!atLowerLimit){
-            elevatorRight.setControl(voltOutDown);
+        double p;
+        if(!limitLower.get()){
+            while(!limitLower.get()){
+                manualUp();
+            }
+            stopElevator();
+        }
+
+        manualDown();
+        Timer.delay(.02);
+        while(elevatorRight.getVelocity().getValueAsDouble()<-0.001){
         }
         stopElevator();
         zeroed=true;
@@ -215,25 +203,7 @@ public Elevator(){
     }
 
 
- public void simulationPeriodic() {
-    // In this method, we update our simulation of what our elevator is doing
-    // First, we set our "inputs" (voltages)
-    m_elevatorSim.setInput(elevatorRightSim.getMotorVoltage() * RobotController.getBatteryVoltage());
 
-    // Next, we update it. The standard loop time is 20ms.
-    m_elevatorSim.update(0.020);
-
-    // Finally, we set our simulated encoder's readings and simulated battery voltage
-    elevatorRightSim.setRawRotorPosition(m_elevatorSim.getPositionMeters());
-    // SimBattery estimates loaded battery voltages
-    RoboRioSim.setVInVoltage(
-        BatterySim.calculateDefaultBatteryLoadedVoltage(m_elevatorSim.getCurrentDrawAmps()));
-  }
-
-  public void updateTelemetry() {
-    // Update elevator visualization with position
-    m_elevatorMech2d.setLength(100*elevatorRight.getPosition().getValueAsDouble());
-  }
 
   
   public void configure(){
@@ -262,6 +232,7 @@ public Elevator(){
 
     // Apply motor configurations
 
+    
     cfg.MotorOutput.Inverted=InvertedValue.CounterClockwise_Positive;
     cfg.MotorOutput.NeutralMode=NeutralModeValue.Brake;
     
@@ -275,15 +246,13 @@ public Elevator(){
     cfg.Slot0.kI=elevatorkI;
     cfg.Slot0.kD=elevatorkD;
     cfg.Slot0.kS=elevatorkS;
-    cfg.Slot0.kV=0;
+    cfg.Slot0.kV=.4;
     cfg.Slot0.kA=elevatorkA;
 
     cfg.CurrentLimits.StatorCurrentLimit=elevatorStatorCL;
     cfg.CurrentLimits.StatorCurrentLimitEnable=true;
     cfg.CurrentLimits.SupplyCurrentLimit=elevatorSupplyCL;
     cfg.CurrentLimits.SupplyCurrentLimitEnable=true;
-    cfg.TorqueCurrent.PeakForwardTorqueCurrent=elevatorTorqueCL;
-    cfg.TorqueCurrent.PeakReverseTorqueCurrent=-elevatorTorqueCL;
 
 
     elevatorRight.getConfigurator().apply(cfg);
