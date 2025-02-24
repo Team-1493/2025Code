@@ -31,8 +31,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
 public class Elevator extends SubsystemBase{
-    final TalonFX elevatorRight = new TalonFX(21); 
-    final TalonFX elevatorFollower = new TalonFX(22);
+    final TalonFX elevatorRight = new TalonFX(22); 
+    final TalonFX elevatorFollower = new TalonFX(21);
     final DigitalInput limitLower = new DigitalInput(0);
     final DigitalInput limitUpper = new DigitalInput(3);
 
@@ -42,9 +42,9 @@ public class Elevator extends SubsystemBase{
     private VoltageOut voltOutDown = new VoltageOut(-.20);
     
     public double 
-            positionAlgae1=.2,positionAlgae2 = 0.3, positionNet=1, 
-            positionCoral1=25, positionCoral2=12,
-            positionCoral3=18,positionCoral4=25,
+            positionAlgae1=10,positionAlgae2 = 15, positionNet=1, 
+            positionCoral1=5, positionCoral2=12,
+            positionCoral3=18,positionCoral4=26,
             positionIntake=.03;
     private double currentLimit=100;
     public double elevatorPos=0;
@@ -58,7 +58,7 @@ private final TalonFXSimState elevatorRightSim = elevatorRight.getSimState();
 
 public Elevator(){
 
-    elevatorFollower.setControl(new Follower(21,true));
+    elevatorFollower.setControl(new Follower(22,true));
 
     SmartDashboard.putNumber("Elevator kG", 0.465);
     SmartDashboard.putNumber("Elevator kP", 2);
@@ -233,7 +233,7 @@ public Elevator(){
     // Apply motor configurations
 
     
-    cfg.MotorOutput.Inverted=InvertedValue.CounterClockwise_Positive;
+    cfg.MotorOutput.Inverted=InvertedValue.Clockwise_Positive;
     cfg.MotorOutput.NeutralMode=NeutralModeValue.Brake;
     
     cfg.MotionMagic.MotionMagicCruiseVelocity=elevatorMMvel;

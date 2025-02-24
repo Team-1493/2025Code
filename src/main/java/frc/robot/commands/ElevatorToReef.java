@@ -14,15 +14,16 @@ public class ElevatorToReef extends Command {
   private final Elevator elevator;
   private final Claw claw;
   boolean elevFlag=false;
-  double pos;
+  double pos,clawPos;
 
   /**
    * @param subsystem The subsystem used by this command.
    */
-  public ElevatorToReef(Elevator m_elevator,Claw m_claw,double m_pos) {
+  public ElevatorToReef(Elevator m_elevator,Claw m_claw,double m_pos, double m_clawPos) {
     claw=m_claw;
     elevator=m_elevator;
     pos=m_pos;
+    clawPos=m_clawPos;
     elevFlag=false;
     addRequirements(claw,elevator);
   }
@@ -30,7 +31,7 @@ public class ElevatorToReef extends Command {
   @Override
   public void initialize() {
     elevFlag=false;
-    claw.toPosition(claw.positionCoral1);
+    claw.toPosition(clawPos);
 
 
 
@@ -41,12 +42,10 @@ public class ElevatorToReef extends Command {
 
   @Override
   public void execute() {
+    
     if (claw.encPosition<0.215 && !elevFlag) {
       elevator.toPosition(pos);
-      elevFlag=true;}   
-
-
-
+      elevFlag=true;}  
   }
 
   @Override

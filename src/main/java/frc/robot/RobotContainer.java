@@ -106,12 +106,8 @@ public class RobotContainer {
 
         //  allow driver to switch between fast and slow mode 
         // changes stick scale factor on joystock
-  /*       stickDriver.button(6).onTrue(
-            new InstantCommand(() ->stickDriver.setSlowScaleFactor()  )  );
-    
-        stickDriver.button(6).onFalse(
-                new InstantCommand(() ->stickDriver.setFastScaleFactor()  )  );
-*/
+
+
         
 //        stickDriver.a().whileTrue(drivetrain.applyRequest(() -> brake));
         
@@ -135,64 +131,58 @@ public class RobotContainer {
         */
 
         // reset the field-centric heading on left bumper press
-//        stickDriver.button(5).onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyro()));
-
-
-        // *** Operator Joystick Bindings ***
-
-     // **** TEST BINDINGS ***    
-        // manual control of elevator          
-/*         stickDriver.button(9).whileTrue(elevator.ManualDown());
-        stickDriver.button(9).onFalse(elevator.StopElevator());
-        stickDriver.button(10).whileTrue(elevator.ManualUp());
-        stickDriver.button(10).onFalse(elevator.StopElevator());
-*/
-
-        // elevator to preset positions
-//        stickDriver.povUp().onTrue(elevator.ToPosition(elevator.positionCoral4));
-//        stickDriver.povDown().onTrue(elevator.ToPosition(elevator.positionCoral2));
-//        stickDriver.povRight().onTrue(elevator.ToPosition(elevator.positionIntake));
-//        stickDriver.povLeft().onTrue(elevator.ToPosition(elevator.positionIntake));
-
-
-
-         // claw to preset positions
-         stickDriver.button(1).whileTrue(
-            new ElevatorToReef(elevator,claw, elevator.positionCoral1));
-
-
-//         stickDriver.button(1).onTrue(claw.ToPosition(claw.positionIntake));
-        stickDriver.button(2).onTrue(claw.ToPosition(claw.positionCoral1));
-        stickDriver.button(3).onTrue(claw.ToPosition(claw.positionCoral3));
-        stickDriver.button(4).onTrue(claw.ToPosition(claw.positionCoral4));
-
-        // manual control of rollers          
-//       stickDriver.button(7).whileTrue(elevator.ManualDown());
-//        stickDriver.button(7).onFalse(elevator.StopElevator());
-//        stickDriver.button(8).whileTrue(elevator.ManualUp());
-//        stickDriver.button(8).onFalse(elevator.StopElevator());
-
-
-        stickDriver.button(7).whileTrue(new IntakeCoral(elevator,claw));
-        stickDriver.button(7).onFalse(claw.StopRollers());
-        stickDriver.button(8).whileTrue
-                (new IntakeAlgae1(claw));
+        stickDriver.button(5).onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyro()));
 
         stickDriver.button(6).onTrue(
-                (new ElevatorToReef(elevator,claw, elevator.positionCoral1)).andThen(
-                claw.SpitAlgae()));
+                new InstantCommand(() ->stickDriver.setSlowScaleFactor()  )  );
+        
+        stickDriver.button(6).onFalse(
+                    new InstantCommand(() ->stickDriver.setFastScaleFactor()  )  );
 
-        stickDriver.button(6).onFalse(claw.StopRollers());
+  
 
-        stickDriver.povDown().onTrue(actions.spitCoral);
+        // elevator to preset positions
+        stickDriver.povUp().onTrue(elevator.ToPosition(elevator.positionCoral4));
+        stickDriver.povDown().onTrue(elevator.ToPosition(elevator.positionCoral2));
+        stickDriver.povRight().onTrue(elevator.ToPosition(elevator.positionIntake));
+        stickDriver.povLeft().onTrue(elevator.ToPosition(elevator.positionIntake));
 
-        stickDriver.povLeft().onTrue(elevator.ToPosition(elevator.positionCoral1));
-        stickDriver.povRight().onTrue(elevator.ToPosition(elevator.positionCoral2));
-        stickDriver.button(9).onTrue(elevator.ToPosition(elevator.positionCoral3));
-        stickDriver.button(10).onTrue(elevator.ToPosition(elevator.positionCoral4));
 
 
-        stickDriver.button(14).onTrue(new InstantCommand( () -> {configure();}));
+         
+        stickOperator.button(1).onTrue(
+                new ElevatorToReef(elevator,claw, elevator.positionCoral1,claw.positionCoral1));
+        stickOperator.button(2).onTrue(                
+                new ElevatorToReef(elevator,claw, elevator.positionCoral2,claw.positionCoral2));
+        stickOperator.button(3).onTrue(
+                new ElevatorToReef(elevator,claw, elevator.positionCoral3,claw.positionCoral3));
+        stickOperator.button(4).onTrue(
+                new ElevatorToReef(elevator,claw, elevator.positionCoral4,claw.positionCoral4)); 
+        stickOperator.button(14).onTrue(
+                new ElevatorToReef(elevator,claw, elevator.positionAlgae1,claw.positionAlgae1));                 
+        stickOperator.button(13).onTrue(
+                new ElevatorToReef(elevator,claw, elevator.positionAlgae2,claw.positionAlgae2));    
+        stickOperator.button(9).onTrue(
+                new ElevatorToReef(elevator,claw, elevator.positionNet,claw.positionNet));                                                  
+
+
+
+        stickOperator.button(7).whileTrue(new IntakeCoral(elevator,claw));
+        stickOperator.button(7).onFalse(claw.StopRollers());
+
+        stickOperator.button(8).whileTrue
+                (new IntakeAlgae1(claw));
+
+        stickOperator.button(6).onTrue(claw.SpitAlgae());
+        stickOperator.button(6).onFalse(claw.StopRollers());
+
+        stickOperator.button(5).onTrue(actions.spitCoral);
+        stickOperator.button(5).onFalse(claw.StopRollers());
+
+
+
+
+//        stickDriver.button(14).onTrue(new InstantCommand( () -> {configure();}));
 
 
 //** COMPETITION BINDINGS
