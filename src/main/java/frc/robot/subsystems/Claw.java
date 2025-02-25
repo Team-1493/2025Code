@@ -323,7 +323,8 @@ public Claw(){
         positionCoral3 = SmartDashboard.getNumber("Claw Pos Coral3", positionCoral3);
         positionCoral4 = SmartDashboard.getNumber("Claw Pos Coral4", positionCoral4);
         positionIntake = SmartDashboard.getNumber("Claw Pos Intake", positionIntake);
-        positionNeutral = SmartDashboard.getNumber("Claw Pos Neutral", positionNeutral);    
+        positionNeutral = SmartDashboard.getNumber("Claw Pos Neutral", positionNeutral);
+        SmartDashboard.putNumber("Claw pN", positionNeutral);    
     }
 
 }

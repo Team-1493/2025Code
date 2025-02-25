@@ -18,13 +18,13 @@ import frc.robot.Robot;
 public class Elevator extends SubsystemBase{
     public final TalonFX elevatorRight = new TalonFX(22); 
     final TalonFX elevatorFollower = new TalonFX(21);
-    final DigitalInput limitLower = new DigitalInput(0);
-    final DigitalInput limitUpper = new DigitalInput(3);
+    public final DigitalInput limitLower = new DigitalInput(0);
+    public final DigitalInput limitUpper = new DigitalInput(3);
 
     private TalonFXConfiguration cfg = new TalonFXConfiguration();
     private MotionMagicVoltage  magicToPos= new MotionMagicVoltage(0);
     private VoltageOut voltOutUp = new VoltageOut(.75);
-    private VoltageOut voltOutDown = new VoltageOut(-.20);
+    private VoltageOut voltOutDown = new VoltageOut(-.4);
     
     public double 
             positionAlgae1=10,positionAlgae2 = 15, positionNet=1, 
@@ -54,8 +54,8 @@ public Elevator(){
 }
 
     public void periodic(){
-        if (!Robot.enabled) zeroed=false;
-        if(!zeroed)zeroElevator();
+//        if (!Robot.enabled) zeroed=false;
+//        if(!zeroed && Robot.enabled)zeroElevator();
         atLowerLimit=!limitLower.get();
         atUpperLimit=!limitUpper.get();
 
@@ -147,7 +147,7 @@ public Elevator(){
         elevatorRight.stopMotor();
     }
 
-
+/* 
     public void zeroElevator(){
         if(!limitLower.get()){
             while(!limitLower.get()){
@@ -157,16 +157,24 @@ public Elevator(){
         }
 
         manualDown();
-        Timer.delay(.02);
-        while(Math.abs(elevatorRight.getVelocity().getValueAsDouble())<-0.001){
+        System.out.println("A1  "+elevatorRight.getVelocity().getValueAsDouble());
+        System.out.println("A2  "+elevatorRight.getVelocity().getValueAsDouble());
+        
+        int i = 0;
+        while(elevatorRight.getVelocity().getValueAsDouble()<-0.001 && i>20){
+            i++;
+            System.out.println("C "+ elevatorRight.getVelocity().getValueAsDouble());
         }
         stopElevator();
         zeroed=true;
         elevatorRight.setPosition(0);
         elevatorFollower.setPosition(0);
+        elevatorPos=elevatorRight.getPosition().getValueAsDouble();
+        System.out.println("D "+ elevatorRight.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Elevator Pos", elevatorPos);
     }
 
-
+*/
 
 
   
@@ -206,8 +214,8 @@ public Elevator(){
     positionCoral2= SmartDashboard.getNumber("Elevator positionCoral2", positionCoral2);
     positionCoral3= SmartDashboard.getNumber("Elevator positionCoral3", positionCoral3);
     positionCoral4= SmartDashboard.getNumber("Elevator positionCoral4", positionCoral4);
- 
     SmartDashboard.putNumber("Elevator p1", positionCoral1);
+    SmartDashboard.putNumber("Elevator p4", positionCoral4);
   }
 
 }

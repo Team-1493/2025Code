@@ -18,6 +18,7 @@ import frc.robot.commands.DriveReefRight;
 import frc.robot.commands.ElevatorToReef;
 import frc.robot.commands.IntakeAlgae1;
 import frc.robot.commands.IntakeCoral;
+import frc.robot.commands.ZeroElevator;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ActionCommands;
 import frc.robot.subsystems.AutoGenerator;
@@ -154,9 +155,9 @@ public class RobotContainer {
         stickOperator.button(5).onFalse(claw.StopRollers());
 
 
-        stickOperator.button(10).onTrue(new InstantCommand(() -> elevator.elevatorRight.setPosition(0)));
+        stickOperator.button(12).onTrue(new InstantCommand(() -> elevator.elevatorRight.setPosition(0)));
 
-        stickDriver.button(9).onTrue(new InstantCommand( () -> {updateConstants();}));
+        stickOperator.button(11).onTrue(new InstantCommand( () -> {updateConstants();}));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
@@ -170,5 +171,10 @@ public class RobotContainer {
         elevator.updateConstants();
 //        vision.configure();
 //        drivetrain.configure();
-        }
+     }
+
+     public Command zeroElevator(){
+        return (new ZeroElevator(elevator));
+     }
+
     }
