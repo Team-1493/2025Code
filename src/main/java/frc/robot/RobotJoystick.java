@@ -12,7 +12,7 @@ public class RobotJoystick extends CommandXboxController {
     double deadbandX=0.05,deadbandY=0.05,deadbandRot=0.05;
 
     double scaleFactorRotate=scaleFactorRotateFast;
-    int rotateAxis=2;
+    int rotateAxis=4;
    // int rotateAxis=3;
 
     public RobotJoystick(int port){

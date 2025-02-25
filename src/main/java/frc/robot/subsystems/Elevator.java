@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 
 public class Elevator extends SubsystemBase{
-    final TalonFX elevatorRight = new TalonFX(22); 
+    public final TalonFX elevatorRight = new TalonFX(22); 
     final TalonFX elevatorFollower = new TalonFX(21);
     final DigitalInput limitLower = new DigitalInput(0);
     final DigitalInput limitUpper = new DigitalInput(3);
@@ -43,8 +43,8 @@ public class Elevator extends SubsystemBase{
     
     public double 
             positionAlgae1=10,positionAlgae2 = 15, positionNet=1, 
-            positionCoral1=5, positionCoral2=12,
-            positionCoral3=18,positionCoral4=26,
+            positionCoral1=8, positionCoral2=14,
+            positionCoral3=21,positionCoral4=28,
             positionIntake=.03;
     private double currentLimit=100;
     public double elevatorPos=0;
@@ -195,11 +195,12 @@ public Elevator(){
 
         manualDown();
         Timer.delay(.02);
-        while(elevatorRight.getVelocity().getValueAsDouble()<-0.001){
+        while(Math.abs(elevatorRight.getVelocity().getValueAsDouble())<-0.001){
         }
         stopElevator();
         zeroed=true;
         elevatorRight.setPosition(0);
+        elevatorFollower.setPosition(0);
     }
 
 

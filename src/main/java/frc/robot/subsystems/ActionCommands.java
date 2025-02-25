@@ -84,7 +84,7 @@ public  ActionCommands(CommandSwerveDrivetrain m_sd,Elevator m_elevator,Claw m_c
         intakeCoral = new frc.robot.commands.IntakeCoral(elevator,claw);
 
         spitCoral= new SequentialCommandGroup(
-        claw.RearRollerFor(),
+        claw.RearRollerRev(),
         new InstantCommand(()->Timer.delay(1.5)),claw.StopRollers());
 
         bumpIntoWall = new BumpIntoWall(sd);

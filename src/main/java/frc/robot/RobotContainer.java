@@ -180,9 +180,9 @@ public class RobotContainer {
         stickOperator.button(5).onFalse(claw.StopRollers());
 
 
+        stickOperator.button(10).onTrue(new InstantCommand(() -> elevator.elevatorRight.setPosition(0)));
 
-
-//        stickDriver.button(14).onTrue(new InstantCommand( () -> {configure();}));
+        stickDriver.button(9).onTrue(new InstantCommand( () -> {configure();}));
 
 
 //** COMPETITION BINDINGS
@@ -221,7 +221,7 @@ public class RobotContainer {
     }
 
     private void configure(){
-//        claw.configure();
+        claw.configure();
           elevator.configure();
 //        vision.configure();
 //        drivetrain.configure();

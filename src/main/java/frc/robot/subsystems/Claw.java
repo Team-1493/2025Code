@@ -40,19 +40,19 @@ private VoltageOut  voltOutRearForward= new VoltageOut(4);
 private VoltageOut  voltOutRearReverse= new VoltageOut(-3);
 private VoltageOut  voltOutFrontForward= new VoltageOut(4);
 private VoltageOut  voltOutFrontReverse= new VoltageOut(-4);
-private VoltageOut  voltOutFrontHold= new VoltageOut(-.3);
-private VoltageOut  voltOutRearHold= new VoltageOut(.3);
-private VoltageOut  voltOutFrontSpitAlgae= new VoltageOut(4);
-private VoltageOut  voltOutRearSpitAlgae= new VoltageOut(-4);
+private VoltageOut  voltOutFrontHold= new VoltageOut(-.6);
+private VoltageOut  voltOutRearHold= new VoltageOut(.6);
+private VoltageOut  voltOutFrontSpitAlgae= new VoltageOut(8);
+private VoltageOut  voltOutRearSpitAlgae= new VoltageOut(-8);
 
 
     
 
 public double 
         positionAlgae1=0,positionAlgae2 = 0, positionNet, 
-        positionCoral1=0, positionCoral2=.1,
-        positionCoral3=.15,positionCoral4=.2,
-        positionIntake=0.365;   
+        positionCoral1=.295, positionCoral2=.295,
+        positionCoral3=.295,positionCoral4=.2,
+        positionIntake=0.375;   
 
 
 private DigitalInput limitLower = new DigitalInput(4);
