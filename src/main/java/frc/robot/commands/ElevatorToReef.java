@@ -31,7 +31,7 @@ public class ElevatorToReef extends Command {
   @Override
   public void initialize() {
     elevFlag=false;
-    claw.toPosition(clawPos);
+    claw.toPosition(claw.positionNeutral);
 
 
 
@@ -43,18 +43,21 @@ public class ElevatorToReef extends Command {
   @Override
   public void execute() {
     
-    if (claw.encPosition<0.215 && !elevFlag) {
+    if (Math.abs(claw.encPosition-claw.positionNeutral)<0.05 && !elevFlag) {
       elevator.toPosition(pos);
-      elevFlag=true;}  
+      elevFlag=true;}
+
+
+
   }
 
   @Override
   public void end(boolean interrupted) {
-
+    claw.toPosition(clawPos);
   }
 
   @Override
   public boolean isFinished() {
-    return elevFlag; //claw.hasCoral;
+    return (Math.abs(elevator.elevatorPos-pos)<1 ); //claw.hasCoral;
   }
 }

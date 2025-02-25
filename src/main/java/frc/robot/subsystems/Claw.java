@@ -4,8 +4,6 @@ import java.time.Period;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
-import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -52,7 +50,7 @@ public double
         positionAlgae1=0,positionAlgae2 = 0, positionNet, 
         positionCoral1=.295, positionCoral2=.295,
         positionCoral3=.295,positionCoral4=.2,
-        positionIntake=0.375;   
+        positionIntake=0.375,positionNeutral=0.25;   
 
 
 private DigitalInput limitLower = new DigitalInput(4);
@@ -68,19 +66,6 @@ private double voltage,current;
 public double encPosition,rearRollerCurrent;
 
 public Claw(){
-    SmartDashboard.putNumber("Claw MMacc", 1.5);
-    SmartDashboard.putNumber("Claw MMvel", .6);
-    SmartDashboard.putNumber("Claw MMjerk", 30);
-
-    SmartDashboard.putNumber("Claw kG", .305);
-    SmartDashboard.putNumber("Claw kP", 2.5);
-    SmartDashboard.putNumber("Claw kI", 0);
-    SmartDashboard.putNumber("Claw kD", 0);
-    SmartDashboard.putNumber("Claw kS", 0.07);
-    SmartDashboard.putNumber("Claw kA", 0.5);
-
-    SmartDashboard.putNumber("Claw StatorCL", 120);
-    SmartDashboard.putNumber("Claw SupplyCL", 120);
     SmartDashboard.putNumber("Claw Pos Algae1", positionAlgae1);
     SmartDashboard.putNumber("Claw Pos Algae2", positionAlgae2);
     SmartDashboard.putNumber("Claw Pos Net", positionNet);
@@ -89,24 +74,18 @@ public Claw(){
     SmartDashboard.putNumber("Claw Pos Coral3", positionCoral3);
     SmartDashboard.putNumber("Claw Pos Coral4", positionCoral4);
     SmartDashboard.putNumber("Claw Pos Intake", positionIntake);
-
-
+    SmartDashboard.putNumber("Claw Pos Neutral", positionNeutral);
 
     configure();
-
 }
-
 
     public void periodic(){
         voltage=clawMotor.getMotorVoltage().getValueAsDouble();
+
         current=clawMotor.getStatorCurrent().getValueAsDouble();
         double velocity=clawEncoder.getVelocity().getValueAsDouble();
         encPosition=clawEncoder.getAbsolutePosition().getValueAsDouble();
 
-
-//        atLowerLimit=!limitLower.get()|| encPosition<-.3;
-//        atLowerLimit=encPosition<-.1;
- //       atUpperLimit=!limitUpper.get();
         atUpperLimit=false;
         // check mag limit switch
         if (atUpperLimit && velocity>0 ) stopClaw();
@@ -125,7 +104,6 @@ public Claw(){
 
         SmartDashboard.putBoolean("Claw LLS",atLowerLimit);
         SmartDashboard.putBoolean("Claw ULS",atUpperLimit);
-
 
         SmartDashboard.putBoolean("Coral Sensor", hasCoral);
         SmartDashboard.putBoolean("Algae Sensor", hasAlgae);
@@ -281,31 +259,6 @@ public Claw(){
 
     // Configure claw motor
     public void configure(){
-
-    double clawkG = SmartDashboard.getNumber("Claw kG", 0);
-    double clawkP = SmartDashboard.getNumber("Claw kP", 1);
-    double clawkI = SmartDashboard.getNumber("Claw kI", 0);
-    double clawkD = SmartDashboard.getNumber("Claw kD", 0);
-    double clawkS = SmartDashboard.getNumber("Claw kS", 0);
-    double clawkA = SmartDashboard.getNumber("Claw kA", 0);
-
-    double clawMMacc = SmartDashboard.getNumber("Claw MMacc", 3);
-    double clawMMvel = SmartDashboard.getNumber("Claw MMvel", 0.8);
-    double clawMMjerk = SmartDashboard.getNumber("Claw MMjerk", 50);
-
-    double clawStatorCL = SmartDashboard.getNumber("Claw StatorCL", 60);
-    double clawSupplyCL = SmartDashboard.getNumber("Claw SupplyCL", 40);
-    
-    positionAlgae1 = SmartDashboard.getNumber("Claw Pos Algae1", positionAlgae1);
-    positionAlgae2 = SmartDashboard.getNumber("Claw Pos Algae2", positionAlgae2);
-    positionNet = SmartDashboard.getNumber("Claw Pos Net", positionNet);
-    positionCoral1 = SmartDashboard.getNumber("Claw Pos Coral1", positionCoral1);
-    positionCoral2 = SmartDashboard.getNumber("Claw Pos Coral2", positionCoral2);
-    positionCoral3 = SmartDashboard.getNumber("Claw Pos Coral3", positionCoral3);
-    positionCoral4 = SmartDashboard.getNumber("Claw Pos Coral4", positionCoral4);
-    positionIntake = SmartDashboard.getNumber("Claw Pos Intake", positionIntake);
-
-
     cfg.MotorOutput.Inverted=InvertedValue.Clockwise_Positive;
     cfg.MotorOutput.NeutralMode=NeutralModeValue.Brake;
 
@@ -313,25 +266,24 @@ public Claw(){
     cfg.Feedback.FeedbackRemoteSensorID=27;
     
     cfg.Slot0.GravityType=GravityTypeValue.Arm_Cosine;
-    cfg.Slot0.kG = clawkG;
-    cfg.Slot0.kP = clawkP;
-    cfg.Slot0.kI = clawkI;
-    cfg.Slot0.kD = clawkD;
-    cfg.Slot0.kS=clawkS;
+    cfg.Slot0.kG = 0.305;
+    cfg.Slot0.kP = 2.5;
+    cfg.Slot0.kI = 0;
+    cfg.Slot0.kD = 0;
+    cfg.Slot0.kS=0.07;
     cfg.Slot0.kV=5.25;
-    cfg.Slot0.kA=clawkA;
-
+    cfg.Slot0.kA=0.5;
+ 
 //    cfg.MotorOutput.PeakForwardDutyCycle=.5;
 //    cfg.MotorOutput.PeakForwardDutyCycle=-.5;
 
-    cfg.MotionMagic.MotionMagicCruiseVelocity = clawMMvel;
-    cfg.MotionMagic.MotionMagicAcceleration = clawMMacc;
-    cfg.MotionMagic.MotionMagicJerk=clawMMjerk;   
-        SmartDashboard.putNumber("clawpk", clawkP);
+    cfg.MotionMagic.MotionMagicCruiseVelocity = 0.6;
+    cfg.MotionMagic.MotionMagicAcceleration = 1.5;
+    cfg.MotionMagic.MotionMagicJerk=30;   
 
-    cfg.CurrentLimits.StatorCurrentLimit=clawStatorCL;
-    cfg.CurrentLimits.StatorCurrentLimitEnable=true;
-    cfg.CurrentLimits.SupplyCurrentLimit=clawSupplyCL;
+    cfg.CurrentLimits.StatorCurrentLimit = 120;
+    cfg.CurrentLimits.StatorCurrentLimitEnable = true;
+    cfg.CurrentLimits.SupplyCurrentLimit = 120;
     cfg.CurrentLimits.SupplyCurrentLimitEnable=true;
     
     cfg.SoftwareLimitSwitch.ForwardSoftLimitEnable=true;
@@ -340,11 +292,7 @@ public Claw(){
     cfg.SoftwareLimitSwitch.ReverseSoftLimitEnable=true;
     cfg.SoftwareLimitSwitch.ReverseSoftLimitThreshold=-0.1;
 
-    SmartDashboard.putNumber("clawpk", clawkP);
-    SmartDashboard.putNumber("clawgk", clawkG);
-
     clawMotor.getConfigurator().apply(cfg);
-
 
     // Configure Roller Motors
     cfgRollers.MotorOutput.Inverted=InvertedValue.CounterClockwise_Positive;
@@ -357,18 +305,25 @@ public Claw(){
     clawRearRoller.getConfigurator().apply(cfgRollers);
 
 
-    // top possible position: 0.00708
-    // lowest possible position: -0.
-
     // Cponfigure encoder
     cfgEnc.MagnetSensor.AbsoluteSensorDiscontinuityPoint=0.6;
     cfgEnc.MagnetSensor.MagnetOffset=0.355;
     cfgEnc.MagnetSensor.SensorDirection=SensorDirectionValue.Clockwise_Positive;
     
     clawEncoder.getConfigurator().apply(cfgEnc);
-
-
     }
 
+
+    public void updateConstants(){
+        positionAlgae1 = SmartDashboard.getNumber("Claw Pos Algae1", positionAlgae1);
+        positionAlgae2 = SmartDashboard.getNumber("Claw Pos Algae2", positionAlgae2);
+        positionNet = SmartDashboard.getNumber("Claw Pos Net", positionNet);
+        positionCoral1 = SmartDashboard.getNumber("Claw Pos Coral1", positionCoral1);
+        positionCoral2 = SmartDashboard.getNumber("Claw Pos Coral2", positionCoral2);
+        positionCoral3 = SmartDashboard.getNumber("Claw Pos Coral3", positionCoral3);
+        positionCoral4 = SmartDashboard.getNumber("Claw Pos Coral4", positionCoral4);
+        positionIntake = SmartDashboard.getNumber("Claw Pos Intake", positionIntake);
+        positionNeutral = SmartDashboard.getNumber("Claw Pos Neutral", positionNeutral);    
+    }
 
 }

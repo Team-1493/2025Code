@@ -8,13 +8,10 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveIntake;
 import frc.robot.commands.DriveReefLeft;
 import frc.robot.commands.DriveReefRight;
@@ -32,15 +29,7 @@ import frc.robot.subsystems.VisionSystem;
 public class RobotContainer {
     private Elevator elevator = new Elevator();
     private Claw claw = new Claw();
-    private int b_IntakeCoral=5;
-    private int b_SpitCoral=6;
-    private int b_toReef1=1;
-    private int b_toReef2=2;
-    private int b_toReef3=3;
-    private int b_toReef4=4;
-    private int b_ElevatorToGround=7;
     
-
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -87,8 +76,6 @@ public class RobotContainer {
         );
         
 
-
-    //***& Driver Joystick Bindings ***
 
 /*     stickDriver.button(1).whileTrue(driveReefLeft);
     stickDriver.button(1).onFalse(
@@ -138,17 +125,6 @@ public class RobotContainer {
         
         stickDriver.button(6).onFalse(
                     new InstantCommand(() ->stickDriver.setFastScaleFactor()  )  );
-
-  
-
-        // elevator to preset positions
-        stickDriver.povUp().onTrue(elevator.ToPosition(elevator.positionCoral4));
-        stickDriver.povDown().onTrue(elevator.ToPosition(elevator.positionCoral2));
-        stickDriver.povRight().onTrue(elevator.ToPosition(elevator.positionIntake));
-        stickDriver.povLeft().onTrue(elevator.ToPosition(elevator.positionIntake));
-
-
-
          
         stickOperator.button(1).onTrue(
                 new ElevatorToReef(elevator,claw, elevator.positionCoral1,claw.positionCoral1));
@@ -165,8 +141,6 @@ public class RobotContainer {
         stickOperator.button(9).onTrue(
                 new ElevatorToReef(elevator,claw, elevator.positionNet,claw.positionNet));                                                  
 
-
-
         stickOperator.button(7).whileTrue(new IntakeCoral(elevator,claw));
         stickOperator.button(7).onFalse(claw.StopRollers());
 
@@ -182,37 +156,8 @@ public class RobotContainer {
 
         stickOperator.button(10).onTrue(new InstantCommand(() -> elevator.elevatorRight.setPosition(0)));
 
-        stickDriver.button(9).onTrue(new InstantCommand( () -> {configure();}));
+        stickDriver.button(9).onTrue(new InstantCommand( () -> {updateConstants();}));
 
-
-//** COMPETITION BINDINGS
-/* 
-        stickOperator.button(b_IntakeCoral).whileTrue(intakeCoral);
-
-        stickOperator.button(b_toReef1).
-            onTrue(claw.ToPosition(claw.positionCoral1).
-            andThen(elevator.ToPosition(elevator.positionCoral1)));
-
-        stickOperator.button(b_toReef2).
-            onTrue(claw.ToPosition(claw.positionCoral2).
-            andThen(elevator.ToPosition(elevator.positionCoral2)));
-
-        stickOperator.button(b_toReef3).
-            onTrue(claw.ToPosition(claw.positionCoral3).
-            andThen(elevator.ToPosition(elevator.positionCoral3)));                
-
-            stickOperator.button(b_toReef4).
-            onTrue(claw.ToPosition(claw.positionCoral4).
-            andThen(elevator.ToPosition(elevator.positionCoral4)));    
-                
-            
-        stickOperator.button(b_SpitCoral).onTrue(claw.RollersForward());
-        stickOperator.button(b_SpitCoral).onFalse(claw.StopRollers());
-  
-        stickOperator.button(b_ElevatorToGround).
-        onTrue(claw.ToPosition(claw.positionCoral2).
-        andThen(elevator.ToPosition(elevator.positionIntake)));
-*/
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
@@ -220,9 +165,9 @@ public class RobotContainer {
         return autoChooser.getSelected();
     }
 
-    private void configure(){
-        claw.configure();
-          elevator.configure();
+    private void updateConstants(){
+        claw.updateConstants();
+        elevator.updateConstants();
 //        vision.configure();
 //        drivetrain.configure();
         }

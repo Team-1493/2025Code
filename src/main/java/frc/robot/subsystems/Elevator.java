@@ -1,30 +1,15 @@
 package frc.robot.subsystems;
 
-import org.w3c.dom.ElementTraversal;
-
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
-import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.sim.TalonFXSimState;
-
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.simulation.BatterySim;
-import edu.wpi.first.wpilibj.simulation.ElevatorSim;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -46,33 +31,12 @@ public class Elevator extends SubsystemBase{
             positionCoral1=8, positionCoral2=14,
             positionCoral3=21,positionCoral4=28,
             positionIntake=.03;
-    private double currentLimit=100;
     public double elevatorPos=0;
     boolean zeroed=false,atLowerLimit=false,atUpperLimit=false;
-
-     
-private final TalonFXSimState elevatorRightSim = elevatorRight.getSimState();
-
-
-
 
 public Elevator(){
 
     elevatorFollower.setControl(new Follower(22,true));
-
-    SmartDashboard.putNumber("Elevator kG", 0.465);
-    SmartDashboard.putNumber("Elevator kP", 2);
-    SmartDashboard.putNumber("Elevator kI", 0);
-    SmartDashboard.putNumber("Elevator kD", 0);
-    SmartDashboard.putNumber("Elevator kS", 0);
-    SmartDashboard.putNumber("Elevator kA", 0);
-    SmartDashboard.putNumber("Elevator MMacc", 70);
-    SmartDashboard.putNumber("Elevator MMvel", 50);
-    SmartDashboard.putNumber("Elevator MMjerk", 160);
-    SmartDashboard.putNumber("Elevator StatorCL", 60);
-    SmartDashboard.putNumber("Elevator SupplyCL", 40);
-    SmartDashboard.putNumber("Elevator TorqueCL", 100);
-    System.out.println("************************************************"+positionCoral1);
     SmartDashboard.putNumber("Elevator positionAlgae1", positionAlgae1);
     SmartDashboard.putNumber("Elevator positionAlgae2", positionAlgae2);
     SmartDashboard.putNumber("Elevator positionNet", positionNet);
@@ -95,7 +59,7 @@ public Elevator(){
         atLowerLimit=!limitLower.get();
         atUpperLimit=!limitUpper.get();
 
-        double v,i,c;
+        double v,i;
         v=elevatorRight.getMotorVoltage().getValueAsDouble();
         i=elevatorRight.getStatorCurrent().getValueAsDouble();
         double vel=elevatorRight.getVelocity().getValueAsDouble();
@@ -185,7 +149,6 @@ public Elevator(){
 
 
     public void zeroElevator(){
-        double p;
         if(!limitLower.get()){
             while(!limitLower.get()){
                 manualUp();
@@ -208,19 +171,33 @@ public Elevator(){
 
   
   public void configure(){
-    double elevatorkG = SmartDashboard.getNumber("Elevator kG", 0.56);
-    double elevatorkP = SmartDashboard.getNumber("Elevator kP", 0);
-    double elevatorkI = SmartDashboard.getNumber("Elevator kI", 0);
-    double elevatorkD = SmartDashboard.getNumber("Elevator kD", 0);
-    double elevatorkS = SmartDashboard.getNumber("Elevator kS", 0);
-    double elevatorkA = SmartDashboard.getNumber("Elevator kA", 0);
 
-    double elevatorMMacc = SmartDashboard.getNumber("Elevator MMacc", 3);
-    double elevatorMMvel = SmartDashboard.getNumber("Elevator MMvel", 0.8);
-    double elevatorMMjerk = SmartDashboard.getNumber("Elevator MMjerk", 50);
-    double elevatorStatorCL = SmartDashboard.getNumber("Elevator StatorCL", 60);
-    double elevatorSupplyCL = SmartDashboard.getNumber("Elevator SupplyCL", 40);
-    double elevatorTorqueCL = SmartDashboard.getNumber("Elevator TorqueCL", 100);
+    cfg.MotorOutput.Inverted=InvertedValue.Clockwise_Positive;
+    cfg.MotorOutput.NeutralMode=NeutralModeValue.Brake;
+
+    cfg.MotionMagic.MotionMagicCruiseVelocity=50;
+    cfg.MotionMagic.MotionMagicAcceleration=70;
+    cfg.MotionMagic.MotionMagicJerk=160;   
+
+    cfg.Slot0.GravityType=GravityTypeValue.Elevator_Static;
+    cfg.Slot0.kG=0.465;
+    cfg.Slot0.kP=2.0;
+    cfg.Slot0.kI=0;
+    cfg.Slot0.kD=0;
+    cfg.Slot0.kS=0;
+    cfg.Slot0.kV=.4;
+    cfg.Slot0.kA=0;
+
+    cfg.CurrentLimits.StatorCurrentLimit=60;
+    cfg.CurrentLimits.StatorCurrentLimitEnable=true;
+    cfg.CurrentLimits.SupplyCurrentLimit=40;
+    cfg.CurrentLimits.SupplyCurrentLimitEnable=true;
+
+    elevatorRight.getConfigurator().apply(cfg);
+
+  }
+
+  public void updateConstants(){
     positionAlgae1= SmartDashboard.getNumber("Elevator positionAlgae1", positionAlgae1);
     positionAlgae2= SmartDashboard.getNumber("Elevator positionAlgae2", positionAlgae2);
     positionNet= SmartDashboard.getNumber("Elevator positionNet", positionNet);
@@ -229,37 +206,8 @@ public Elevator(){
     positionCoral2= SmartDashboard.getNumber("Elevator positionCoral2", positionCoral2);
     positionCoral3= SmartDashboard.getNumber("Elevator positionCoral3", positionCoral3);
     positionCoral4= SmartDashboard.getNumber("Elevator positionCoral4", positionCoral4);
-
-
-    // Apply motor configurations
-
-    
-    cfg.MotorOutput.Inverted=InvertedValue.Clockwise_Positive;
-    cfg.MotorOutput.NeutralMode=NeutralModeValue.Brake;
-    
-    cfg.MotionMagic.MotionMagicCruiseVelocity=elevatorMMvel;
-    cfg.MotionMagic.MotionMagicAcceleration=elevatorMMacc;
-    cfg.MotionMagic.MotionMagicJerk=elevatorMMjerk;   
-
-    cfg.Slot0.GravityType=GravityTypeValue.Elevator_Static;
-    cfg.Slot0.kG=elevatorkG;
-    cfg.Slot0.kP=elevatorkP;
-    cfg.Slot0.kI=elevatorkI;
-    cfg.Slot0.kD=elevatorkD;
-    cfg.Slot0.kS=elevatorkS;
-    cfg.Slot0.kV=.4;
-    cfg.Slot0.kA=elevatorkA;
-
-    cfg.CurrentLimits.StatorCurrentLimit=elevatorStatorCL;
-    cfg.CurrentLimits.StatorCurrentLimitEnable=true;
-    cfg.CurrentLimits.SupplyCurrentLimit=elevatorSupplyCL;
-    cfg.CurrentLimits.SupplyCurrentLimitEnable=true;
-
-
-    elevatorRight.getConfigurator().apply(cfg);
-
+ 
+    SmartDashboard.putNumber("Elevator p1", positionCoral1);
   }
-
-
 
 }
