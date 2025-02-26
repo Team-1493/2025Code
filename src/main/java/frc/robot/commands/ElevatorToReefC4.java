@@ -9,17 +9,16 @@ import frc.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class IntakeCoral extends Command {
+public class ElevatorToReefC4 extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Elevator elevator;
   private final Claw claw;
   boolean elevFlag=false;
-  int i = 0;
 
   /**
    * @param subsystem The subsystem used by this command.
    */
-  public IntakeCoral(Elevator m_elevator,Claw m_claw) {
+  public ElevatorToReefC4(Elevator m_elevator,Claw m_claw) {
     claw=m_claw;
     elevator=m_elevator;
     elevFlag=false;
@@ -29,21 +28,21 @@ public class IntakeCoral extends Command {
   @Override
   public void initialize() {
     elevFlag=false;
-    if(elevator.elevatorPos>0.15 && claw.encPosition>.15) claw.toPosition(.15);
-    claw.rearRollerRev();
+    claw.toPosition(claw.positionNeutral);
 
 
 
+    //claw.toPosition(claw.positionIntake);
     
 
   }
 
   @Override
   public void execute() {
-    if (claw.encPosition<0.22 && !elevFlag) {
-      elevator.toPosition(elevator.positionIntake);
-      elevFlag=true;}   
-    if (elevator.elevatorPos<0.15)claw.toPosition(claw.positionIntake); 
+    
+    if (Math.abs(claw.encPosition-claw.positionNeutral)<0.05 && !elevFlag) {
+      elevator.toPosition(elevator.positionCoral4);
+      elevFlag=true;}
 
 
 
@@ -51,15 +50,11 @@ public class IntakeCoral extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    claw.stopRollerRear();
-    claw.toPosition(claw.positionCoral1);
+    claw.toPosition(claw.positionCoral4);
   }
 
   @Override
   public boolean isFinished() {
-    if (claw.hasCoral)i++;
-    else i=0;
-    return (claw.hasCoral&&i>1);
-
+    return (Math.abs(elevator.elevatorPos-elevator.positionCoral4)<1 ); //claw.hasCoral;
   }
 }

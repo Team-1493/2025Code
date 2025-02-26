@@ -27,7 +27,7 @@ public class RobotJoystick extends CommandXboxController {
         if (x<deadbandX)x=0;
         x=Math.signum(getRawAxis(0))*x;
         SmartDashboard.putNumber("scalefactor", scaleFactor);
-        return -x*scaleFactor;
+        return x*scaleFactor;
     }
 
     // return the y stick value, square it for better low speed control
@@ -35,7 +35,7 @@ public class RobotJoystick extends CommandXboxController {
         double y = Math.pow(getRawAxis(1),2);
         if (y<deadbandY)y=0.;
         y=Math.signum(getRawAxis(1))*y;
-        return -y*scaleFactor;
+        return y*scaleFactor;
     }
     
     // return the rotate stick value,  TODO - do we ant to sqaure this also?

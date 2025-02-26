@@ -38,6 +38,7 @@ private VoltageOut  voltOutRearForward= new VoltageOut(4);
 private VoltageOut  voltOutRearReverse= new VoltageOut(-3);
 private VoltageOut  voltOutFrontForward= new VoltageOut(4);
 private VoltageOut  voltOutFrontReverse= new VoltageOut(-4);
+private VoltageOut  voltOutSpitCoral = new VoltageOut(-10);
 private VoltageOut  voltOutFrontHold= new VoltageOut(-.6);
 private VoltageOut  voltOutRearHold= new VoltageOut(.6);
 private VoltageOut  voltOutFrontSpitAlgae= new VoltageOut(8);
@@ -48,9 +49,9 @@ private VoltageOut  voltOutRearSpitAlgae= new VoltageOut(-8);
 
 public double 
         positionAlgae1=0,positionAlgae2 = 0, positionNet, 
-        positionCoral1=.295, positionCoral2=.295,
-        positionCoral3=.295,positionCoral4=.2,
-        positionIntake=0.375,positionNeutral=0.25;   
+        positionCoral1=.24, positionCoral2=.275,
+        positionCoral3=.275,positionCoral4=.18,
+        positionIntake=0.322,positionNeutral=0.25;   
 
 
 private DigitalInput limitLower = new DigitalInput(4);
@@ -143,6 +144,36 @@ public Claw(){
     }
 
 
+    public void toPositionC1(){
+        clawMotor.setControl(magicToPos.withPosition(positionCoral1));
+    }
+
+    public void toPositionC2(){
+        clawMotor.setControl(magicToPos.withPosition(positionCoral2));
+    }
+
+    public void toPositionC3(){
+        clawMotor.setControl(magicToPos.withPosition(positionCoral3));
+    }
+
+    public void toPositionC4(){
+        clawMotor.setControl(magicToPos.withPosition(positionCoral4));
+    }
+
+    public void toPositionA1(){
+        clawMotor.setControl(magicToPos.withPosition(positionAlgae1));
+    }
+
+    public void toPositionA2(){
+        clawMotor.setControl(magicToPos.withPosition(positionAlgae2));
+    }
+
+    public void toPositionN(){
+        clawMotor.setControl(magicToPos.withPosition(positionNet));
+    }
+
+
+
     public Command StopClaw() {
         return runOnce( () -> {stopClaw();});
     }
@@ -166,6 +197,14 @@ public Claw(){
 
     public void rearRollerRev(){
         clawRearRoller.setControl(voltOutRearReverse);
+    }
+
+    public Command SpitCoral() {
+        return runOnce( () -> {spitCoral();});
+    }
+
+    public void spitCoral(){
+        clawRearRoller.setControl(voltOutSpitCoral);
     }
 
 
@@ -266,13 +305,13 @@ public Claw(){
     cfg.Feedback.FeedbackRemoteSensorID=27;
     
     cfg.Slot0.GravityType=GravityTypeValue.Arm_Cosine;
-    cfg.Slot0.kG = 0.305;
-    cfg.Slot0.kP = 2.5;
+    cfg.Slot0.kG = 0.31;
+    cfg.Slot0.kP = 3;
     cfg.Slot0.kI = 0;
     cfg.Slot0.kD = 0;
-    cfg.Slot0.kS=0.07;
-    cfg.Slot0.kV=5.25;
-    cfg.Slot0.kA=0.5;
+    cfg.Slot0.kS = 0.07;
+    cfg.Slot0.kV = 5.25;
+    cfg.Slot0.kA = 0.02;
  
 //    cfg.MotorOutput.PeakForwardDutyCycle=.5;
 //    cfg.MotorOutput.PeakForwardDutyCycle=-.5;
@@ -287,27 +326,27 @@ public Claw(){
     cfg.CurrentLimits.SupplyCurrentLimitEnable=true;
     
     cfg.SoftwareLimitSwitch.ForwardSoftLimitEnable=true;
-    cfg.SoftwareLimitSwitch.ForwardSoftLimitThreshold=.380;
+    cfg.SoftwareLimitSwitch.ForwardSoftLimitThreshold=.332;
 
     cfg.SoftwareLimitSwitch.ReverseSoftLimitEnable=true;
-    cfg.SoftwareLimitSwitch.ReverseSoftLimitThreshold=-0.1;
+    cfg.SoftwareLimitSwitch.ReverseSoftLimitThreshold=-0.11;
 
     clawMotor.getConfigurator().apply(cfg);
 
     // Configure Roller Motors
     cfgRollers.MotorOutput.Inverted=InvertedValue.CounterClockwise_Positive;
     cfgRollers.MotorOutput.NeutralMode=NeutralModeValue.Brake;
-    cfgRollers.CurrentLimits.StatorCurrentLimit=60;
+    cfgRollers.CurrentLimits.StatorCurrentLimit=80;
     cfgRollers.CurrentLimits.StatorCurrentLimitEnable=true;
-    cfgRollers.CurrentLimits.SupplyCurrentLimit=40;
+    cfgRollers.CurrentLimits.SupplyCurrentLimit=50;
     cfgRollers.CurrentLimits.SupplyCurrentLimitEnable=true;
     clawFrontRoller.getConfigurator().apply(cfgRollers);
     clawRearRoller.getConfigurator().apply(cfgRollers);
 
 
     // Cponfigure encoder
-    cfgEnc.MagnetSensor.AbsoluteSensorDiscontinuityPoint=0.6;
-    cfgEnc.MagnetSensor.MagnetOffset=0.355;
+    cfgEnc.MagnetSensor.AbsoluteSensorDiscontinuityPoint=0.7;
+    cfgEnc.MagnetSensor.MagnetOffset=-0.67553;
     cfgEnc.MagnetSensor.SensorDirection=SensorDirectionValue.Clockwise_Positive;
     
     clawEncoder.getConfigurator().apply(cfgEnc);

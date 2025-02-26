@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.commands.ElevatorToReef;
 
 public class Elevator extends SubsystemBase{
     public final TalonFX elevatorRight = new TalonFX(22); 
@@ -28,9 +29,9 @@ public class Elevator extends SubsystemBase{
     
     public double 
             positionAlgae1=10,positionAlgae2 = 15, positionNet=1, 
-            positionCoral1=8, positionCoral2=14,
-            positionCoral3=21,positionCoral4=28,
-            positionIntake=.03;
+            positionCoral1=5, positionCoral2=7,
+            positionCoral3=21,positionCoral4=43,
+            positionIntake=0;
     public double elevatorPos=0;
     boolean zeroed=false,atLowerLimit=false,atUpperLimit=false;
 
@@ -138,6 +139,34 @@ public Elevator(){
     }
 
 
+    public void toPositionC1(){
+        elevatorRight.setControl(magicToPos.withPosition(positionCoral1));
+    }
+
+    public void toPositionC2(){
+        elevatorRight.setControl(magicToPos.withPosition(positionCoral2));
+    }
+
+    public void toPositionC3(){
+        elevatorRight.setControl(magicToPos.withPosition(positionCoral3));
+    }
+
+    public void toPositionC4(){
+        elevatorRight.setControl(magicToPos.withPosition(positionCoral4));
+    }
+
+    public void toPositionA1(){
+        elevatorRight.setControl(magicToPos.withPosition(positionAlgae1));
+    }
+
+    public void toPositionA2(){
+        elevatorRight.setControl(magicToPos.withPosition(positionAlgae2));
+    }
+
+    public void toPositionN(){
+        elevatorRight.setControl(magicToPos.withPosition(positionNet));
+    }
+
     public Command StopElevator() {
         return runOnce( () -> {stopElevator();});
         }
@@ -146,6 +175,7 @@ public Elevator(){
         SmartDashboard.putString("Man Dir", "stop");
         elevatorRight.stopMotor();
     }
+
 
 /* 
     public void zeroElevator(){
@@ -216,6 +246,7 @@ public Elevator(){
     positionCoral4= SmartDashboard.getNumber("Elevator positionCoral4", positionCoral4);
     SmartDashboard.putNumber("Elevator p1", positionCoral1);
     SmartDashboard.putNumber("Elevator p4", positionCoral4);
+    System.out.println("GGG  pos4  "+positionCoral4);
   }
 
 }
