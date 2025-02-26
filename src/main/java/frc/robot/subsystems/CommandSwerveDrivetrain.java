@@ -6,7 +6,9 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
@@ -173,7 +175,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         writeInitialConstants();
         initializeAutoBuilder();
-
+        setLimits();
 
 
 
@@ -204,6 +206,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         writeInitialConstants();
         initializeAutoBuilder();
+        setLimits();
     }
 
     /**
@@ -295,7 +298,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("Pose X",robotpose.getX());
         SmartDashboard.putNumber("Pose Y",robotpose.getY());
         SmartDashboard.putNumber("Pose Z",robotpose.getRotation().getDegrees());
-
+        SmartDashboard.putNumber("DriveCur1", this.getModule(0).getDriveMotor().getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("DriveCur2", this.getModule(1).getDriveMotor().getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("DriveCur3", this.getModule(2).getDriveMotor().getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("DriveCur4", this.getModule(3).getDriveMotor().getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("TurnCur1", this.getModule(0).getSteerMotor().getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("TurnCur2", this.getModule(1).getSteerMotor().getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("TurnCur3", this.getModule(2).getSteerMotor().getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("TurnCur4", this.getModule(3).getSteerMotor().getStatorCurrent().getValueAsDouble());
 
     }
 
@@ -345,7 +355,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         double x = -stickDriver.getY2()*MaxSpeed;
         double y = -stickDriver.getX2()*MaxSpeed;
         double z = -stickDriver.getRotate()*MaxAngularRate;
-
+/* 
         double headingRate=this.getPigeon2().getAngularVelocityZWorld().getValueAsDouble();
         headingRate=Math.toRadians(headingRate);
         SmartDashboard.putNumber("Drive HeadingRate", headingRate);
@@ -371,7 +381,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 z=headingRate;
                 SmartDashboard.putNumber("TargetHeading", targetHeading);
         }
-
+*/
         driveFieldCentric(x, y, z);
     }
 
@@ -508,6 +518,24 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public void stop(){
         driveRobotCentricCommand(0, 0, 0);
+    }
+
+    private void setLimits(){
+        CurrentLimitsConfigs clc = new CurrentLimitsConfigs();
+        clc.StatorCurrentLimit=20;
+        clc.SupplyCurrentLimit=20;
+        clc.StatorCurrentLimitEnable=true;
+
+
+        this.getModule(0).getDriveMotor().getConfigurator().apply(clc);
+        this.getModule(1).getDriveMotor().getConfigurator().apply(clc);
+        this.getModule(2).getDriveMotor().getConfigurator().apply(clc);
+        this.getModule(3).getDriveMotor().getConfigurator().apply(clc);
+        this.getModule(0).getSteerMotor().getConfigurator().apply(clc);
+        this.getModule(1).getSteerMotor().getConfigurator().apply(clc);
+        this.getModule(2).getSteerMotor().getConfigurator().apply(clc);
+        this.getModule(3).getSteerMotor().getConfigurator().apply(clc);
+
     }
 
 }

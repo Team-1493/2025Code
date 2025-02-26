@@ -52,6 +52,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     enabled=true;
+    m_robotContainer.zeroGyro().schedule();;
     m_robotContainer.zeroElevator().schedule();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();

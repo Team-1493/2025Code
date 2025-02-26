@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.ctre.phoenix6.Utils;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -10,7 +11,8 @@ public class RobotJoystick extends CommandXboxController {
     double scaleFactorRotateSlow=0.5,scaleFactorRotateFast=1;
     double scaleFactor=scaleFactorFast;
     double deadbandX=0.05,deadbandY=0.05,deadbandRot=0.05;
-
+    private SlewRateLimiter srlx= new SlewRateLimiter(6);
+    private SlewRateLimiter srly= new SlewRateLimiter(6);
     double scaleFactorRotate=scaleFactorRotateFast;
     int rotateAxis=4;
    // int rotateAxis=3;
@@ -27,7 +29,8 @@ public class RobotJoystick extends CommandXboxController {
         if (x<deadbandX)x=0;
         x=Math.signum(getRawAxis(0))*x;
         SmartDashboard.putNumber("scalefactor", scaleFactor);
-        return x*scaleFactor;
+//        return x*scaleFactor;
+        return -srlx.calculate(x*scaleFactor);
     }
 
     // return the y stick value, square it for better low speed control
@@ -35,7 +38,8 @@ public class RobotJoystick extends CommandXboxController {
         double y = Math.pow(getRawAxis(1),2);
         if (y<deadbandY)y=0.;
         y=Math.signum(getRawAxis(1))*y;
-        return y*scaleFactor;
+//        return (y*scaleFactor);
+        return -srly.calculate(y*scaleFactor);
     }
     
     // return the rotate stick value,  TODO - do we ant to sqaure this also?

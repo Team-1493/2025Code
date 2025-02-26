@@ -29,6 +29,8 @@ public class ElevatorToReefA1 extends Command {
   public void initialize() {
     elevFlag=false;
     claw.toPosition(claw.positionNeutral);
+    claw.rollersRun(-1, 1);
+
 
 
 
@@ -50,7 +52,9 @@ public class ElevatorToReefA1 extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    claw.toPosition(claw.positionAlgae1);
+    if(interrupted) claw.stopRollers(); 
+    else claw.holdAlgae();
+
   }
 
   @Override

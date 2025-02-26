@@ -28,9 +28,9 @@ public class Elevator extends SubsystemBase{
     private VoltageOut voltOutDown = new VoltageOut(-.4);
     
     public double 
-            positionAlgae1=10,positionAlgae2 = 15, positionNet=1, 
-            positionCoral1=5, positionCoral2=7,
-            positionCoral3=21,positionCoral4=43,
+            positionAlgae1=14,positionAlgae2 = 23, positionNet=1, 
+            positionCoral1=5, positionCoral2=8.5,
+            positionCoral3=21.75,positionCoral4=45,
             positionIntake=0;
     public double elevatorPos=0;
     boolean zeroed=false,atLowerLimit=false,atUpperLimit=false;
@@ -226,9 +226,9 @@ public Elevator(){
     cfg.Slot0.kV=.4;
     cfg.Slot0.kA=0;
 
-    cfg.CurrentLimits.StatorCurrentLimit=60;
+    cfg.CurrentLimits.StatorCurrentLimit=80;
     cfg.CurrentLimits.StatorCurrentLimitEnable=true;
-    cfg.CurrentLimits.SupplyCurrentLimit=40;
+    cfg.CurrentLimits.SupplyCurrentLimit=50;
     cfg.CurrentLimits.SupplyCurrentLimitEnable=true;
 
     elevatorRight.getConfigurator().apply(cfg);

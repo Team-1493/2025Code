@@ -57,7 +57,7 @@ public class RobotContainer {
     private final RobotJoystick stickOperator = new RobotJoystick(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    //public final VisionSystem vision = new VisionSystem(drivetrain);
+    public final VisionSystem vision = new VisionSystem(drivetrain);
 
     public IntakeCoral intakeCoral=new IntakeCoral(elevator, claw);
     public ElevatorToReef elevatorToReef;
@@ -108,14 +108,14 @@ public class RobotContainer {
         
 //        stickDriver.a().whileTrue(drivetrain.applyRequest(() -> brake));
         
-//        stickDriver.button(2).onTrue(new InstantCommand(() 
-//        -> drivetrain.setTargetHeading(Math.toRadians(-90))  )  );
-//        stickDriver.button(1).onTrue(new InstantCommand(() ->
-//            drivetrain.setTargetHeading(Math.toRadians( 179.9))  )  );
-//        stickDriver.button(3).onTrue(new InstantCommand(() ->
-//            drivetrain.setTargetHeading(Math.toRadians(90))  )  );            
-//        stickDriver.button(4).onTrue(new InstantCommand(() ->
-//            drivetrain.setTargetHeading(Math.toRadians(0))  )  );      
+        stickDriver.button(2).onTrue(new InstantCommand(() 
+        -> drivetrain.setTargetHeading(Math.toRadians(-90))  )  );
+        stickDriver.button(1).onTrue(new InstantCommand(() ->
+            drivetrain.setTargetHeading(Math.toRadians( 179.9))  )  );
+        stickDriver.button(3).onTrue(new InstantCommand(() ->
+            drivetrain.setTargetHeading(Math.toRadians(90))  )  );            
+        stickDriver.button(4).onTrue(new InstantCommand(() ->
+            drivetrain.setTargetHeading(Math.toRadians(0))  )  );      
 
 
         // Run SysId routines when holding back/start and X/Y.
@@ -135,6 +135,8 @@ public class RobotContainer {
         
         stickDriver.button(6).onFalse(
                     new InstantCommand(() ->stickDriver.setFastScaleFactor()  )  );
+
+//        stickDriver.button(10).whileTrue( driveReefRight);                    
          
 //       stickOperator.button(1).onTrue(claw.ToPosition(-.05));
 //        stickOperator.button(2).onTrue(claw.ToPosition(.1));
@@ -151,10 +153,10 @@ public class RobotContainer {
         stickOperator.button(9).onTrue(new ElevatorToNet(elevator,claw));                                                  
 
         stickOperator.button(7).whileTrue(new IntakeCoral(elevator,claw));
-        stickOperator.button(7).onFalse(claw.StopRollers());
+        stickOperator.button(7).onFalse(claw.StopRollers().andThen(new ElevatorToReefC3(elevator,claw)));
 
         stickOperator.button(8).whileTrue
-                (new IntakeAlgae1(claw));
+                (new IntakeAlgae1(elevator,claw));
 
         stickOperator.button(6).onTrue(claw.SpitAlgae());
         stickOperator.button(6).onFalse(claw.StopRollers());
@@ -163,9 +165,9 @@ public class RobotContainer {
         stickOperator.button(5).onFalse(claw.StopRollers());
 
 
-        stickOperator.button(12).onTrue(new InstantCommand(() -> elevator.elevatorRight.setPosition(0)));
+//        stickOperator.button(12).onTrue(new InstantCommand(() -> elevator.elevatorRight.setPosition(0)));
 
-        stickOperator.button(11).onTrue(new InstantCommand( () -> {updateConstants();}));
+//        stickOperator.button(11).onTrue(new InstantCommand( () -> {updateConstants();}));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
@@ -183,6 +185,12 @@ public class RobotContainer {
 
      public Command zeroElevator(){
         return (new ZeroElevator(elevator));
+     }
+
+
+     public Command zeroGyro(){
+        return (drivetrain.runOnce(() -> drivetrain.zeroGyro()));
+
      }
 
     }

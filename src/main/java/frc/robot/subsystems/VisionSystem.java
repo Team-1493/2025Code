@@ -25,16 +25,16 @@ public class VisionSystem extends SubsystemBase {
     public static int closestReefID=0;
     public static double closestReefDist=999;
     public static double reefOffsetX=0.25;
-    public static double reefOffsetY=0.75;
+    public static double reefOffsetY=.75;
     public static double intakeOffsetX=0;
     public static double intakeOffsetY=.75;
     public static double stdFactor=30;
 
 
     Transform3d camFR_RobotToCam = 
-        new Transform3d(.1,.1,.22,new Rotation3d(0,0,Math.toRadians(30)));
+        new Transform3d(.273,.247,.188,new Rotation3d(0,0,Math.toRadians(33)));
     Transform3d camFL_RobotToCam = 
-        new Transform3d(-.1,-.1,.22,new Rotation3d(0,0,Math.toRadians(-30)));
+        new Transform3d(-.273,-.247,.188,new Rotation3d(0,0,Math.toRadians(-30)));
     
     Transform3d camB_RobotToCam = 
         new Transform3d(-.1,0,1,new Rotation3d(0,0,Math.PI));
@@ -44,7 +44,7 @@ public class VisionSystem extends SubsystemBase {
     public static Matrix<N3, N1> kMultiTagStdDevs;
 
 
-    private VisionSystemSim visionSim;
+//    private VisionSystemSim visionSim;
 
     
 
@@ -70,21 +70,21 @@ public class VisionSystem extends SubsystemBase {
 
         if (Robot.isSimulation()) {
              // Create the vision system simulation which handles cameras and targets on the field.
-             visionSim = new VisionSystemSim("visionSim");
+//             visionSim = new VisionSystemSim("visionSim");
              // Add all the AprilTags inside the tag layout as visible targets to this simulated field.
-             visionSim.addAprilTags(VisionConstants.FieldLayout);
+ //            visionSim.addAprilTags(VisionConstants.FieldLayout);
         }
 
         dt=m_dt;
 
         camFL = new AprilTagCam("Spinel_1", camFL_RobotToCam,
-            dt,visionSim);
+            dt);
         
         camFR = new AprilTagCam("Spinel_2", camFR_RobotToCam,
-            dt,visionSim);
+            dt);
 
-        camB = new AprilTagCam("OV9281_1", camB_RobotToCam,
-            dt,visionSim);           
+ //       camB = new AprilTagCam("OV9281_1", camB_RobotToCam,
+ //           dt,visionSim);           
             
 
 
@@ -97,8 +97,8 @@ public class VisionSystem extends SubsystemBase {
   public void periodic(){ 
             camFL.getEstimatedGlobalPose();
             camFR.getEstimatedGlobalPose();
-            camB.getEstimatedGlobalPose();
-            visionSim.update(dt.getPose());
+//            camB.getEstimatedGlobalPose();
+//            visionSim.update(dt.getPose());
 
             if (camFL.closestTargetDist<camFR.closestTargetDist){
                 closestReefDist=camFL.closestTargetDist;

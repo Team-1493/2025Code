@@ -38,7 +38,7 @@ private VoltageOut  voltOutRearForward= new VoltageOut(4);
 private VoltageOut  voltOutRearReverse= new VoltageOut(-3);
 private VoltageOut  voltOutFrontForward= new VoltageOut(4);
 private VoltageOut  voltOutFrontReverse= new VoltageOut(-4);
-private VoltageOut  voltOutSpitCoral = new VoltageOut(-10);
+private VoltageOut  voltOutSpitCoral = new VoltageOut(-8);
 private VoltageOut  voltOutFrontHold= new VoltageOut(-.6);
 private VoltageOut  voltOutRearHold= new VoltageOut(.6);
 private VoltageOut  voltOutFrontSpitAlgae= new VoltageOut(8);
@@ -48,9 +48,9 @@ private VoltageOut  voltOutRearSpitAlgae= new VoltageOut(-8);
     
 
 public double 
-        positionAlgae1=0,positionAlgae2 = 0, positionNet, 
-        positionCoral1=.24, positionCoral2=.275,
-        positionCoral3=.275,positionCoral4=.18,
+        positionAlgae1=-.125,positionAlgae2 = 0, positionNet, 
+        positionCoral1=.25, positionCoral2=.25,
+        positionCoral3=.25,positionCoral4=.23,
         positionIntake=0.322,positionNeutral=0.25;   
 
 
@@ -59,7 +59,6 @@ private DigitalInput limitUpper = new DigitalInput(1);
 private DigitalInput coralSensor = new DigitalInput(5);
 
 private boolean atLowerLimit=false,atUpperLimit=false;
-private double currentLimit=30;
 public boolean hasCoral = false;
 public boolean hasAlgae=false;
 int coralCounter=0,algaeCounter=0;
@@ -283,7 +282,7 @@ public Claw(){
 
     private void checkForAlgae(){
 
-        if( (Math.abs(clawRearRoller.getStatorCurrent().getValueAsDouble())>1)
+        if( (Math.abs(clawRearRoller.getStatorCurrent().getValueAsDouble())>3)
         && Math.abs(clawRearRoller.getVelocity().getValueAsDouble())<0.1){
             algaeCounter ++;
             if (algaeCounter>3) hasAlgae=true;
@@ -329,7 +328,7 @@ public Claw(){
     cfg.SoftwareLimitSwitch.ForwardSoftLimitThreshold=.332;
 
     cfg.SoftwareLimitSwitch.ReverseSoftLimitEnable=true;
-    cfg.SoftwareLimitSwitch.ReverseSoftLimitThreshold=-0.11;
+    cfg.SoftwareLimitSwitch.ReverseSoftLimitThreshold=-0.26;
 
     clawMotor.getConfigurator().apply(cfg);
 
