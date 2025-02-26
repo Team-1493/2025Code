@@ -1,7 +1,12 @@
 package frc.robot.subsystems;
 
-import java.time.Period;
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Volts;
 
+import java.time.Period;
+import java.util.concurrent.TimeUnit;
+
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -15,10 +20,17 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
+import edu.wpi.first.units.DistanceUnit;
+import edu.wpi.first.units.VelocityUnit;
+import edu.wpi.first.units.VoltageUnit;
+import edu.wpi.first.units.measure.Per;
+import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Claw extends SubsystemBase {
 
@@ -65,6 +77,24 @@ public boolean hasAlgae=false;
 int coralCounter=0,algaeCounter=0;
 private double voltage,current;
 public double encPosition,rearRollerCurrent;
+
+    private final SysIdRoutine m_sysIdRoutineArm = new SysIdRoutine(
+        new SysIdRoutine.Config(
+            Velocity.ofBaseUnits(1,VelocityUnit.combine(Volts, Second) ),        // Use default ramp rate (1 V/s)
+            Volts.of(.25), // Reduce dynamic step voltage to 4 V to prevent brownout
+            null,        // Use default timeout (10 s)
+            // Log state with SignalLogger class
+            state -> SignalLogger.writeString("Arm", state.toString())
+        ),
+        new SysIdRoutine.Mechanism(
+ //           output -> setControl(m_translationCharacterization.withVolts(output)),
+            output -> SetVoltage(0.25),
+            null,
+            this
+        )
+    );
+
+
 
 public Claw(){
     SmartDashboard.putNumber("Claw Pos Algae1", positionAlgae1);
@@ -131,7 +161,9 @@ public Claw(){
     }
 
 
-
+    private Command SetVoltage(double volts){
+        return runOnce ( ()-> clawMotor.setControl(new VoltageOut(volts)));
+    }
 
     public Command ToPosition(double pos) {
         return runOnce( () -> {toPosition(pos);
@@ -294,6 +326,7 @@ public Claw(){
             algaeCounter=0;
         } 
     }
+
 
 
     // Configure claw motor
