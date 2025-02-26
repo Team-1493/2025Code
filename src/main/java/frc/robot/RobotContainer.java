@@ -59,12 +59,12 @@ public class RobotContainer {
     public final VisionSystem vision = new VisionSystem(drivetrain);
 
     public IntakeCoral intakeCoral=new IntakeCoral(elevator, claw);
+    public ActionCommands actions = new ActionCommands(drivetrain,elevator,claw); 
 
     //The auto generator was originally defined just as public, but I changed that, may need to be changed back?
-    private final AutoGenerator autoGenerator = new AutoGenerator(elevator, claw);
+    private final AutoGenerator autoGenerator = new AutoGenerator(elevator, claw, actions);
     private final SendableChooser<Command> autoChooser = autoGenerator.autoChooser;
 
-    public ActionCommands actions = new ActionCommands(drivetrain,elevator,claw); 
     public DriveReefLeft driveReefLeft = new DriveReefLeft(drivetrain);
     public DriveReefRight driveReefRight = new DriveReefRight(drivetrain);
     public DriveIntake driveIntake = new DriveIntake(drivetrain);

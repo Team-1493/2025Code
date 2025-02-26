@@ -38,7 +38,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Drop Algae",
+      "name": "",
       "waypointRelativePos": 0.28,
       "endWaypointRelativePos": null,
       "command": {

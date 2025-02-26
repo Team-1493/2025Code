@@ -1,0 +1,66 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.934679487179486,
+        "y": 5.346025641025641
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.2146853063296863,
+        "y": 6.040005741275227
+      },
+      "isLocked": false,
+      "linkedName": "Coral_Score_K"
+    },
+    {
+      "anchor": {
+        "x": 1.323589743589743,
+        "y": 7.0385897435897435
+      },
+      "prevControl": {
+        "x": 2.2870894844290204,
+        "y": 6.770880480764105
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Coral_Intake_1"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "toIntake",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 1.0,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "toIntake"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -53.69550287742479
+  },
+  "reversed": false,
+  "folder": "3 Coral Auto L Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -58.642999999999994
+  },
+  "useDefaultConstraints": true
+}

@@ -12,22 +12,29 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.IntakeCoral;
+import frc.robot.subsystems.ActionCommands;
 
 public class AutoGenerator {
     public SendableChooser<Command> autoChooser;
     Elevator elevator;
     Claw claw;
-
-    private void defineCommands(Command command0, Command command1, Command command2, Command command3, Command simIntakeCoral, Command simIntakeAlgae, Command simScoreCoral, Command simDropAlgae){
-        NamedCommands.registerCommand("testAction0", command0);
-        NamedCommands.registerCommand("testAction1", command1);
-        NamedCommands.registerCommand("testAction2", command2);
-        NamedCommands.registerCommand("testAction3", command3);
-
+    ActionCommands actions;
+    private void defineCommands(Command simIntakeCoral, Command simIntakeAlgae, Command simScoreCoral, Command simDropAlgae, Command toReef1, Command toReef2, Command toReef3, Command toReef4, Command toIntake, Command driveToReefWall, Command driveToIntakeWall, Command intakeCoral, Command spitCoral, Command autoComplete){
         NamedCommands.registerCommand("simIntakeCoral", simIntakeCoral);
         NamedCommands.registerCommand("simIntakeAlgae", simIntakeAlgae);
         NamedCommands.registerCommand("simScoreCoral", simScoreCoral);
         NamedCommands.registerCommand("simDropAlgae", simDropAlgae);
+
+        NamedCommands.registerCommand("toReef1", toReef1);
+        NamedCommands.registerCommand("toReef2", toReef2);
+        NamedCommands.registerCommand("toReef3", toReef3);
+        NamedCommands.registerCommand("toReef4", toReef4);
+        NamedCommands.registerCommand("toIntake", toIntake);
+        NamedCommands.registerCommand("driveToReefWall", driveToReefWall);
+        NamedCommands.registerCommand("driveToIntakeWall", driveToIntakeWall);
+        NamedCommands.registerCommand("intakeCoral", intakeCoral);
+        NamedCommands.registerCommand("spitCoral", spitCoral);
+        NamedCommands.registerCommand("autoComplete", autoComplete);
     }
 
     private void autoChooserInit(){
@@ -36,17 +43,20 @@ public class AutoGenerator {
         SmartDashboard.putBoolean("autocommand0Successful", false);
         SmartDashboard.putData("Auto Chooser", autoChooser);
         
-        //Variables for simulating 3 Coral Auto
-        SmartDashboard.putBoolean("Holding Coral", true);
-        SmartDashboard.putBoolean("Holding Algae", false);
-        SmartDashboard.putNumber("Scored Coral", 0);
+        //Variables for simulating Autos
+        SmartDashboard.putString("autoSim elevatorGoal", "start");
+        SmartDashboard.putBoolean("autoSim holdingCoral", true);
+        SmartDashboard.putNumber("autoSim coralScored", 0);
+        SmartDashboard.putBoolean("autoSim autoComplete", false);
 
     }
 
 
-    public AutoGenerator( Elevator m_elevator, Claw m_claw){
+    public AutoGenerator( Elevator m_elevator, Claw m_claw, ActionCommands m_actions){
         elevator = m_elevator;
         claw = m_claw;
+        actions = m_actions;
+        
 
         InstantCommand simIntakeCoral = new InstantCommand(
             () -> SmartDashboard.putBoolean("Holding Coral", true)
@@ -79,14 +89,57 @@ public class AutoGenerator {
             () ->m_claw.toPosition(m_claw.positionCoral1));  
             
         Command auto1 = AutoCommand1();
-   
-        defineCommands(command0, command1, command2, command3, simIntakeCoral, simIntakeAlgae, simScoreCoral, simDropAlgae);
         
+        SequentialCommandGroup toReef1 = m_actions.elevatorToReef1;
+        SequentialCommandGroup toReef2 = m_actions.elevatorToReef2;
+        SequentialCommandGroup toReef3 = m_actions.elevatorToReef3;
+        //SequentialCommandGroup toReef4 = m_actions.elevatorToReef4;
+        //autoSim version
+        SequentialCommandGroup toReef4 = new SequentialCommandGroup(
+            new InstantCommand(() -> SmartDashboard.putString("autoSim elevatorGoal", "beginTo4")),
+            m_actions.elevatorToReef4,
+            new InstantCommand(() -> SmartDashboard.putString("autoSim elevatorGoal", "endTo4"))
+        );
+
+
+        //SequentialCommandGroup toIntake = m_actions.elevatorToIntake;
+        //autoSim version
+        SequentialCommandGroup toIntake = new SequentialCommandGroup(
+            new InstantCommand(() -> SmartDashboard.putString("autoSim elevatorGoal", "beginToIntake")),
+            m_actions.elevatorToIntake,
+            new InstantCommand(() -> SmartDashboard.putString("autoSim elevatorGoal", "endToIntake"))
+        );
+        
+        Command driveToReefWall = m_actions.bumpIntoWall;
+        Command driveToIntakeWall = m_actions.bumpIntoWallReverse;
+
+        //Command intakeCoral = m_actions.intakeCoral;
+        //autoSim version
+        SequentialCommandGroup intakeCoral = new SequentialCommandGroup(
+            new InstantCommand(() -> SmartDashboard.putBoolean("autoSim holdingCoral", true)),
+            m_actions.intakeCoral
+        );
+
+        //SequentialCommandGroup spitCoral = m_actions.spitCoral;
+        //autoSim version
+        SequentialCommandGroup spitCoral = new SequentialCommandGroup(
+            new InstantCommand(() -> SmartDashboard.putBoolean("autoSim holdingCoral", false)),
+            new InstantCommand(() -> SmartDashboard.putNumber("autoSim coralScored", 1+SmartDashboard.getNumber("autoSim coralScored", 0))),
+            m_actions.spitCoral
+        );
+
+        InstantCommand autoComplete = new InstantCommand(() -> SmartDashboard.putBoolean("autoSim autoComplete", true));
+
+        defineCommands(simIntakeCoral, simIntakeAlgae, simScoreCoral, simDropAlgae, toReef1, toReef2, toReef3, toReef4, toIntake, driveToReefWall, driveToIntakeWall, intakeCoral, spitCoral, autoComplete);
+        
+
+
         autoChooserInit();    
         autoChooser.addOption("Auto1", auto1);
         autoChooser.addOption("Command1", command1);
 
     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+
 
      public Command AutoCommand1() {
     try{

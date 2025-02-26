@@ -23,7 +23,7 @@ public class BumpIntoWall extends Command {
 
   @Override
   public void initialize() {
-    sd.driveRobotCentric(.25, 0, 0);
+    sd.driveRobotCentric(0.75, 0, 0); //was 0.25 originally
     i=0;
   }
 

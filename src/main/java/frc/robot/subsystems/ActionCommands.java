@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.VisionConstants;
 import frc.robot.commands.BumpIntoWall;
+import frc.robot.commands.BumpIntoWallReverse;
+
 
 public class ActionCommands {
 
@@ -25,7 +27,7 @@ public class ActionCommands {
     public SequentialCommandGroup elevatorToReef1, elevatorToReef2,elevatorToReef3,
         elevatorToReef4, elevatorToIntake,elevatorToAlgae1,elevatorToAlgae2;
     public  SequentialCommandGroup spitCoral;
-    public Command intakeCoral,bumpIntoWall;
+    public Command intakeCoral,bumpIntoWall, bumpIntoWallReverse;
 
 
     
@@ -88,6 +90,7 @@ public  ActionCommands(CommandSwerveDrivetrain m_sd,Elevator m_elevator,Claw m_c
         new InstantCommand(()->Timer.delay(1.5)),claw.StopRollers());
 
         bumpIntoWall = new BumpIntoWall(sd);
+        bumpIntoWallReverse = new BumpIntoWallReverse(sd);
 }
 }
 
