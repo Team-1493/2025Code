@@ -24,8 +24,7 @@ public class ActionCommands {
     private Claw claw;
     public SequentialCommandGroup elevatorToReef1, elevatorToReef2,elevatorToReef3,
         elevatorToReef4, elevatorToIntake,elevatorToAlgae1,elevatorToAlgae2;
-    public  SequentialCommandGroup spitCoral;
-    public Command intakeCoral,bumpIntoWall;
+    public Command intakeCoral,spitCoral,bumpIntoWall;
 
 
     
@@ -83,9 +82,7 @@ public  ActionCommands(CommandSwerveDrivetrain m_sd,Elevator m_elevator,Claw m_c
 
         intakeCoral = new frc.robot.commands.IntakeCoral(elevator,claw);
 
-        spitCoral= new SequentialCommandGroup(
-        claw.SpitCoral(),
-        new InstantCommand(()->Timer.delay(1.5)),claw.StopRollers());
+        spitCoral= claw.SpitCoral();
 
         bumpIntoWall = new BumpIntoWall(sd);
 }

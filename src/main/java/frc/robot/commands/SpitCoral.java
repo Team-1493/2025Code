@@ -6,61 +6,42 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class IntakeCoral extends Command {
+public class SpitCoral extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Elevator elevator;
   private final Claw claw;
-  boolean elevFlag=false;
-  boolean clawFlag=false;
-  int i = 0;
-
+  int i;
   /**
    * @param subsystem The subsystem used by this command.
    */
-  public IntakeCoral(Elevator m_elevator,Claw m_claw) {
+  public SpitCoral(Claw m_claw) {
     claw=m_claw;
-    elevator=m_elevator;
-    elevFlag=false;
-    addRequirements(claw,elevator);
+    addRequirements(claw);
   }
 
   @Override
   public void initialize() {
-    claw.StopRollers();  
-    elevFlag=false;
-    if(elevator.elevatorPos>0.15 && claw.encPosition>.15) claw.toPosition(.15);
-    claw.rearRollerRev();
-
-
-
-    
+    claw.spitCoral();
+    i=0;
 
   }
 
   @Override
   public void execute() {
-    if (claw.encPosition<0.22 && !elevFlag) {
-      elevator.toPosition(elevator.positionIntake);
-      elevFlag=true;}   
-    if (elevator.elevatorPos<0.15){
-      claw.toPosition(claw.positionIntake);
-      clawFlag=true;
-    } 
-
-
-
   }
 
   @Override
   public void end(boolean interrupted) {
-  }
+    claw.stopRollers(); 
+      }
 
   @Override
   public boolean isFinished() {
-      return (clawFlag && elevFlag);
-
+    if(!claw.hasCoral)i++;
+    else i=0;
+    return i>10;
   }
 }

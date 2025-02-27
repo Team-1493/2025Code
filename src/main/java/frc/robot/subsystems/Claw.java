@@ -59,7 +59,7 @@ private DigitalInput limitUpper = new DigitalInput(1);
 private DigitalInput coralSensor = new DigitalInput(5);
 
 private boolean atLowerLimit=false,atUpperLimit=false;
-public boolean hasCoral = false;
+public boolean hasCoral = false, prevHasCoral=false;
 public boolean hasAlgae=false;
 int coralCounter=0,algaeCounter=0;
 private double voltage,current;
@@ -94,13 +94,15 @@ public Claw(){
 
         checkForCoral();
         checkForAlgae();
+      
+
+        if (prevHasCoral &&  !hasCoral) stopRollers();
+        prevHasCoral=hasCoral;
 
         SmartDashboard.putNumber("Claw Enc AbsPos", encPosition);    
 
         SmartDashboard.putNumber("Claw Voltqqq",voltage);
         SmartDashboard.putNumber("Claw Current", current);
-        SmartDashboard.putNumber("Roller Current", clawRearRoller.getStatorCurrent().getValueAsDouble());
-        SmartDashboard.putNumber("Roller Vel", clawRearRoller.getVelocity().getValueAsDouble());
 
         SmartDashboard.putBoolean("Claw LLS",atLowerLimit);
         SmartDashboard.putBoolean("Claw ULS",atUpperLimit);
@@ -276,8 +278,17 @@ public Claw(){
 
     // Check if we have Coral
     private void checkForCoral(){
+            prevHasCoral=hasCoral;
             if (!coralSensor.get()) hasCoral=true;
             else hasCoral=false;
+    }
+
+    public boolean pickedUpCoral(){
+        return (!prevHasCoral && hasCoral);
+    }
+
+    public boolean shotCoral(){
+        return (prevHasCoral && !hasCoral);
     }
 
     private void checkForAlgae(){

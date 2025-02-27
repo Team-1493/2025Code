@@ -12,6 +12,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveIntake;
 import frc.robot.commands.DriveReefLeft;
 import frc.robot.commands.DriveReefRight;
@@ -27,6 +28,7 @@ import frc.robot.commands.ElevatorToNet;
 
 import frc.robot.commands.IntakeAlgae1;
 import frc.robot.commands.IntakeCoral;
+import frc.robot.commands.SpitCoral;
 import frc.robot.commands.ZeroElevator;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ActionCommands;
@@ -71,7 +73,11 @@ public class RobotContainer {
     public DriveReefRight driveReefRight = new DriveReefRight(drivetrain);
     public DriveIntake driveIntake = new DriveIntake(drivetrain);
 
+    private Trigger receivedCoral;
+
     public RobotContainer() {
+        receivedCoral = new Trigger ( ()-> claw.pickedUpCoral());
+
         drivetrain.setupHeadingController();
         configureBindings();        
     }
@@ -138,11 +144,6 @@ public class RobotContainer {
 
 //        stickDriver.button(10).whileTrue( driveReefRight);                    
          
-//       stickOperator.button(1).onTrue(claw.ToPosition(-.05));
-//        stickOperator.button(2).onTrue(claw.ToPosition(.1));
-//        stickOperator.button(3).onTrue(claw.ToPosition(.25));
-//        stickOperator.button(4).onTrue(claw.ToPosition(.32));
-
         stickOperator.button(1).onTrue(new ElevatorToReefC1(elevator,claw));                     
         stickOperator.button(2).onTrue(new ElevatorToReefC2(elevator,claw));                     
         stickOperator.button(3).onTrue(new ElevatorToReefC3(elevator,claw)); 
@@ -152,18 +153,17 @@ public class RobotContainer {
         stickOperator.button(13).onTrue(new ElevatorToReefA2(elevator,claw));    
         stickOperator.button(9).onTrue(new ElevatorToNet(elevator,claw));                                                  
 
-        stickOperator.button(7).whileTrue(new IntakeCoral(elevator,claw));
-        stickOperator.button(7).onFalse(claw.StopRollers().andThen(new ElevatorToReefC3(elevator,claw)));
-
+        stickOperator.button(7).onTrue(new IntakeCoral(elevator,claw));
+        
         stickOperator.button(8).whileTrue
                 (new IntakeAlgae1(elevator,claw));
 
         stickOperator.button(6).onTrue(claw.SpitAlgae());
         stickOperator.button(6).onFalse(claw.StopRollers());
 
-        stickOperator.button(5).onTrue(actions.spitCoral);
-        stickOperator.button(5).onFalse(claw.StopRollers());
+        stickOperator.button(5).onTrue(new SpitCoral(claw));
 
+        receivedCoral.onTrue(claw.StopRollers().andThen(new ElevatorToReefC3(elevator,claw)));
 
 //        stickOperator.button(12).onTrue(new InstantCommand(() -> elevator.elevatorRight.setPosition(0)));
 
