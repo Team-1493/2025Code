@@ -3,35 +3,24 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
-import frc.robot.subsystems.AprilTagCam;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.VisionSystem;
 import frc.robot.Constants;
 import frc.robot.VisionConstants;
-
-import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class FollowPoseDirect extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final CommandSwerveDrivetrain sd;
-    boolean hasFirstTarget=false;
-    boolean hasTarget=false;
-    PhotonTrackedTarget target,lastTarget;
     Pose2d robotPose2d;
-    Pose3d robotPose3d;
-    Pose3d cameraPose = new Pose3d();
     Pose2d goalPose= new Pose2d();
-    Transform3d  targetTransform = new Transform3d();
-    Transform3d targetToGoal = new Transform3d();
-    Transform3d ROBOT_TO_CAMERA = new Transform3d();
-    public Pose3d targetPose3d     = new Pose3d();
+    double finalRawRotation;
+    double deltaRot;
+
     public Pose2d targetPose2d     = new Pose2d();
     ProfiledPIDController pidx, pidy, pidr; 
 
@@ -43,62 +32,37 @@ public class FollowPoseDirect extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    hasFirstTarget=false;
-    hasTarget=false;
+    
     robotPose2d=sd.getState().Pose;
     updateControllers();
     pidr.reset(robotPose2d.getRotation().getRadians());
     pidx.reset(robotPose2d.getX());
     pidy.reset(robotPose2d.getY());
+    goalPose=getTagTargetPose();
+    deltaRot=sd.getPose().getRotation().getRadians()-sd.rawGyroInitial;
+    finalRawRotation=goalPose.getRotation().getRadians()-deltaRot;
+    goalPose=new Pose2d(goalPose.getX(),goalPose.getY(),new Rotation2d(finalRawRotation));
+    System.out.println(goalPose.getX()+"   "+goalPose.getY()+"   "+goalPose.getRotation().getDegrees());
+    pidx.setGoal(goalPose.getX());
+    pidy.setGoal(goalPose.getY());
+    pidr.setGoal(goalPose.getRotation().getRadians());
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    /* 
-
-    if (hasFirstTarget){
-
-      if (hasTarget){
-        robotPose2d = sd.getPose(); 
-        robotPose3d= new Pose3d(
-          robotPose2d.getX(),
-          robotPose2d.getY(), 0, 
-          new Rotation3d(0,0,robotPose2d.getRotation().getRadians())) ;
-        if(AprilTagCam.BACK)ROBOT_TO_CAMERA=VisionConstants.ROBOT_TO_CAMERA_B;
-        else ROBOT_TO_CAMERA=VisionConstants.ROBOT_TO_CAMERA_F;           
-        cameraPose=robotPose3d.transformBy(VisionConstants.ROBOT_TO_CAMERA_B); 
-       targetPose3d=cameraPose.transformBy(targetTransform);        
-        goalPose=targetPose3d.transformBy(targetToGoal).toPose2d();
-
-
-        pidx.setGoal(goalPose.getX());
-        pidy.setGoal(goalPose.getY());
-        pidr.setGoal(goalPose.getRotation().getRadians());
-      }
+      
 
       robotPose2d=sd.getPose();
       double dx = pidx.calculate(robotPose2d.getX());
       double dy = pidy.calculate(robotPose2d.getY());
       double dr = pidr.calculate(robotPose2d.getRotation().getRadians());
 
-      sd.driveFieldCentric(dx, dy, dr);
+      System.out.println(dx+"   "+robotPose2d.getX()+"    "+pidx.getPositionError());
 
-      SmartDashboard.putNumber("FollowPose RobotPose x", robotPose2d.getX());
-      SmartDashboard.putNumber("FollowPose RobotPose y", robotPose2d.getY());
-      SmartDashboard.putNumber("FollowPose RobotPose rot", robotPose2d.getRotation().getDegrees());
-      SmartDashboard.putNumber("FollowPose GoalPose x", goalPose.getX());
-      SmartDashboard.putNumber("FollowPose GoalPose y", goalPose.getY());
-      SmartDashboard.putNumber("FollowPose GoalPose rot", goalPose.getRotation().getDegrees());
-      SmartDashboard.putNumber("FollowPose TargetTrans x", targetTransform.getX());
-      SmartDashboard.putNumber("FollowPose TargetTrans y", targetTransform.getY());
-      SmartDashboard.putNumber("FollowPose TargetTrans rot", Math.toDegrees(targetTransform.getRotation().getAngle()));
-    }
-    // System.out.println(AprilTagCam.visionPose.getX()+","+AprilTagCam.visionPose.getY());
-      SmartDashboard.putBoolean("FollowPose hasTarget",hasTarget);
+      sd.driveRobotCentric(dx, dy, dr);
 
-      */
   }
 
   @Override
@@ -107,15 +71,6 @@ public class FollowPoseDirect extends Command {
   }
 
   public void updateControllers(){
-      SmartDashboard.putNumber("FollowPose RobotPose x", 0);
-      SmartDashboard.putNumber("FollowPose RobotPose y", 0);
-      SmartDashboard.putNumber("FollowPose RobotPose rot",0);
-      SmartDashboard.putNumber("FollowPose GoalPose x", 0);
-      SmartDashboard.putNumber("FollowPose GoalPose y", 0);
-      SmartDashboard.putNumber("FollowPose GoalPose rot",0);
-      SmartDashboard.putNumber("FollowPose TargetTrans x",0);
-      SmartDashboard.putNumber("FollowPose TargetTrans y", 0);
-      SmartDashboard.putNumber("FollowPose TargetTrans rot",0);
 
 
       pidx = new ProfiledPIDController(
@@ -145,6 +100,45 @@ public class FollowPoseDirect extends Command {
        pidr.enableContinuousInput(-Math.PI, Math.PI);
 
 
-  } 
+  }
+  
+     private Pose2d getTagTargetPose(){
+        Pose2d targetPose;
+        double rotRobot;
+        double rotTarget;
+
+        double reefOffsetX = -VisionSystem.reefOffsetX;
+        double reefOffsetY = VisionSystem.reefOffsetY;
+
+        Pose2d robotPose = sd.getPose();
+        double xr=robotPose.getX();
+        double yr=robotPose.getY();
+        int id;
+
+        // y = -1/2x  ,  y = 1/2 x  ,   x = 0
+        // coord reef center 4.508,4.055
+        xr=xr - 4.058;
+        yr=yr - 4.055;  
+
+        id=13;
+        if (yr>xr/2 && yr<-xr/2) id=18;
+        if (xr<0 && yr<xr/2) id = 17;
+        if (xr<0 && yr>-xr/2 ) id = 19;
+        if (xr>0 && yr>xr/2) id = 20;    
+        if (yr<xr/2 && yr>-xr/2) id = 21;
+        if (xr>0 && yr<-xr/2 ) id = 22;
+
+         int index = id-1;
+        targetPose = VisionConstants.AprilTagList.get(index).pose.toPose2d();
+        System.out.println("***********************  "+targetPose.getX());
+        System.out.println("***********************  "+targetPose.getY());
+        rotTarget = targetPose.getRotation().getRadians();
+        rotRobot=rotTarget+Math.PI;
+        targetPose = new Pose2d(
+            targetPose.getX()+reefOffsetX*Math.sin(rotTarget)+reefOffsetY*Math.cos(rotTarget),
+            targetPose.getY()-reefOffsetX*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
+            new Rotation2d(rotRobot));
+        return (targetPose);
+    }
 
 }

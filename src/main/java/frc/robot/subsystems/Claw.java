@@ -51,7 +51,7 @@ public double
         positionAlgae1=-.125,positionAlgae2 = 0, positionNet, 
         positionCoral1=.25, positionCoral2=.25,
         positionCoral3=.25,positionCoral4=.23,
-        positionIntake=0.322,positionNeutral=0.25;   
+        positionIntake=0.314,positionNeutral=0.25;   
 
 
 private DigitalInput limitLower = new DigitalInput(4);
@@ -97,7 +97,6 @@ public Claw(){
       
 
         if (prevHasCoral &&  !hasCoral) stopRollers();
-        prevHasCoral=hasCoral;
 
         SmartDashboard.putNumber("Claw Enc AbsPos", encPosition);    
 

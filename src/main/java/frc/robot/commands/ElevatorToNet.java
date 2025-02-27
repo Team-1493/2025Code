@@ -27,6 +27,8 @@ public class ElevatorToNet extends Command {
 
   @Override
   public void initialize() {
+    elevator.stopElevator();
+    claw.stopClaw();
     elevFlag=false;
     claw.toPosition(claw.positionNeutral);
 

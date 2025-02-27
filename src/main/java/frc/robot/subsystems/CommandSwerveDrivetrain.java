@@ -25,6 +25,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.jni.Pose3dJNI;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -54,7 +55,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
     private double targetHeading=0, targetHeadingPrev=0,headingRateDeadband=1;
     boolean pointInDirection=false;
-
+    private double reverseDirection=1;
+    public double rawGyroInitial=0;
     private TrapezoidProfile.Constraints tp =
          new TrapezoidProfile.Constraints(3, 6);
     private ProfiledPIDController headingController = new ProfiledPIDController(20, 0, 0,tp);
@@ -172,6 +174,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        rawGyroInitial=this.getPigeon2().getYaw().getValueAsDouble()*Math.PI/180;
 
         writeInitialConstants();
         initializeAutoBuilder();
@@ -204,6 +207,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             startSimThread();
         }       
 
+        rawGyroInitial=this.getPigeon2().getYaw().getValueAsDouble()*Math.PI/180;
         writeInitialConstants();
         initializeAutoBuilder();
         setLimits();
@@ -352,8 +356,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public  void driveFieldCentric(RobotJoystick stickDriver) {
-        double x = -stickDriver.getY2()*MaxSpeed;
-        double y = -stickDriver.getX2()*MaxSpeed;
+        double x = -stickDriver.getY2()*MaxSpeed*reverseDirection;
+        double y = -stickDriver.getX2()*MaxSpeed*reverseDirection;
         double z = -stickDriver.getRotate()*MaxAngularRate;
 /* 
         double headingRate=this.getPigeon2().getAngularVelocityZWorld().getValueAsDouble();
@@ -409,6 +413,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         headingController.setGoal(targetHeading);
       }
 
+
       public void resetHeadingController(){
         resetHeadingController
         (this.getPose().getRotation().getRadians());
@@ -428,6 +433,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public void zeroGyro(){
+        reverseDirection=1;
+        seedFieldCentric();
+        resetHeadingController(this.getPose().getRotation().getRadians());        
+
+    }
+
+    public void zeroGyroFlip(){
+        reverseDirection=-1;
         seedFieldCentric();
         resetHeadingController(this.getPose().getRotation().getRadians());        
 
@@ -439,9 +452,20 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public ChassisSpeeds getChassisSpeed(){
+        
         return getState().Speeds;
     }
 
+    private void resetPoseflip(Pose2d pose){
+        this.resetPose(new Pose2d(pose.getX(),pose.getY(),new Rotation2d(pose.getRotation().getRadians())));
+    }
+
+    public Pose2d getPoseFlip(Pose2d pose){
+        Pose2d tmp = this.getPose();
+        return new Pose2d(tmp.getX(),tmp.getY(),new Rotation2d(tmp.getRotation().getRadians()+Math.PI ));
+    }
+
+    
 
     public void initializeAutoBuilder(){
         RobotConfig config;
@@ -451,6 +475,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             double kProtAuto=SmartDashboard.getNumber("Drive Auto rot kP", 0);
             double kDrotAuto=SmartDashboard.getNumber("Drive Auto rot kD", 0);
             config = RobotConfig.fromGUISettings();
+
+
 
             AutoBuilder.configure(
             this::getPose,
@@ -465,7 +491,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             () -> {
                 var alliance = DriverStation.getAlliance();
                 if (alliance.isPresent()){
-                    return alliance.get() == DriverStation.Alliance.Red;  
+                    return alliance.get() == DriverStation.Alliance.Blue;  
                 }
                 return false;
             },
@@ -518,6 +544,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public void stop(){
         driveRobotCentricCommand(0, 0, 0);
+    }
+
+    public double getRawGyro(){
+        return (this.getPigeon2().getYaw().getValueAsDouble()*Math.PI/180);
     }
 
     private void setLimits(){

@@ -24,17 +24,17 @@ public class VisionSystem extends SubsystemBase {
     public static boolean hasReefTarget;
     public static int closestReefID=0;
     public static double closestReefDist=999;
-    public static double reefOffsetX=0.25;
-    public static double reefOffsetY=.75;
+    public static double reefOffsetX=0.75;
+    public static double reefOffsetY=.3;
     public static double intakeOffsetX=0;
     public static double intakeOffsetY=.75;
     public static double stdFactor=30;
 
 
     Transform3d camFR_RobotToCam = 
-        new Transform3d(.273,.247,.188,new Rotation3d(0,0,Math.toRadians(33)));
+        new Transform3d(0,-.247,.188,new Rotation3d(0,0,Math.toRadians(33)));
     Transform3d camFL_RobotToCam = 
-        new Transform3d(-.273,-.247,.188,new Rotation3d(0,0,Math.toRadians(-30)));
+        new Transform3d(0,.247,.188,new Rotation3d(0,0,Math.toRadians(-30)));
     
     Transform3d camB_RobotToCam = 
         new Transform3d(-.1,0,1,new Rotation3d(0,0,Math.PI));
@@ -51,9 +51,9 @@ public class VisionSystem extends SubsystemBase {
     public VisionSystem(CommandSwerveDrivetrain m_dt) {
 
             
-        SmartDashboard.putNumber("std single X", 6);    
-        SmartDashboard.putNumber("std single Y", 6);    
-        SmartDashboard.putNumber("std single Rot", 8);    
+        SmartDashboard.putNumber("std single X", .3);    
+        SmartDashboard.putNumber("std single Y", .3);    
+        SmartDashboard.putNumber("std single Rot", 9999);    
 
         SmartDashboard.putNumber("std multi X", .25);    
         SmartDashboard.putNumber("std multi Y", .25);    

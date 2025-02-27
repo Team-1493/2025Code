@@ -31,6 +31,7 @@ public class IntakeCoral extends Command {
   public void initialize() {
     claw.StopRollers();  
     elevFlag=false;
+    clawFlag=false;
     if(elevator.elevatorPos>0.15 && claw.encPosition>.15) claw.toPosition(.15);
     claw.rearRollerRev();
 

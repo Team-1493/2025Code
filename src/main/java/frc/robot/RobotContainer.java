@@ -21,7 +21,7 @@ import frc.robot.commands.ElevatorToReefC1;
 import frc.robot.commands.ElevatorToReefC2;
 import frc.robot.commands.ElevatorToReefC3;
 import frc.robot.commands.ElevatorToReefC4;
-
+import frc.robot.commands.FollowPoseDirect;
 import frc.robot.commands.ElevatorToReefA1;
 import frc.robot.commands.ElevatorToReefA2;
 import frc.robot.commands.ElevatorToNet;
@@ -70,6 +70,7 @@ public class RobotContainer {
 
     public ActionCommands actions = new ActionCommands(drivetrain,elevator,claw); 
     public DriveReefLeft driveReefLeft = new DriveReefLeft(drivetrain);
+    private Utilities utils = new Utilities(drivetrain, vision);
     public DriveReefRight driveReefRight = new DriveReefRight(drivetrain);
     public DriveIntake driveIntake = new DriveIntake(drivetrain);
 
@@ -135,15 +136,21 @@ public class RobotContainer {
 
         // reset the field-centric heading on left bumper press
         stickDriver.button(5).onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyro()));
+        stickDriver.button(6).onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyroFlip()));
 
-        stickDriver.button(6).onTrue(
-                new InstantCommand(() ->stickDriver.setSlowScaleFactor()  )  );
+//        stickDriver.button(6).onTrue(
+//                new InstantCommand(() ->stickDriver.setSlowScaleFactor()  )  );
         
-        stickDriver.button(6).onFalse(
-                    new InstantCommand(() ->stickDriver.setFastScaleFactor()  )  );
+//        stickDriver.button(6).onFalse(
+//                    new InstantCommand(() ->stickDriver.setFastScaleFactor()  )  );
+        
+//        stickDriver.button(7).whileTrue( new FollowPoseDirect(drivetrain));                  
 
-//        stickDriver.button(10).whileTrue( driveReefRight);                    
-         
+        stickDriver.button(7).whileTrue( new DriveReefRight(drivetrain));                    
+               stickDriver.button(10).whileTrue( 
+                getReefRight().andThen(drivetrain.Stop()).
+                andThen(drivetrain.ResetHeadingController()));  
+
         stickOperator.button(1).onTrue(new ElevatorToReefC1(elevator,claw));                     
         stickOperator.button(2).onTrue(new ElevatorToReefC2(elevator,claw));                     
         stickOperator.button(3).onTrue(new ElevatorToReefC3(elevator,claw)); 
@@ -191,6 +198,11 @@ public class RobotContainer {
      public Command zeroGyro(){
         return (drivetrain.runOnce(() -> drivetrain.zeroGyro()));
 
+     }
+
+     private Command getReefRight(){
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        return utils.getReefRight();
      }
 
     }
