@@ -50,7 +50,7 @@ private VoltageOut  voltOutRearSpitAlgae= new VoltageOut(-8);
 public double 
         positionAlgae1=-.125,positionAlgae2 = 0, positionNet, 
         positionCoral1=.25, positionCoral2=.25,
-        positionCoral3=.25,positionCoral4=.23,
+        positionCoral3=.25,positionCoral4=.21,
         positionIntake=0.314,positionNeutral=0.25;   
 
 
