@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.261666666666666,
-        "y": 7.1624358974358975
+        "x": 1.323589743589743,
+        "y": 7.0385897435897435
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.261666666666666,
-        "y": 7.1624358974358975
+        "x": 2.323589743589743,
+        "y": 7.0385897435897435
       },
       "isLocked": false,
       "linkedName": "Coral_Intake_1"
     },
     {
       "anchor": {
-        "x": 5.085511363636364,
-        "y": 5.515752840909091
+        "x": 5.038974358974358,
+        "y": 5.387307692307693
       },
       "prevControl": {
-        "x": 4.796335227272728,
-        "y": 6.28356534090909
+        "x": 4.749798222610722,
+        "y": 6.155120192307692
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +48,7 @@
   "folder": "4 Coral Auto Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -52.49585763972985
+    "rotation": -53.69550287742479
   },
   "useDefaultConstraints": true
 }

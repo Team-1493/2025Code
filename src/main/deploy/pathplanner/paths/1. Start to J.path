@@ -3,35 +3,47 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.934679487179486,
-        "y": 5.346025641025641
+        "x": 8.057045454545454,
+        "y": 6.133991477272727
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.861842636462187,
-        "y": 6.006233101113699
+        "x": 6.673084788139243,
+        "y": 5.961797683000124
       },
       "isLocked": false,
-      "linkedName": "Coral_Score_K"
+      "linkedName": "Up Middle Start"
     },
     {
       "anchor": {
-        "x": 1.323589743589743,
-        "y": 7.0385897435897435
+        "x": 5.038974358974358,
+        "y": 5.387307692307693
       },
       "prevControl": {
-        "x": 2.0859585345323977,
-        "y": 6.5609380571001426
+        "x": 5.871420607077772,
+        "y": 5.543126844141476
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Coral_Intake_1"
+      "linkedName": "Coral_Score_J"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "toReef4",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": 1.0,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "toReef4"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -42,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -53.69550287742479
+    "rotation": -119.40718906073371
   },
   "reversed": false,
-  "folder": "4 Coral Auto Paths",
+  "folder": "3 Coral Auto L Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -58.642999999999994
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

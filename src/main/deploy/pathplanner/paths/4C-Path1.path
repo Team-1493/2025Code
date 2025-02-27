@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.047073863636363,
-        "y": 6.05421875
+        "x": 8.057045454545454,
+        "y": 6.133991477272727
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.797521973570382,
-        "y": 6.039256993268366
+        "x": 7.807493564479473,
+        "y": 6.119029720541093
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Up Middle Start"
     },
     {
       "anchor": {
@@ -48,7 +48,7 @@
   "folder": "4 Coral Auto Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

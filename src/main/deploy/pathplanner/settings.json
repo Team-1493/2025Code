@@ -3,6 +3,8 @@
   "robotLength": 0.876,
   "holonomicMode": true,
   "pathFolders": [
+    "3 Coral Auto R Paths ",
+    "3 Coral Auto L Paths",
     "4 Coral Auto Paths"
   ],
   "autoFolders": [],
