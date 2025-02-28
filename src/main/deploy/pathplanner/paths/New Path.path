@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.057045454545454,
-        "y": 6.133991477272727
+        "x": 2.0,
+        "y": 7.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.807493564479473,
-        "y": 6.119029720541093
+        "x": 3.0,
+        "y": 7.0
       },
       "isLocked": false,
-      "linkedName": "Up Middle Start"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.324829545454545,
-        "y": 5.366178977272727
+        "x": 4.0,
+        "y": 6.0
       },
       "prevControl": {
-        "x": 5.030004009470008,
-        "y": 5.258281024687123
+        "x": 3.0,
+        "y": 6.0
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Algae_IJ"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 58.465
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "4 Coral Auto Paths",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

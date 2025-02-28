@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveIntake;
 import frc.robot.commands.DriveReefLeft;
 import frc.robot.commands.DriveReefRight;
@@ -25,7 +26,7 @@ import frc.robot.commands.FollowPoseDirect;
 import frc.robot.commands.ElevatorToReefA1;
 import frc.robot.commands.ElevatorToReefA2;
 import frc.robot.commands.ElevatorToNet;
-
+import frc.robot.commands.ElevatorToProcessor;
 import frc.robot.commands.IntakeAlgae1;
 import frc.robot.commands.IntakeCoral;
 import frc.robot.commands.SpitCoral;
@@ -62,22 +63,24 @@ public class RobotContainer {
     public final VisionSystem vision = new VisionSystem(drivetrain);
 
     public IntakeCoral intakeCoral=new IntakeCoral(elevator, claw);
+    public ActionCommands actions = new ActionCommands(drivetrain,elevator,claw );
     public ElevatorToReef elevatorToReef;
 
     //The auto generator was originally defined just as public, but I changed that, may need to be changed back?
-    private final AutoGenerator autoGenerator = new AutoGenerator(elevator, claw);
+    private final AutoGenerator autoGenerator = new AutoGenerator(elevator, claw, actions);
     private final SendableChooser<Command> autoChooser = autoGenerator.autoChooser;
 
-    public ActionCommands actions = new ActionCommands(drivetrain,elevator,claw); 
     public DriveReefLeft driveReefLeft = new DriveReefLeft(drivetrain);
     private Utilities utils = new Utilities(drivetrain, vision);
     public DriveReefRight driveReefRight = new DriveReefRight(drivetrain);
     public DriveIntake driveIntake = new DriveIntake(drivetrain);
 
     private Trigger receivedCoral;
+    private Trigger setSlow;
 
     public RobotContainer() {
         receivedCoral = new Trigger ( ()-> claw.pickedUpCoral());
+        setSlow = new Trigger ( ()-> stickDriver.getRawAxis(2)>0.5);
 
         drivetrain.setupHeadingController();
         configureBindings();        
@@ -115,7 +118,7 @@ public class RobotContainer {
         
 //        stickDriver.a().whileTrue(drivetrain.applyRequest(() -> brake));
         
-        stickDriver.button(2).onTrue(new InstantCommand(() 
+/*         stickDriver.button(2).onTrue(new InstantCommand(() 
         -> drivetrain.setTargetHeading(Math.toRadians(-90))  )  );
         stickDriver.button(1).onTrue(new InstantCommand(() ->
             drivetrain.setTargetHeading(Math.toRadians( 179.9))  )  );
@@ -123,47 +126,47 @@ public class RobotContainer {
             drivetrain.setTargetHeading(Math.toRadians(90))  )  );            
         stickDriver.button(4).onTrue(new InstantCommand(() ->
             drivetrain.setTargetHeading(Math.toRadians(0))  )  );      
-
+*/
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        /* 
-        stickDriver.back().and(stickDriver.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        stickDriver.back().and(stickDriver.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        stickDriver.start().and(stickDriver.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        stickDriver.start().and(stickDriver.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-        */
+         
+//        stickDriver.back().and(stickDriver.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+//        stickDriver.back().and(stickDriver.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+//        stickDriver.start().and(stickDriver.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+//        stickDriver.start().and(stickDriver.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        
 
         // reset the field-centric heading on left bumper press
         stickDriver.button(5).onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyro()));
         stickDriver.button(6).onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyroFlip()));
 
-//        stickDriver.button(6).onTrue(
-//                new InstantCommand(() ->stickDriver.setSlowScaleFactor()  )  );
-        
-//        stickDriver.button(6).onFalse(
-//                    new InstantCommand(() ->stickDriver.setFastScaleFactor()  )  );
+        setSlow.onTrue(new InstantCommand(() ->stickDriver.setSlowScaleFactor()  )  );
+        setSlow.onFalse(new InstantCommand(() ->stickDriver.setFastScaleFactor()  )  );
         
 //        stickDriver.button(7).whileTrue( new FollowPoseDirect(drivetrain));                  
 
-        stickDriver.button(7).whileTrue( new DriveReefRight(drivetrain));                    
-               stickDriver.button(10).whileTrue( 
-                getReefRight().andThen(drivetrain.Stop()).
-                andThen(drivetrain.ResetHeadingController()));  
+//        stickDriver.button(7).whileTrue( new Dri/veReefRight(drivetrain));                    
+//               stickDriver.button(10).whileTrue( 
+//                getReefRight().andThen(drivetrain.Stop()).
+//                andThen(drivetrain.ResetHeadingController()));  
 
         stickOperator.button(1).onTrue(new ElevatorToReefC1(elevator,claw));                     
         stickOperator.button(2).onTrue(new ElevatorToReefC2(elevator,claw));                     
         stickOperator.button(3).onTrue(new ElevatorToReefC3(elevator,claw)); 
         stickOperator.button(4).onTrue(new ElevatorToReefC4(elevator,claw)); 
         
-        stickOperator.button(14).onTrue(new ElevatorToReefA1(elevator,claw));                 
-        stickOperator.button(13).onTrue(new ElevatorToReefA2(elevator,claw));    
+        stickOperator.button(14).whileTrue(new ElevatorToReefA1(elevator,claw));                 
+        stickOperator.button(13).whileTrue(new ElevatorToReefA2(elevator,claw));    
         stickOperator.button(9).onTrue(new ElevatorToNet(elevator,claw));                                                  
 
         stickOperator.button(7).onTrue(new IntakeCoral(elevator,claw));
+
         
-        stickOperator.button(8).whileTrue
-                (new IntakeAlgae1(elevator,claw));
+        stickOperator.button(9).onTrue
+                (new ElevatorToProcessor(elevator,claw));
+        stickOperator.button(10).onTrue
+                (new ElevatorToNet(elevator,claw));                
 
         stickOperator.button(6).onTrue(claw.SpitAlgae());
         stickOperator.button(6).onFalse(claw.StopRollers());
@@ -174,7 +177,7 @@ public class RobotContainer {
 
 //        stickOperator.button(12).onTrue(new InstantCommand(() -> elevator.elevatorRight.setPosition(0)));
 
-//        stickOperator.button(11).onTrue(new InstantCommand( () -> {updateConstants();}));
+        stickOperator.button(11).onTrue(new InstantCommand( () -> {updateConstants();}));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
@@ -201,7 +204,6 @@ public class RobotContainer {
      }
 
      private Command getReefRight(){
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         return utils.getReefRight();
      }
 

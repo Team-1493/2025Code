@@ -37,8 +37,8 @@ public class DriveReefRight extends Command {
         sd=m_sd;
 
         constraints = new PathConstraints(
-            1.5, 
-         1.5,
+            1, 
+         2,
          Units.degreesToRadians(360),
          Units.degreesToRadians(450));
 

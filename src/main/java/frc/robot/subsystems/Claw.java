@@ -41,14 +41,15 @@ private VoltageOut  voltOutFrontReverse= new VoltageOut(-4);
 private VoltageOut  voltOutSpitCoral = new VoltageOut(-8);
 private VoltageOut  voltOutFrontHold= new VoltageOut(-.6);
 private VoltageOut  voltOutRearHold= new VoltageOut(.6);
-private VoltageOut  voltOutFrontSpitAlgae= new VoltageOut(8);
-private VoltageOut  voltOutRearSpitAlgae= new VoltageOut(-8);
+private VoltageOut  voltOutFrontSpitAlgae= new VoltageOut(12);
+private VoltageOut  voltOutRearSpitAlgae= new VoltageOut(-12);
 
 
     
 
 public double 
-        positionAlgae1=-.125,positionAlgae2 = 0, positionNet, 
+        positionAlgae1=-.125,positionAlgae2 = -0.125, 
+        positionNet=-0.04,positionProcessor=-0.17, 
         positionCoral1=.25, positionCoral2=.25,
         positionCoral3=.25,positionCoral4=.21,
         positionIntake=0.314,positionNeutral=0.25;   
@@ -69,6 +70,7 @@ public Claw(){
     SmartDashboard.putNumber("Claw Pos Algae1", positionAlgae1);
     SmartDashboard.putNumber("Claw Pos Algae2", positionAlgae2);
     SmartDashboard.putNumber("Claw Pos Net", positionNet);
+    SmartDashboard.putNumber("Claw Pos Processor", positionProcessor);
     SmartDashboard.putNumber("Claw Pos Coral1", positionCoral1);
     SmartDashboard.putNumber("Claw Pos Coral2", positionCoral2);
     SmartDashboard.putNumber("Claw Pos Coral3", positionCoral3);
@@ -366,6 +368,7 @@ public Claw(){
         positionAlgae1 = SmartDashboard.getNumber("Claw Pos Algae1", positionAlgae1);
         positionAlgae2 = SmartDashboard.getNumber("Claw Pos Algae2", positionAlgae2);
         positionNet = SmartDashboard.getNumber("Claw Pos Net", positionNet);
+        positionProcessor = SmartDashboard.getNumber("Claw Pos Processor", positionProcessor);
         positionCoral1 = SmartDashboard.getNumber("Claw Pos Coral1", positionCoral1);
         positionCoral2 = SmartDashboard.getNumber("Claw Pos Coral2", positionCoral2);
         positionCoral3 = SmartDashboard.getNumber("Claw Pos Coral3", positionCoral3);

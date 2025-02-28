@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 1.323589743589743,
-        "y": 7.0385897435897435
+        "y": 7.039
       },
       "prevControl": {
         "x": 2.1160708041958047,
-        "y": 6.648327141608391
+        "y": 6.648737398018647
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 1.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -53.69550287742479
+    "rotation": -52.50130060603152
   },
   "reversed": false,
   "folder": "4 Coral Auto Paths",

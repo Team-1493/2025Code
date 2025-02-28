@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 1.323589743589743,
-        "y": 7.0385897435897435
+        "y": 7.039
       },
       "prevControl": null,
       "nextControl": {
         "x": 2.225756238038512,
-        "y": 6.787921978007896
+        "y": 6.788332234418152
       },
       "isLocked": false,
       "linkedName": "Coral_Intake_1"
@@ -45,7 +45,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 1.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -60,7 +60,7 @@
   "folder": "3 Coral Auto L Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -53.69550287742479
+    "rotation": -52.50130060603152
   },
   "useDefaultConstraints": true
 }

@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 5.038974358974358,
-        "y": 5.387307692307693
+        "y": 5.3870000000000005
       },
       "prevControl": {
         "x": 5.871420607077772,
-        "y": 5.543126844141476
+        "y": 5.5428191518337835
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 1.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -54,7 +54,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.40718906073371
+    "rotation": 119.89586597075329
   },
   "reversed": false,
   "folder": "3 Coral Auto L Paths",

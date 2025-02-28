@@ -8,7 +8,7 @@ import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class BumpIntoWall extends Command {
+public class BumpIntoWallReverse extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final CommandSwerveDrivetrain sd;
   private int i;  
@@ -16,14 +16,14 @@ public class BumpIntoWall extends Command {
   /**
    * @param subsystem The subsystem used by this command.
    */
-  public BumpIntoWall(CommandSwerveDrivetrain m_sd) {
+  public BumpIntoWallReverse(CommandSwerveDrivetrain m_sd) {
     sd=m_sd;
     addRequirements(sd);
   }
 
   @Override
   public void initialize() {
-    sd.driveRobotCentric(.75, 0, 0);
+    sd.driveRobotCentric(-.75, 0, 0);
     i=0;
   }
 

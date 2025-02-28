@@ -28,7 +28,8 @@ public class Elevator extends SubsystemBase{
     private VoltageOut voltOutDown = new VoltageOut(-.4);
     
     public double 
-            positionAlgae1=14,positionAlgae2 = 23, positionNet=1, 
+            positionAlgae1=15,positionAlgae2 = 30, 
+            positionNet=45, positionProcessor=5, 
             positionCoral1=5, positionCoral2=8.5,
             positionCoral3=21.75,positionCoral4=45,
             positionIntake=0;
@@ -41,6 +42,7 @@ public Elevator(){
     SmartDashboard.putNumber("Elevator positionAlgae1", positionAlgae1);
     SmartDashboard.putNumber("Elevator positionAlgae2", positionAlgae2);
     SmartDashboard.putNumber("Elevator positionNet", positionNet);
+    SmartDashboard.putNumber("Elevator positionProcessor", positionProcessor);
     SmartDashboard.putNumber("Elevator positionIntake", positionIntake);
     SmartDashboard.putNumber("Elevator positionCoral1", positionCoral1);
     SmartDashboard.putNumber("Elevator positionCoral2", positionCoral2);
@@ -239,6 +241,7 @@ public Elevator(){
     positionAlgae1= SmartDashboard.getNumber("Elevator positionAlgae1", positionAlgae1);
     positionAlgae2= SmartDashboard.getNumber("Elevator positionAlgae2", positionAlgae2);
     positionNet= SmartDashboard.getNumber("Elevator positionNet", positionNet);
+    positionProcessor= SmartDashboard.getNumber("Elevator positionProcessor", positionProcessor);
     positionIntake= SmartDashboard.getNumber("Elevator positionIntake", positionIntake);
     positionCoral1= SmartDashboard.getNumber("Elevator positionCoral1", positionCoral1);
     positionCoral2= SmartDashboard.getNumber("Elevator positionCoral2", positionCoral2);

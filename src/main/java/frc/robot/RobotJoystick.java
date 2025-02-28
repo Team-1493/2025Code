@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotJoystick extends CommandXboxController {
     double scaleFactorSlow=0.333,scaleFactorFast=1;
-    double scaleFactorRotateSlow=0.5,scaleFactorRotateFast=1;
+    double scaleFactorRotateSlow=0.4,scaleFactorRotateFast=1;
     double scaleFactor=scaleFactorFast;
     double deadbandX=0.05,deadbandY=0.05,deadbandRot=0.05;
-    private SlewRateLimiter srlx= new SlewRateLimiter(6);
-    private SlewRateLimiter srly= new SlewRateLimiter(6);
+    private SlewRateLimiter srlx= new SlewRateLimiter(4);
+    private SlewRateLimiter srly= new SlewRateLimiter(4);
     double scaleFactorRotate=scaleFactorRotateFast;
     int rotateAxis=4;
    // int rotateAxis=3;

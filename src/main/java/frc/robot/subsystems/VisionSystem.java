@@ -24,8 +24,8 @@ public class VisionSystem extends SubsystemBase {
     public static boolean hasReefTarget;
     public static int closestReefID=0;
     public static double closestReefDist=999;
-    public static double reefOffsetX=0.75;
-    public static double reefOffsetY=.3;
+    public static double reefOffsetX=0.2;
+    public static double reefOffsetY=.55;
     public static double intakeOffsetX=0;
     public static double intakeOffsetY=.75;
     public static double stdFactor=30;

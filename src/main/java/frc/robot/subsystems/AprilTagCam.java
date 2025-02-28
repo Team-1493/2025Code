@@ -153,10 +153,10 @@ import com.ctre.phoenix6.Utils;
                 Pose2d tmpPose2=new Pose2d(tmpPose1.getX(),tmpPose1.getY(),new Rotation2d(newRot));
 
 
-                 dt.addVisionMeasurement(
-//                    visionEst.get().estimatedPose.toPose2d(),
-                    tmpPose2,
-                    Utils.fpgaToCurrentTime(visionEst.get().timestampSeconds), curStdDevs);
+//                dt.addVisionMeasurement(
+             //       visionEst.get().estimatedPose.toPose2d(),
+ //                   tmpPose2,
+ //                   Utils.fpgaToCurrentTime(visionEst.get().timestampSeconds), curStdDevs);
                     
                 printResults(visionEst);
                 }

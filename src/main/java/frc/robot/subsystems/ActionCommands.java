@@ -15,6 +15,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.VisionConstants;
 import frc.robot.commands.BumpIntoWall;
+import frc.robot.commands.BumpIntoWallReverse;
+import frc.robot.commands.ElevatorToReefA1;
+import frc.robot.commands.ElevatorToReefA2;
+import frc.robot.commands.ElevatorToReefC1;
+import frc.robot.commands.ElevatorToReefC2;
+import frc.robot.commands.ElevatorToReefC3;
+import frc.robot.commands.ElevatorToReefC4;
 
 public class ActionCommands {
 
@@ -22,9 +29,10 @@ public class ActionCommands {
     private CommandSwerveDrivetrain sd;
     private Elevator elevator;
     private Claw claw;
-    public SequentialCommandGroup elevatorToReef1, elevatorToReef2,elevatorToReef3,
+    public Command  elevatorToReef2,elevatorToReef3,
         elevatorToReef4, elevatorToIntake,elevatorToAlgae1,elevatorToAlgae2;
-    public Command intakeCoral,spitCoral,bumpIntoWall;
+    public Command intakeCoral,spitCoral,bumpIntoWall,elevatorToReef1;
+    public Command bumpIntoWallReverse;
 
 
     
@@ -48,43 +56,25 @@ public  ActionCommands(CommandSwerveDrivetrain m_sd,Elevator m_elevator,Claw m_c
             new InstantCommand(()->Timer.delay(.5)),
             elevator.ToPosition(elevator.positionIntake));
 
-        elevatorToReef1 = new SequentialCommandGroup( 
-            claw.ToPosition(claw.positionCoral1),
-            new InstantCommand(()->Timer.delay(.5)), 
-            elevator.ToPosition(elevator.positionCoral1));
+        elevatorToReef1 = new ElevatorToReefC1(elevator, claw);
         
 
-        elevatorToReef2 = new SequentialCommandGroup( 
-            claw.ToPosition(claw.positionCoral2),
-            new InstantCommand(()->Timer.delay(.5)),
-             elevator.ToPosition(elevator.positionCoral2));
+        elevatorToReef2 = new ElevatorToReefC2(elevator, claw);
 
-        elevatorToReef3 = new SequentialCommandGroup( 
-            claw.ToPosition(claw.positionCoral3),
-            new InstantCommand(()->Timer.delay(.5)), 
-            elevator.ToPosition(elevator.positionCoral3));
+        elevatorToReef3 = new ElevatorToReefC3(elevator, claw);
             
-        elevatorToReef4 = new SequentialCommandGroup( 
-            claw.ToPosition(claw.positionCoral4),
-            new InstantCommand(()->Timer.delay(.5)),
-            elevator.ToPosition(elevator.positionCoral4));
+        elevatorToReef4 = new ElevatorToReefC4(elevator, claw);
 
             
-        elevatorToAlgae1 = new SequentialCommandGroup( 
-            claw.ToPosition(claw.positionAlgae1),
-            new InstantCommand(()->Timer.delay(.5)), 
-            elevator.ToPosition(elevator.positionAlgae1));
-
-        elevatorToAlgae2 = new SequentialCommandGroup( 
-            claw.ToPosition(claw.positionAlgae2),
-            new InstantCommand(()->Timer.delay(.5)),
-            elevator.ToPosition(elevator.positionAlgae2));
+        elevatorToAlgae1 = new ElevatorToReefA1(elevator, claw);
+        elevatorToAlgae2 = new ElevatorToReefA2(elevator, claw);
 
         intakeCoral = new frc.robot.commands.IntakeCoral(elevator,claw);
 
         spitCoral= claw.SpitCoral();
 
         bumpIntoWall = new BumpIntoWall(sd);
+        bumpIntoWallReverse = new BumpIntoWallReverse(sd);
 }
 }
 

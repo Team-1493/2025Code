@@ -9,31 +9,27 @@ import frc.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class ElevatorToNet extends Command {
+public class SpitAlgaeProcessor extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Elevator elevator;
   private final Claw claw;
-  boolean elevFlag=false,clawFlag=false;
+  boolean elevFlag=false;
 
   /**
    * @param subsystem The subsystem used by this command.
    */
-  public ElevatorToNet(Elevator m_elevator,Claw m_claw) {
+  public SpitAlgaeProcessor(Elevator m_elevator,Claw m_claw) {
     claw=m_claw;
     elevator=m_elevator;
     elevFlag=false;
-    clawFlag=false;
     addRequirements(claw,elevator);
   }
 
   @Override
   public void initialize() {
-    elevFlag=false;clawFlag=false;
-    elevator.stopElevator();
-    claw.stopClaw();
     elevFlag=false;
-    claw.toPosition(claw.positionNet);
-
+    claw.rollersRun(-3, 3);
+    claw.toPosition(claw.positionAlgae2);
 
 
     //claw.toPosition(claw.positionIntake);
@@ -44,14 +40,9 @@ public class ElevatorToNet extends Command {
   @Override
   public void execute() {
     
-    if (Math.abs(claw.encPosition-claw.positionNet)<0.03 && !elevFlag) {
-      elevator.toPosition(elevator.positionNet);
+    if (Math.abs(claw.encPosition-claw.positionAlgae2)<0.03 && !elevFlag) {
+      elevator.toPosition(elevator.positionAlgae2);
       elevFlag=true;}
-
-    if (Math.abs(elevator.elevatorPos-elevator.positionNet)<.4 && !clawFlag){
-      clawFlag=true;
-      claw.toPosition(claw.positionNet);
-    }  
 
 
 
@@ -59,10 +50,12 @@ public class ElevatorToNet extends Command {
 
   @Override
   public void end(boolean interrupted) {
+    if (interrupted) claw.stopRollers();
+    else claw.holdAlgae();
   }
 
   @Override
   public boolean isFinished() {
-    return (clawFlag&& elevFlag); 
+    return (claw.hasAlgae);
   }
 }

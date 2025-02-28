@@ -27,11 +27,9 @@ public class ElevatorToReefA2 extends Command {
 
   @Override
   public void initialize() {
-    elevator.stopElevator();
-    claw.stopRollers();
     elevFlag=false;
-    claw.toPosition(claw.positionNeutral);
-
+    claw.rollersRun(-3, 3);
+    claw.toPosition(claw.positionAlgae2);
 
 
     //claw.toPosition(claw.positionIntake);
@@ -42,7 +40,7 @@ public class ElevatorToReefA2 extends Command {
   @Override
   public void execute() {
     
-    if (Math.abs(claw.encPosition-claw.positionNeutral)<0.05 && !elevFlag) {
+    if (Math.abs(claw.encPosition-claw.positionAlgae2)<0.03 && !elevFlag) {
       elevator.toPosition(elevator.positionAlgae2);
       elevFlag=true;}
 
@@ -52,11 +50,12 @@ public class ElevatorToReefA2 extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    claw.toPosition(claw.positionAlgae2);
+    if (interrupted) claw.stopRollers();
+    else claw.holdAlgae();
   }
 
   @Override
   public boolean isFinished() {
-    return (Math.abs(elevator.elevatorPos-elevator.positionAlgae2)<1 ); //claw.hasCoral;
+    return (claw.hasAlgae);
   }
 }

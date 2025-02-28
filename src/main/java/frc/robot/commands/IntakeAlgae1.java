@@ -28,9 +28,8 @@ public class IntakeAlgae1 extends Command {
   @Override
   public void initialize() {
     elevFlag=false;
-    claw.rollersRun(-3, -3);
+    claw.rollersRun(-3, 3);
     claw.toPosition(claw.positionAlgae1);
-
 
 
     //claw.toPosition(claw.positionIntake);

@@ -32,8 +32,9 @@ public class IntakeCoral extends Command {
     claw.StopRollers();  
     elevFlag=false;
     clawFlag=false;
-    if(elevator.elevatorPos>0.15 && claw.encPosition>.15) claw.toPosition(.15);
-    claw.rearRollerRev();
+//    if(elevator.elevatorPos>0.15 && claw.encPosition>.15) claw.toPosition(.15);
+    claw.toPosition(.15);
+claw.rearRollerRev();
 
 
 
@@ -43,7 +44,8 @@ public class IntakeCoral extends Command {
 
   @Override
   public void execute() {
-    if (claw.encPosition<0.22 && !elevFlag) {
+//    if (claw.encPosition<0.22 && claw.encPosition>-0.1 &&!elevFlag) {
+  if (claw.encPosition<0.22 &&!elevFlag) {
       elevator.toPosition(elevator.positionIntake);
       elevFlag=true;}   
     if (elevator.elevatorPos<0.15){

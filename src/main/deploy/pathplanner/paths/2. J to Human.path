@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 5.038974358974358,
-        "y": 5.387307692307693
+        "y": 5.3870000000000005
       },
       "prevControl": null,
       "nextControl": {
         "x": 5.567468677156177,
-        "y": 6.314665646853148
+        "y": 6.314357954545456
       },
       "isLocked": false,
       "linkedName": "Coral_Score_J"
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 1.323589743589743,
-        "y": 7.0385897435897435
+        "y": 7.039
       },
       "prevControl": {
         "x": 2.305531031468532,
-        "y": 6.5286680506993
+        "y": 6.529078307109556
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 1.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -54,13 +54,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -53.69550287742479
+    "rotation": -52.50130060603152
   },
   "reversed": false,
   "folder": "3 Coral Auto L Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -119.40718906073371
+    "rotation": 119.89586597075329
   },
   "useDefaultConstraints": true
 }

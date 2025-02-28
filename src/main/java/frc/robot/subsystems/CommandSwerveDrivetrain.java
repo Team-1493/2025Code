@@ -61,13 +61,21 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
          new TrapezoidProfile.Constraints(3, 6);
     private ProfiledPIDController headingController = new ProfiledPIDController(20, 0, 0,tp);
 
-    private SwerveRequest.RobotCentric driveRC= new SwerveRequest.RobotCentric()
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);;
+//    private SwerveRequest.RobotCentric driveRC= new SwerveRequest.RobotCentric()
+//            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);;
 
-    private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentric()
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-            
+private SwerveRequest.RobotCentric driveRC= new SwerveRequest.RobotCentric()
+            .withDriveRequestType(DriveRequestType.Velocity);
+
+//    private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentric()
+//            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+ 
+private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentric()
+.withDriveRequestType(DriveRequestType.Velocity); // Use open-loop control for drive motors
+
     static Pose2d robotpose = new Pose2d(0,0,new Rotation2d(0));
+    static Pose2d poseZero = new Pose2d(0,0,new Rotation2d(0));
+    public double rotZero ;
 
  
     // States:  
@@ -174,11 +182,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
-        rawGyroInitial=this.getPigeon2().getYaw().getValueAsDouble()*Math.PI/180;
-
         writeInitialConstants();
         initializeAutoBuilder();
         setLimits();
+        rawGyroInitial=this.getPigeon2().getYaw().getValueAsDouble()*Math.PI/180;
+        poseZero=new Pose2d
+            (this.getPose().getX(),
+            this.getPose().getY(),
+            new Rotation2d(this.getPigeon2().getYaw().getValueAsDouble()*Math.PI/180-rawGyroInitial));
 
 
 
@@ -299,9 +310,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         // added static robotpose  so AprilTagCamera can get the pose for simulation
         robotpose=this.getPose();
+        poseZero=new Pose2d
+            (this.getPose().getX(),
+            this.getPose().getY(),
+            new Rotation2d(this.getPigeon2().getYaw().getValueAsDouble()*Math.PI/180-rawGyroInitial));
         SmartDashboard.putNumber("Pose X",robotpose.getX());
         SmartDashboard.putNumber("Pose Y",robotpose.getY());
         SmartDashboard.putNumber("Pose Z",robotpose.getRotation().getDegrees());
+        SmartDashboard.putNumber("Pose X",poseZero.getX());
+        SmartDashboard.putNumber("Pose Y",poseZero.getY());
+        SmartDashboard.putNumber("Pose Z",poseZero.getRotation().getDegrees());
         SmartDashboard.putNumber("DriveCur1", this.getModule(0).getDriveMotor().getStatorCurrent().getValueAsDouble());
         SmartDashboard.putNumber("DriveCur2", this.getModule(1).getDriveMotor().getStatorCurrent().getValueAsDouble());
         SmartDashboard.putNumber("DriveCur3", this.getModule(2).getDriveMotor().getStatorCurrent().getValueAsDouble());
@@ -511,9 +529,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("Drive kS",0.0);  // 0 for TC
 
 
-        SmartDashboard.putNumber("Drive Auto kP",5); 
-        SmartDashboard.putNumber("Drive Auto kD",0);         
-        SmartDashboard.putNumber("Drive Auto rot kP", 5);
+        SmartDashboard.putNumber("Drive Auto kP",7); 
+        SmartDashboard.putNumber("Drive Auto kD",.2);         
+        SmartDashboard.putNumber("Drive Auto rot kP", 8);
         SmartDashboard.putNumber("Drive Auto rot kD", 0);
 
 
@@ -552,8 +570,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     private void setLimits(){
         CurrentLimitsConfigs clc = new CurrentLimitsConfigs();
-        clc.StatorCurrentLimit=20;
-        clc.SupplyCurrentLimit=20;
+        clc.StatorCurrentLimit=40;
+        clc.SupplyCurrentLimit=40;
         clc.StatorCurrentLimitEnable=true;
 
 
