@@ -106,11 +106,11 @@ public class Utilities {
  //           }
 
 //          if(VisionSystem.hasReefTarget){
+            sd.TurnOffHeadingControl().andThen(
             driveReefRight= AutoBuilder.pathfindToPose(
                 targetPose,
                 constraints,
-                0.0).andThen( 
-                  new InstantCommand( ()->sd.resetHeadingController(rotRobot)));
+                0.0));
 
         return driveReefRight;
     }

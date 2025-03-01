@@ -19,7 +19,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class DriveIntake extends Command {
+public class DriveIntakeLeft extends Command {
     private PathConstraints constraints;
     double rotTarget,rotRobot;
     Pose2d targetPose;
@@ -33,7 +33,7 @@ public class DriveIntake extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveIntake(CommandSwerveDrivetrain m_sd) {
+  public DriveIntakeLeft(CommandSwerveDrivetrain m_sd) {
         sd=m_sd;
 
         constraints = new PathConstraints(
@@ -63,12 +63,11 @@ public class DriveIntake extends Command {
         new Rotation2d(rotRobot));
             
 
-    
+    sd.turnOffHeadingControl();
     drivePath= AutoBuilder.pathfindToPose(
                 targetPose,
                 constraints,
-                0.0).andThen( 
-                new InstantCommand( ()->sd.resetHeadingController(rotRobot)));
+                0.0);
 
             drivePath.initialize();
 
@@ -83,8 +82,9 @@ public class DriveIntake extends Command {
   @Override
   public void end(boolean interrupted) {
     drivePath.end(false);
-    sd.resetHeadingController();
     sd.stop();
+    sd.setTargetHeading(Math.toRadians(Math.toRadians(-54)));
+    sd.seedFieldCentric();
     
 
   }

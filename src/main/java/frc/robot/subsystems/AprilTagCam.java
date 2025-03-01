@@ -75,9 +75,10 @@ import com.ctre.phoenix6.Utils;
      public AprilTagCam(
                 String kCameraName, 
                 Transform3d kRobotToCam,
-                CommandSwerveDrivetrain m_dt) {
+                CommandSwerveDrivetrain m_dt,
+                VisionSystemSim m_visionSystemSim) {
 
-//        visionSim = m_visionSystemSim;
+        visionSim = m_visionSystemSim;
 
         dt=m_dt;
 

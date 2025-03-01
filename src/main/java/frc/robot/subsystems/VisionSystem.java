@@ -44,7 +44,7 @@ public class VisionSystem extends SubsystemBase {
     public static Matrix<N3, N1> kMultiTagStdDevs;
 
 
-//    private VisionSystemSim visionSim;
+    private VisionSystemSim visionSim;
 
     
 
@@ -70,18 +70,18 @@ public class VisionSystem extends SubsystemBase {
 
         if (Robot.isSimulation()) {
              // Create the vision system simulation which handles cameras and targets on the field.
-//             visionSim = new VisionSystemSim("visionSim");
+             visionSim = new VisionSystemSim("visionSim");
              // Add all the AprilTags inside the tag layout as visible targets to this simulated field.
- //            visionSim.addAprilTags(VisionConstants.FieldLayout);
+             visionSim.addAprilTags(VisionConstants.FieldLayout);
         }
 
         dt=m_dt;
 
         camFL = new AprilTagCam("Spinel_1", camFL_RobotToCam,
-            dt);
+            dt,visionSim);
         
         camFR = new AprilTagCam("Spinel_2", camFR_RobotToCam,
-            dt);
+            dt,visionSim);
 
  //       camB = new AprilTagCam("OV9281_1", camB_RobotToCam,
  //           dt,visionSim);           

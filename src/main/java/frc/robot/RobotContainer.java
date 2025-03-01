@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.commands.DriveIntake;
+import frc.robot.commands.DriveIntakeRight;
 import frc.robot.commands.DriveReefLeft;
 import frc.robot.commands.DriveReefRight;
 import frc.robot.commands.ElevatorToReef;
@@ -47,10 +47,6 @@ public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
-    /* Setting up bindings for necessary control of the swerve drive platform */
-    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
@@ -73,7 +69,7 @@ public class RobotContainer {
     public DriveReefLeft driveReefLeft = new DriveReefLeft(drivetrain);
     private Utilities utils = new Utilities(drivetrain, vision);
     public DriveReefRight driveReefRight = new DriveReefRight(drivetrain);
-    public DriveIntake driveIntake = new DriveIntake(drivetrain);
+    public DriveIntakeRight driveIntake = new DriveIntakeRight(drivetrain);
 
     private Trigger receivedCoral;
     private Trigger setSlow;
@@ -81,8 +77,6 @@ public class RobotContainer {
     public RobotContainer() {
         receivedCoral = new Trigger ( ()-> claw.pickedUpCoral());
         setSlow = new Trigger ( ()-> stickDriver.getRawAxis(2)>0.5);
-
-        drivetrain.setupHeadingController();
         configureBindings();        
     }
 
@@ -97,20 +91,6 @@ public class RobotContainer {
         
 
 
-/*     stickDriver.button(1).whileTrue(driveReefLeft);
-    stickDriver.button(1).onFalse(
-        new InstantCommand( ()-> drivetrain.ResetHeadingController()));
-
-    stickDriver.button(2).whileTrue(driveReefRight);
-    stickDriver.button(2).onFalse(
-            new InstantCommand( ()-> drivetrain.ResetHeadingController()));        
-    
-    stickDriver.button(3).whileTrue(driveIntake);
-    stickDriver.button(3).onFalse(
-            new InstantCommand( ()-> drivetrain.ResetHeadingController()));        
-  */      
-
-
         //  allow driver to switch between fast and slow mode 
         // changes stick scale factor on joystock
 
@@ -118,15 +98,15 @@ public class RobotContainer {
         
 //        stickDriver.a().whileTrue(drivetrain.applyRequest(() -> brake));
         
-/*         stickDriver.button(2).onTrue(new InstantCommand(() 
-        -> drivetrain.setTargetHeading(Math.toRadians(-90))  )  );
+         stickDriver.button(2).onTrue(new InstantCommand(() 
+        -> drivetrain.setTargetHeading(Math.toRadians(-90))));
         stickDriver.button(1).onTrue(new InstantCommand(() ->
-            drivetrain.setTargetHeading(Math.toRadians( 179.9))  )  );
+            drivetrain.setTargetHeading( Math.toRadians(179.9))));
         stickDriver.button(3).onTrue(new InstantCommand(() ->
-            drivetrain.setTargetHeading(Math.toRadians(90))  )  );            
+            drivetrain.setTargetHeading(Math.toRadians(90))));            
         stickDriver.button(4).onTrue(new InstantCommand(() ->
-            drivetrain.setTargetHeading(Math.toRadians(0))  )  );      
-*/
+            drivetrain.setTargetHeading(Math.toRadians( 0))));      
+
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -146,7 +126,7 @@ public class RobotContainer {
         
 //        stickDriver.button(7).whileTrue( new FollowPoseDirect(drivetrain));                  
 
-//        stickDriver.button(7).whileTrue( new Dri/veReefRight(drivetrain));                    
+        stickDriver.button(7).whileTrue( new DriveIntakeRight(drivetrain));                    
 //               stickDriver.button(10).whileTrue( 
 //                getReefRight().andThen(drivetrain.Stop()).
 //                andThen(drivetrain.ResetHeadingController()));  

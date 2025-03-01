@@ -33,7 +33,6 @@ public class DriveReefRight extends Command {
    * @param subsystem The subsystem used by this command.
    */
   public DriveReefRight(CommandSwerveDrivetrain m_sd) {
-    System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
         sd=m_sd;
 
         constraints = new PathConstraints(
@@ -51,9 +50,6 @@ public class DriveReefRight extends Command {
             double reefOffsetX = -VisionSystem.reefOffsetX;
             double reefOffsetY = VisionSystem.reefOffsetY;
 
-//            if(VisionSystem.hasReefTarget){
-
-            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
             Pose2d robotPose = sd.getPose();
             robotPose=new Pose2d(robotPose.getX(),robotPose.getY(),new Rotation2d(robotPose.getRotation().getRadians()));
             double xr=robotPose.getX();
@@ -78,28 +74,23 @@ public class DriveReefRight extends Command {
             System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
             System.out.println("ID  "+id);
 
-//            int index=  VisionSystem.closestReefID-1;
              int index = id-1;
             targetPose = VisionConstants.AprilTagList.get(index).pose.toPose2d();
-            System.out.println("D1********************");
             rotTarget = targetPose.getRotation().getRadians();
             rotRobot=rotTarget+Math.PI;
-            System.out.println("D2********************");
             targetPose = new Pose2d(
                 targetPose.getX()+reefOffsetX*Math.sin(rotTarget)+reefOffsetY*Math.cos(rotTarget),
                 targetPose.getY()-reefOffsetX*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
                 new Rotation2d(rotRobot));
- //           }
 
-//          if(VisionSystem.hasReefTarget){
 
+            sd.turnOffHeadingControl();
             drivePath= AutoBuilder.pathfindToPose(
                 targetPose,
                 constraints,
-                0.0).andThen( 
-                  new InstantCommand( ()->sd.resetHeadingController(rotRobot)));
-//                }
-//            else drivePath= sd.Stop();
+                0.0);
+
+
             drivePath.initialize();
 
             
@@ -113,8 +104,10 @@ public class DriveReefRight extends Command {
   @Override
   public void end(boolean interrupted) {
     drivePath.end(false);
-    sd.resetHeadingController();
     sd.stop();
+    sd.turnOffHeadingControl();
+    sd.resetHeadingController();
+    sd.seedFieldCentric();
     
 
   }

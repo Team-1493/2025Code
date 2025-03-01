@@ -19,12 +19,14 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class DriveReefLeft extends Command {
+public class DriveIntakeRight extends Command {
     private PathConstraints constraints;
     double rotTarget,rotRobot;
     Pose2d targetPose;
+    private  double reefOffsetX = 0,reefOffsetY=.75;
     private CommandSwerveDrivetrain sd;
     private Command drivePath;
+    private int id;
 
     
   /**
@@ -32,7 +34,7 @@ public class DriveReefLeft extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveReefLeft(CommandSwerveDrivetrain m_sd) {
+  public DriveIntakeRight(CommandSwerveDrivetrain m_sd) {
         sd=m_sd;
 
         constraints = new PathConstraints(
@@ -46,50 +48,29 @@ public class DriveReefLeft extends Command {
 
   @Override
   public void initialize() {
-    double reefOffsetX = VisionSystem.reefOffsetX;
-    double reefOffsetY = VisionSystem.reefOffsetY;
+    
+    double yr = sd.getPose().getY();
+    if (yr>4.055) id = 13;
 
-    Pose2d robotPose = sd.getPose();
-    double xr=robotPose.getX();
-    double yr=robotPose.getY();
-    int id;
+    else id = 12;
+    
 
-    // y = -1/2x  ,  y = 1/2 x  ,   x = 0
-    // coord reef center 4.508,4.055
-    xr=xr - 4.058;
-    yr=yr - 4.055;  
+    targetPose = VisionConstants.AprilTagList.get(id-1).pose.toPose2d();
+    rotTarget = targetPose.getRotation().getRadians();
+    rotRobot=rotTarget+Math.PI;
+    targetPose = new Pose2d(
+        targetPose.getX()+reefOffsetX*Math.sin(rotTarget)+reefOffsetY*Math.cos(rotTarget),
+        targetPose.getY()-reefOffsetX*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
+        new Rotation2d(rotRobot+Math.PI));
+            
 
-    id=13;
-    if (yr>xr/2 && yr<-xr/2) id=18;
-    if (xr<0 && yr<xr/2) id = 17;
-    if (xr<0 && yr>-xr/2 ) id = 19;
-    if (xr>0 && yr>xr/2) id = 20;    
-    if (yr<xr/2 && yr>-xr/2) id = 21;
-    if (xr>0 && yr<-xr/2 ) id = 22;
+    sd.turnOffHeadingControl();
+    drivePath= AutoBuilder.pathfindToPose(
+                targetPose,
+                constraints,
+                0.0);
 
-
-
-
-//    if(VisionSystem.hasReefTarget){
-//      int index=  VisionSystem.closestReefID-1;
-    int index = id-1;
-      targetPose = VisionConstants.AprilTagList.get(index).pose.toPose2d();
-      rotTarget = targetPose.getRotation().getRadians();
-      rotRobot=rotTarget+Math.PI;
-      targetPose = new Pose2d(
-          targetPose.getX()+reefOffsetX*Math.sin(rotTarget)+reefOffsetY*Math.cos(rotTarget),
-          targetPose.getY()-reefOffsetX*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
-          new Rotation2d(rotRobot));
- 
-
-      
-      sd.turnOffHeadingControl();    
-      drivePath= AutoBuilder.pathfindToPose(
-          targetPose,
-          constraints,
-          0.0);
- 
-      drivePath.initialize();
+            drivePath.initialize();
 
             
   }
@@ -104,8 +85,11 @@ public class DriveReefLeft extends Command {
     drivePath.end(false);
     sd.stop();
     sd.turnOffHeadingControl();
+    double heading;
+    if(id==12) heading=54;
+    else heading = -54;
     sd.resetHeadingController();
-  
+    //sd.seedFieldCentric();
   }
 
   @Override

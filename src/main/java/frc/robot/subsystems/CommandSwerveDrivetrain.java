@@ -65,7 +65,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 //    private SwerveRequest.RobotCentric driveRC= new SwerveRequest.RobotCentric()
 //            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);;
 
-private FieldCentricFacingAngle fcfa = new FieldCentricFacingAngle();
 
 
 private SwerveRequest.RobotCentric driveRC= new SwerveRequest.RobotCentric()
@@ -381,33 +380,20 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         double x = -stickDriver.getY2()*MaxSpeed*reverseDirection;
         double y = -stickDriver.getX2()*MaxSpeed*reverseDirection;
         double z = -stickDriver.getRotate()*MaxAngularRate;
-/* 
-        double headingRate=this.getPigeon2().getAngularVelocityZWorld().getValueAsDouble();
-        headingRate=Math.toRadians(headingRate);
-        SmartDashboard.putNumber("Drive HeadingRate", headingRate);
+ 
         double heading=this.getPose().getRotation().getRadians();
-        SmartDashboard.putNumber("Drive Heading", heading);
 
 
-        if(Math.abs(z)>0 || (Math.abs(headingRate)>headingRateDeadband && !pointInDirection)) {
-            targetHeadingPrev=targetHeading;
-            targetHeading=heading; 
+        if(Math.abs(z)>0.01 ) {
             pointInDirection=false;
-            SmartDashboard.putNumber("TargetHeading", targetHeading);
         }
-        else {  if (!pointInDirection && Math.abs(headingRate)<headingRateDeadband) {
-                    pointInDirection=true;
-                    targetHeading=heading;
-                    targetHeadingPrev=targetHeading;
-                    resetHeadingController(targetHeading);
+        else if(pointInDirection) {
 
-                }
-                headingRate = headingController.calculate(heading);  
+                double headingRate = headingController.calculate(heading);  
                 if (headingController.atSetpoint()) headingRate=0;
                 z=headingRate;
-                SmartDashboard.putNumber("TargetHeading", targetHeading);
         }
-*/
+
         driveFieldCentric(x, y, z);
     }
 
@@ -421,10 +407,8 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
 
 
     public void setTargetHeading(double heading){
-        SmartDashboard.putNumber("TargetHeading", heading);
         targetHeading=heading;
         pointInDirection=true;  
-        SmartDashboard.putBoolean("HeadingControl", pointInDirection);
         headingController.setGoal(targetHeading); 
     }
 
@@ -446,16 +430,27 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
             (this.getPose().getRotation().getRadians()); });
       }
 
+      public Command TurnOffHeadingControl(){
+        return runOnce( ()-> turnOffHeadingControl());
+      }
+
+      public void turnOffHeadingControl(){
+        pointInDirection=false;
+      }
+
+
+
     public void setupHeadingController(){
         headingController.enableContinuousInput(-Math.PI, Math.PI);
         headingController.setTolerance(0.017);  //1 degree
         targetHeading =0;// this.getPose().getRotation().getRadians();
         headingController.setGoal(0);      
-
     }
+
 
     public void zeroGyro(){
         reverseDirection=1;
+        turnOffHeadingControl();
         seedFieldCentric();
         resetHeadingController(this.getPose().getRotation().getRadians());        
 
@@ -463,6 +458,7 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
 
     public void zeroGyroFlip(){
         reverseDirection=-1;
+        turnOffHeadingControl();
         seedFieldCentric();
         resetHeadingController(this.getPose().getRotation().getRadians());        
 
@@ -591,4 +587,3 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
     }
 
 }
-
