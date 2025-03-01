@@ -13,6 +13,7 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentricFacingAngle;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -63,6 +64,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
 //    private SwerveRequest.RobotCentric driveRC= new SwerveRequest.RobotCentric()
 //            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);;
+
+private FieldCentricFacingAngle fcfa = new FieldCentricFacingAngle();
+
 
 private SwerveRequest.RobotCentric driveRC= new SwerveRequest.RobotCentric()
             .withDriveRequestType(DriveRequestType.Velocity);
