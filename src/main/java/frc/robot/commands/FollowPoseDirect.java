@@ -39,9 +39,9 @@ public class FollowPoseDirect extends Command {
     pidx.reset(robotPose2d.getX());
     pidy.reset(robotPose2d.getY());
     goalPose=getTagTargetPose();
-    deltaRot=sd.getPose().getRotation().getRadians()-sd.rawGyroInitial;
-    finalRawRotation=goalPose.getRotation().getRadians()-deltaRot;
-    goalPose=new Pose2d(goalPose.getX(),goalPose.getY(),new Rotation2d(finalRawRotation));
+//    deltaRot=sd.getPose().getRotation().getRadians()-sd.rawGyroInitial;
+//    finalRawRotation=goalPose.getRotation().getRadians()-deltaRot;
+//    goalPose=new Pose2d(goalPose.getX(),goalPose.getY(),new Rotation2d(finalRawRotation));
     System.out.println(goalPose.getX()+"   "+goalPose.getY()+"   "+goalPose.getRotation().getDegrees());
     pidx.setGoal(goalPose.getX());
     pidy.setGoal(goalPose.getY());
@@ -59,7 +59,12 @@ public class FollowPoseDirect extends Command {
       double dy = pidy.calculate(robotPose2d.getY());
       double dr = pidr.calculate(robotPose2d.getRotation().getRadians());
 
-      System.out.println(dx+"   "+robotPose2d.getX()+"    "+pidx.getPositionError());
+      System.out.println(dy+"   "+robotPose2d.getY()+
+          "    "+pidy.getPositionError());
+      
+      if (Math.abs(pidx.getPositionError())<.03) dx=0;    
+      if (Math.abs(pidy.getPositionError())<.03) dy=0;    
+      if (Math.abs(pidr.getPositionError())<.01) dr=0;    
 
       sd.driveRobotCentric(dx, dy, dr);
 
@@ -74,12 +79,12 @@ public class FollowPoseDirect extends Command {
 
 
       pidx = new ProfiledPIDController(
-             Constants.followPose_Trans_kP,
+             Constants.followPose_Trans_kP*.5,
              0,
              Constants.followPose_Trans_kD, 
              new TrapezoidProfile.Constraints(
             Constants.followPose_Trans_maxV,
-            Constants.followPose_Trans_maxA));
+            Constants.followPose_Trans_maxA)  );
       
       pidy = new ProfiledPIDController(
              Constants.followPose_Trans_kP,

@@ -57,7 +57,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private double targetHeading=0, targetHeadingPrev=0,headingRateDeadband=1;
     boolean pointInDirection=false;
     private double reverseDirection=1;
-    public double rawGyroInitial=0;
+    public double headingTrue=0;
     private TrapezoidProfile.Constraints tp =
          new TrapezoidProfile.Constraints(3, 6);
     private ProfiledPIDController headingController = new ProfiledPIDController(20, 0, 0,tp);
@@ -77,8 +77,6 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
 .withDriveRequestType(DriveRequestType.Velocity); // Use open-loop control for drive motors
 
     static Pose2d robotpose = new Pose2d(0,0,new Rotation2d(0));
-    static Pose2d poseZero = new Pose2d(0,0,new Rotation2d(0));
-    public double rotZero ;
 
  
     // States:  
@@ -188,12 +186,7 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         writeInitialConstants();
         initializeAutoBuilder();
         setLimits();
-        rawGyroInitial=this.getPigeon2().getYaw().getValueAsDouble()*Math.PI/180;
-        poseZero=new Pose2d
-            (this.getPose().getX(),
-            this.getPose().getY(),
-            new Rotation2d(this.getPigeon2().getYaw().getValueAsDouble()*Math.PI/180-rawGyroInitial));
-
+        headingTrue=this.getPose().getRotation().getRadians();
 
 
     }
@@ -221,7 +214,7 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
             startSimThread();
         }       
 
-        rawGyroInitial=this.getPigeon2().getYaw().getValueAsDouble()*Math.PI/180;
+        headingTrue=this.getPose().getRotation().getRadians();
         writeInitialConstants();
         initializeAutoBuilder();
         setLimits();
@@ -313,16 +306,9 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
 
         // added static robotpose  so AprilTagCamera can get the pose for simulation
         robotpose=this.getPose();
-        poseZero=new Pose2d
-            (this.getPose().getX(),
-            this.getPose().getY(),
-            new Rotation2d(this.getPigeon2().getYaw().getValueAsDouble()*Math.PI/180-rawGyroInitial));
         SmartDashboard.putNumber("Pose X",robotpose.getX());
         SmartDashboard.putNumber("Pose Y",robotpose.getY());
         SmartDashboard.putNumber("Pose Z",robotpose.getRotation().getDegrees());
-        SmartDashboard.putNumber("Pose X",poseZero.getX());
-        SmartDashboard.putNumber("Pose Y",poseZero.getY());
-        SmartDashboard.putNumber("Pose Z",poseZero.getRotation().getDegrees());
         SmartDashboard.putNumber("DriveCur1", this.getModule(0).getDriveMotor().getStatorCurrent().getValueAsDouble());
         SmartDashboard.putNumber("DriveCur2", this.getModule(1).getDriveMotor().getStatorCurrent().getValueAsDouble());
         SmartDashboard.putNumber("DriveCur3", this.getModule(2).getDriveMotor().getStatorCurrent().getValueAsDouble());
@@ -407,14 +393,14 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
 
 
     public void setTargetHeading(double heading){
-        targetHeading=heading;
+        targetHeading=heading-headingTrue;
         pointInDirection=true;  
         headingController.setGoal(targetHeading); 
     }
 
     public void resetHeadingController(double angle){
         headingController.reset(angle);
-        targetHeading=angle;
+        targetHeading=angle - headingTrue;
         targetHeadingPrev=targetHeading;
         headingController.setGoal(targetHeading);
       }
@@ -448,17 +434,23 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
     }
 
 
+    public void setTrueHeading(){
+            seedFieldCentric();
+            headingTrue=0;
+    }
+
     public void zeroGyro(){
         reverseDirection=1;
         turnOffHeadingControl();
+        headingTrue = headingTrue - this.getPose().getRotation().getRadians();
         seedFieldCentric();
         resetHeadingController(this.getPose().getRotation().getRadians());        
-
     }
 
     public void zeroGyroFlip(){
         reverseDirection=-1;
         turnOffHeadingControl();
+        headingTrue = headingTrue - this.getPose().getRotation().getRadians();
         seedFieldCentric();
         resetHeadingController(this.getPose().getRotation().getRadians());        
 

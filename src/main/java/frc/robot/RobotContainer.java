@@ -134,9 +134,11 @@ public class RobotContainer {
         setSlow.onTrue(new InstantCommand(() ->stickDriver.setSlowScaleFactor()  )  );
         setSlow.onFalse(new InstantCommand(() ->stickDriver.setFastScaleFactor()  )  );
         
-//        stickDriver.button(7).whileTrue( new FollowPoseDirect(drivetrain));                  
+        stickDriver.button(7).whileTrue( new FollowPoseDirect(drivetrain));                  
+        
+        stickDriver.button(10).onTrue( new InstantCommand(()-> drivetrain.setTrueHeading()));
 
-        stickDriver.button(7).whileTrue( new DriveIntakeRight(drivetrain));                    
+//        stickDriver.button(7).whileTrue( new DriveIntakeRight(drivetrain));                    
 //               stickDriver.button(10).whileTrue( 
 //                getReefRight().andThen(drivetrain.Stop()).
 //                andThen(drivetrain.ResetHeadingController()));  

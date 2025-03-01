@@ -111,14 +111,14 @@ public class Constants {
 
     
 //  **************  FOLLOW POSE CONSTANTS  ******************
-    public static double followPose_Trans_kP=3;
-    public static double followPose_Trans_kD=0;
-    public static double followPose_Rot_kP=2;
-    public static double followPose_Rot_kD=0;
-    public static double followPose_Trans_maxV=0;
-    public static double followPose_Trans_maxA=0;
-    public static double followPose_Rot_maxV=0;
-    public static double followPose_Rot_maxA=0;
+    public static double followPose_Trans_kP=4;
+    public static double followPose_Trans_kD=.1;
+    public static double followPose_Rot_kP=4;
+    public static double followPose_Rot_kD=.5;
+    public static double followPose_Trans_maxV=2;
+    public static double followPose_Trans_maxA=8;
+    public static double followPose_Rot_maxV=1;
+    public static double followPose_Rot_maxA=2;
 
 //  **** Camera Constants
     static public double aprilTagSF_front = 0.97;
