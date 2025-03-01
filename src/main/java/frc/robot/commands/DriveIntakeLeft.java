@@ -83,9 +83,7 @@ public class DriveIntakeLeft extends Command {
   public void end(boolean interrupted) {
     drivePath.end(false);
     sd.stop();
-    sd.setTargetHeading(Math.toRadians(Math.toRadians(-54)));
-    sd.seedFieldCentric();
-    
+    sd.zeroGyro();    
 
   }
 

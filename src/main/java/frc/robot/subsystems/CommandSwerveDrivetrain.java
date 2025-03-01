@@ -58,13 +58,18 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     boolean pointInDirection=false;
     private double reverseDirection=1;
     public double headingTrue=0;
-    private TrapezoidProfile.Constraints tp =
-         new TrapezoidProfile.Constraints(3, 6);
-    private ProfiledPIDController headingController = new ProfiledPIDController(20, 0, 0,tp);
+
+    // For TorqueCurrent
+    private TrapezoidProfile.Constraints tp = new TrapezoidProfile.Constraints(1,   2);
+    private ProfiledPIDController headingController = new ProfiledPIDController(2, 0, 0,tp);
+
+// For VoltageControl/Voltage
+//    private TrapezoidProfile.Constraints tp =
+//         new TrapezoidProfile.Constraints(3, 6);
+//    private ProfiledPIDController headingController = new ProfiledPIDController(20, 0, 0,tp);
 
 //    private SwerveRequest.RobotCentric driveRC= new SwerveRequest.RobotCentric()
 //            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);;
-
 
 
 private SwerveRequest.RobotCentric driveRC= new SwerveRequest.RobotCentric()
@@ -370,13 +375,14 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         double heading=this.getPose().getRotation().getRadians();
 
 
-        if(Math.abs(z)>0.01 ) {
-            pointInDirection=false;
-        }
+        if(Math.abs(z)>0.01)pointInDirection=false;
+    
         else if(pointInDirection) {
 
                 double headingRate = headingController.calculate(heading);  
-                if (headingController.atSetpoint()) headingRate=0;
+                if (headingController.atSetpoint()) {
+                    headingRate=0;
+                    pointInDirection=false;}
                 z=headingRate;
         }
 

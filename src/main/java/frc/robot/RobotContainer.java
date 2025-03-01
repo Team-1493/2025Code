@@ -195,8 +195,4 @@ public class RobotContainer {
 
      }
 
-     private Command getReefRight(){
-        return utils.getReefRight();
-     }
-
     }

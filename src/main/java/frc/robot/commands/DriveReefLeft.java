@@ -103,9 +103,8 @@ public class DriveReefLeft extends Command {
   public void end(boolean interrupted) {
     drivePath.end(false);
     sd.stop();
-    sd.turnOffHeadingControl();
-    sd.resetHeadingController();
-  
+    sd.stop();
+    sd.zeroGyro();   
   }
 
   @Override

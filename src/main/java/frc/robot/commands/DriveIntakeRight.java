@@ -84,12 +84,8 @@ public class DriveIntakeRight extends Command {
   public void end(boolean interrupted) {
     drivePath.end(false);
     sd.stop();
-    sd.turnOffHeadingControl();
-    double heading;
-    if(id==12) heading=54;
-    else heading = -54;
-    sd.resetHeadingController();
-    //sd.seedFieldCentric();
+    sd.stop();
+    sd.zeroGyro(); 
   }
 
   @Override
