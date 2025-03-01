@@ -110,8 +110,13 @@ public class RobotContainer {
         stickDriver.pov(90).onTrue(new InstantCommand(() ->
             drivetrain.setTargetHeading(Math.toRadians( 120))));   
         stickDriver.pov(270).onTrue(new InstantCommand(() ->
-            drivetrain.setTargetHeading(Math.toRadians( -120))));   
-s
+            drivetrain.setTargetHeading(Math.toRadians( -120))));
+            
+        stickDriver.pov(0).onTrue(new InstantCommand(() ->
+            drivetrain.setTargetHeading(Math.toRadians( 60))));   
+        stickDriver.pov(180).onTrue(new InstantCommand(() ->
+            drivetrain.setTargetHeading(Math.toRadians( -60))));
+
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
