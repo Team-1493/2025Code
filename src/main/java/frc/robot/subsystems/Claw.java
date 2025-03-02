@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Volts;
 
 import java.time.Period;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -19,6 +20,7 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.units.DistanceUnit;
 import edu.wpi.first.units.VelocityUnit;
@@ -78,6 +80,27 @@ int coralCounter=0,algaeCounter=0;
 private double voltage,current;
 public double encPosition,rearRollerCurrent;
 
+
+//SysID stuff
+    /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
+    private final SysIdRoutine m_sysIdRoutineClaw = new SysIdRoutine(
+        new SysIdRoutine.Config(
+            null,        // Use default ramp rate (1 V/s)
+            Volts.of(4), // Reduce dynamic step voltage to 4 V to prevent brownout
+            null,        // Use default timeout (10 s)
+            // Log state with SignalLogger class
+            state -> SignalLogger.writeString("SysIdTranslation_State", state.toString())
+        ),
+        new SysIdRoutine.Mechanism(
+            output -> sysIDsetcontol(new VoltageOut(output)),
+            null,
+            this
+        )
+    );
+
+    private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineClaw;
+
+
     private final SysIdRoutine m_sysIdRoutineArm = new SysIdRoutine(
         new SysIdRoutine.Config(
             Velocity.ofBaseUnits(1,VelocityUnit.combine(Volts, Second) ),        // Use default ramp rate (1 V/s)
@@ -109,6 +132,40 @@ public Claw(){
 
     configure();
 }
+
+    /**
+     * Returns a command that applies the specified control request to this swerve drivetrain.
+     *
+     * @param request Function returning the request to apply
+     * @return Command to run
+     */
+    public Command applyRequest(Supplier<VoltageOut> vo) {
+        return run(() -> this.sysIDsetcontol(vo.get()));
+    }
+
+    /**
+     * Runs the SysId Quasistatic test in the given direction for the routine
+     * specified by {@link #m_sysIdRoutineToApply}.
+     *
+     * @param direction Direction of the SysId Quasistatic test
+     * @return Command to run
+     */
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutineToApply.quasistatic(direction);
+    }
+
+    /**
+     * Runs the SysId Dynamic test in the given direction for the routine
+     * specified by {@link #m_sysIdRoutineToApply}.
+     *
+     * @param direction Direction of the SysId Dynamic test
+     * @return Command to run
+     */
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutineToApply.dynamic(direction);
+    }
+
+
 
     public void periodic(){
         voltage=clawMotor.getMotorVoltage().getValueAsDouble();
@@ -150,6 +207,11 @@ public Claw(){
         else stopClaw();
     }
 
+
+    public void sysIDsetcontol(VoltageOut vo){
+        if (!atUpperLimit)  clawMotor.setControl(vo);
+        else stopClaw();
+    }
 
     public Command ClawDown() {
         return runOnce( () -> {clawDown();});
