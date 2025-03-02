@@ -76,7 +76,7 @@ public class RobotContainer {
 
     public RobotContainer() {
         receivedCoral = new Trigger ( ()-> claw.pickedUpCoral());
-        setSlow = new Trigger ( ()-> stickDriver.getRawAxis(2)>0.5);
+        setSlow = new Trigger ( ()-> stickDriver.getRawAxis(4)>0.5);
         configureBindings();        
     }
 
@@ -98,7 +98,8 @@ public class RobotContainer {
         
 //        stickDriver.a().whileTrue(drivetrain.applyRequest(() -> brake));
         
-         stickDriver.button(2).onTrue(new InstantCommand(() 
+/* 
+        stickDriver.button(2).onTrue(new InstantCommand(() 
         -> drivetrain.setTargetHeading(Math.toRadians(-90))));
         stickDriver.button(1).onTrue(new InstantCommand(() ->
             drivetrain.setTargetHeading( Math.toRadians(54))));
@@ -106,7 +107,7 @@ public class RobotContainer {
             drivetrain.setTargetHeading(Math.toRadians(-54))));            
         stickDriver.button(4).onTrue(new InstantCommand(() ->
             drivetrain.setTargetHeading(Math.toRadians( 0))));   
-
+*/
         stickDriver.pov(90).onTrue(new InstantCommand(() ->
             drivetrain.setTargetHeading(Math.toRadians( 120))));   
         stickDriver.pov(270).onTrue(new InstantCommand(() ->
@@ -121,10 +122,10 @@ public class RobotContainer {
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
          
-//        stickDriver.back().and(stickDriver.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-//        stickDriver.back().and(stickDriver.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-//        stickDriver.start().and(stickDriver.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-//        stickDriver.start().and(stickDriver.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        (stickDriver.button(1)).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        (stickDriver.button(2)).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        (stickDriver.button(3)).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        (stickDriver.button(4)).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
         
 
         // reset the field-centric heading on left bumper press

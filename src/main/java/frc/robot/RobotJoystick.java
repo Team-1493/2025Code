@@ -3,12 +3,11 @@ package frc.robot;
 import com.ctre.phoenix6.Utils;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotJoystick extends CommandXboxController {
     double scaleFactorSlow=0.333,scaleFactorFast=1;
-    double scaleFactorRotateSlow=0.4,scaleFactorRotateFast=1;
+    double scaleFactorRotateSlow=0.6,scaleFactorRotateFast=1;
     double scaleFactor=scaleFactorFast;
     double deadbandX=0.05,deadbandY=0.05,deadbandRot=0.05;
     private SlewRateLimiter srlx= new SlewRateLimiter(4);
@@ -28,7 +27,6 @@ public class RobotJoystick extends CommandXboxController {
         double x =Math.pow(getRawAxis(0),2);
         if (x<deadbandX)x=0;
         x=Math.signum(getRawAxis(0))*x;
-        SmartDashboard.putNumber("scalefactor", scaleFactor);
 //        return x*scaleFactor;
         return srlx.calculate(x*scaleFactor);
     }

@@ -363,22 +363,20 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
     public  void driveFieldCentric(RobotJoystick stickDriver) {
         double x = -stickDriver.getY2()*MaxSpeed*reverseDirection;
         double y = -stickDriver.getX2()*MaxSpeed*reverseDirection;
-        double z = -stickDriver.getRotate()*MaxAngularRate;
- 
+        double z = -stickDriver.getRotate()*MaxAngularRate; 
         double heading=this.getPose().getRotation().getRadians();
 
 
-        if( Math.abs(z)>0.01 || (Math.abs(x)<0.01 && Math.abs(y)<0.01) )
+        if( Math.abs(z)>0.01 )
                 pointInDirection=false;
         else if(pointInDirection) {
             double headingRate = headingController.calculate(heading);  
-            if (Math.abs(heading-targetHeading)<0.02) {
+            if (Math.abs(heading-targetHeading)<0.01) {
                 headingRate=0;
                 pointInDirection=false;
             }
             z=headingRate;
         }
-
         driveFieldCentric(x, y, z);
     }
 
@@ -514,8 +512,8 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
     public void writeInitialConstants(){
 
         // Default constants for open loop voltage control
-        SmartDashboard.putNumber("Drive kP",0.1);  // 3 for TC
-        SmartDashboard.putNumber("Drive kV",0.124);  // 0 for TC
+        SmartDashboard.putNumber("Drive kP",3);  // 3 for TC,0.1 Voltage
+        SmartDashboard.putNumber("Drive kV",0);  // 0 for TC,0.124 Voltage
         SmartDashboard.putNumber("Drive kA",0.0);  // 0 for TC
         SmartDashboard.putNumber("Drive kS",0.0);  // 0 for TC
 
