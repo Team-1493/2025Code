@@ -98,7 +98,7 @@ public class VisionSystem extends SubsystemBase {
             camFL.getEstimatedGlobalPose();
             camFR.getEstimatedGlobalPose();
 //            camB.getEstimatedGlobalPose();
-//            visionSim.update(dt.getPose());
+            visionSim.update(dt.getPose());
 
             if (camFL.closestTargetDist<camFR.closestTargetDist){
                 closestReefDist=camFL.closestTargetDist;
@@ -115,6 +115,8 @@ public class VisionSystem extends SubsystemBase {
             SmartDashboard.putNumber("ClosestReefID", closestReefID);
             SmartDashboard.putBoolean("hasReefTarget", hasReefTarget);
 
+
+            
 
     }
 

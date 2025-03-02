@@ -83,13 +83,6 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
 
     static Pose2d robotpose = new Pose2d(0,0,new Rotation2d(0));
 
- 
-    // States:  
-    //      driving cam guided to reef = 1. use only front cams  
-    //      driving cam guided to intake = 2, use only rear cams
-    //      other = 3, use both cams
-
-    public int camState = 0;
 
     // Simulation stuff
     private static final double kSimLoopPeriod = 0.005; // 5 ms
