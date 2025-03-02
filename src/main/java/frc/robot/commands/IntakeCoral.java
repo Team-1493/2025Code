@@ -48,7 +48,7 @@ claw.rearRollerRev();
   if (claw.encPosition<0.22 &&!elevFlag) {
       elevator.toPosition(elevator.positionIntake);
       elevFlag=true;}   
-    if (elevator.elevatorPos<0.15){
+    if (elevator.elevatorPos<0.25){
       claw.toPosition(claw.positionIntake);
       clawFlag=true;
     } 

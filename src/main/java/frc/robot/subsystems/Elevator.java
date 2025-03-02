@@ -29,9 +29,9 @@ public class Elevator extends SubsystemBase{
     
     public double 
             positionAlgae1=15,positionAlgae2 = 30, 
-            positionNet=45, positionProcessor=5, 
-            positionCoral1=5, positionCoral2=8.5,
-            positionCoral3=21.75,positionCoral4=45,
+            positionNet=44, positionProcessor=5, 
+            positionCoral1=5, positionCoral2=7.5,
+            positionCoral3=20,positionCoral4=43,
             positionIntake=0;
     public double elevatorPos=0;
     boolean zeroed=false,atLowerLimit=false,atUpperLimit=false;
@@ -220,7 +220,8 @@ public Elevator(){
     cfg.MotionMagic.MotionMagicJerk=160;   
 
     cfg.Slot0.GravityType=GravityTypeValue.Elevator_Static;
-    cfg.Slot0.kG=0.465;
+
+    cfg.Slot0.kG=0.495;
     cfg.Slot0.kP=2.0;
     cfg.Slot0.kI=0;
     cfg.Slot0.kD=0;

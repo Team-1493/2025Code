@@ -13,7 +13,8 @@ public class ElevatorToNet extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Elevator elevator;
   private final Claw claw;
-  boolean elevFlag=false,clawFlag=false;
+  boolean elevFlag=false,clawFlag=false,clawFlag2=false;
+  int i=0;
 
   /**
    * @param subsystem The subsystem used by this command.
@@ -23,6 +24,7 @@ public class ElevatorToNet extends Command {
     elevator=m_elevator;
     elevFlag=false;
     clawFlag=false;
+    clawFlag2=false;
     addRequirements(claw,elevator);
   }
 
@@ -32,7 +34,10 @@ public class ElevatorToNet extends Command {
     elevator.stopElevator();
     claw.stopClaw();
     elevFlag=false;
-    claw.toPosition(claw.positionNet);
+    clawFlag=false;
+    clawFlag2=false;
+    claw.toPosition(claw.positionAlgae1);
+    i=0;
 
 
 
@@ -43,26 +48,41 @@ public class ElevatorToNet extends Command {
 
   @Override
   public void execute() {
-    
-    if (Math.abs(claw.encPosition-claw.positionNet)<0.03 && !elevFlag) {
+    System.out.println(elevator.elevatorPos+"   "+claw.encPosition +"   " +elevFlag+"    "+clawFlag+"   "+clawFlag2 );
+
+    if (Math.abs(claw.encPosition-claw.positionAlgae1)<0.03 && !elevFlag) {
       elevator.toPosition(elevator.positionNet);
       elevFlag=true;}
 
-    if (Math.abs(elevator.elevatorPos-elevator.positionNet)<.4 && !clawFlag){
-      clawFlag=true;
-      claw.toPosition(claw.positionNet);
+    if (Math.abs(elevator.elevatorPos-elevator.positionNet)<.3 && elevFlag && !clawFlag){
+        clawFlag=true;
+        claw.toPosition(claw.positionNet);}
+
+      if(Math.abs(claw.encPosition-claw.positionNet)<0.1 && elevFlag && clawFlag && !clawFlag2){
+        claw.spitAlgae();
+        clawFlag2=true;}
+
+      if(clawFlag2) i++;
+      
+      
+
     }  
+    
 
 
 
-  }
+  
 
   @Override
   public void end(boolean interrupted) {
+    claw.stopRollers();
   }
 
   @Override
   public boolean isFinished() {
-    return (clawFlag&& elevFlag); 
+  //  return (clawFlag&& elevFlag); 
+  return(i>200);
   }
+
 }
+

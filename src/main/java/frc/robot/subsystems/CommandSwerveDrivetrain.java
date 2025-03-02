@@ -60,8 +60,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public double headingTrue=0;
 
     // For TorqueCurrent
-    private TrapezoidProfile.Constraints tp = new TrapezoidProfile.Constraints(1,   2);
-    private ProfiledPIDController headingController = new ProfiledPIDController(2, 0, 0,tp);
+    private TrapezoidProfile.Constraints tp = new TrapezoidProfile.Constraints(4,   8);
+    private ProfiledPIDController headingController = new ProfiledPIDController(6, 0, 0,tp);
 
 // For VoltageControl/Voltage
 //    private TrapezoidProfile.Constraints tp =
@@ -375,15 +375,15 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         double heading=this.getPose().getRotation().getRadians();
 
 
-        if(Math.abs(z)>0.01)pointInDirection=false;
-    
+        if( Math.abs(z)>0.01 || (Math.abs(x)<0.01 && Math.abs(y)<0.01) )
+                pointInDirection=false;
         else if(pointInDirection) {
-
-                double headingRate = headingController.calculate(heading);  
-                if (headingController.atSetpoint()) {
-                    headingRate=0;
-                    pointInDirection=false;}
-                z=headingRate;
+            double headingRate = headingController.calculate(heading);  
+            if (Math.abs(heading-targetHeading)<0.02) {
+                headingRate=0;
+                pointInDirection=false;
+            }
+            z=headingRate;
         }
 
         driveFieldCentric(x, y, z);
@@ -399,6 +399,7 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
 
 
     public void setTargetHeading(double heading){
+        resetHeadingController();
         targetHeading=heading-headingTrue;
         pointInDirection=true;  
         headingController.setGoal(targetHeading); 
@@ -413,8 +414,7 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
 
 
       public void resetHeadingController(){
-        resetHeadingController
-        (this.getPose().getRotation().getRadians());
+        resetHeadingController(this.getPose().getRotation().getRadians());
     }
       
       public Command ResetHeadingController(){
@@ -568,8 +568,8 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
 
     private void setLimits(){
         CurrentLimitsConfigs clc = new CurrentLimitsConfigs();
-        clc.StatorCurrentLimit=40;
-        clc.SupplyCurrentLimit=40;
+        clc.StatorCurrentLimit=30;
+        clc.SupplyCurrentLimit=30;
         clc.StatorCurrentLimitEnable=true;
 
 

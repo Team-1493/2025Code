@@ -49,9 +49,9 @@ private VoltageOut  voltOutRearSpitAlgae= new VoltageOut(-12);
 
 public double 
         positionAlgae1=-.125,positionAlgae2 = -0.125, 
-        positionNet=-0.04,positionProcessor=-0.17, 
+        positionNet=.13,positionProcessor=-0.17, 
         positionCoral1=.25, positionCoral2=.25,
-        positionCoral3=.25,positionCoral4=.21,
+        positionCoral3=.25,positionCoral4=.205,
         positionIntake=0.314,positionNeutral=0.25;   
 
 
@@ -231,8 +231,7 @@ public Claw(){
     }
 
     public void holdAlgae(){
-        clawFrontRoller.setControl(voltOutFrontHold);
-        clawRearRoller.setControl(voltOutRearHold);
+        rollersRun(-1,1);
     }
 
 
