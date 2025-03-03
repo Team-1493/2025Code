@@ -13,7 +13,7 @@ public class ElevatorToNet extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Elevator elevator;
   private final Claw claw;
-  boolean elevFlag=false,clawFlag=false,clawFlag2=false;
+  boolean elevFlag=false,clawFlag=false,clawFlag2=false,clawFlag3=false;
   int i=0;
 
   /**
@@ -25,14 +25,15 @@ public class ElevatorToNet extends Command {
     elevFlag=false;
     clawFlag=false;
     clawFlag2=false;
+    clawFlag3=false;
     addRequirements(claw,elevator);
   }
 
   @Override
   public void initialize() {
     elevFlag=false;clawFlag=false;
-    elevator.stopElevator();
-    claw.stopClaw();
+//    elevator.stopElevator();
+//    claw.stopClaw();
     elevFlag=false;
     clawFlag=false;
     clawFlag2=false;
@@ -63,6 +64,10 @@ public class ElevatorToNet extends Command {
         clawFlag2=true;}
 
       if(clawFlag2) i++;
+      if(i>10 && !clawFlag3) {
+        clawFlag3=true;
+//        claw.spitReverseAlgae();
+      }
       
       
 

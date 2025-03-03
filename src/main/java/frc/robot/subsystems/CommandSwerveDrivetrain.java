@@ -57,6 +57,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private double targetHeading=0, targetHeadingPrev=0,headingRateDeadband=1;
     boolean pointInDirection=false;
     private double reverseDirection=1;
+    public double headingOffset=0;
     public double headingTrue=0;
 
     // For TorqueCurrent
@@ -184,7 +185,7 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         writeInitialConstants();
         initializeAutoBuilder();
         setLimits();
-        headingTrue=this.getPose().getRotation().getRadians();
+        headingOffset=this.getPose().getRotation().getRadians();
 
 
     }
@@ -212,7 +213,7 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
             startSimThread();
         }       
 
-        headingTrue=this.getPose().getRotation().getRadians();
+        headingOffset=this.getPose().getRotation().getRadians();
         writeInitialConstants();
         initializeAutoBuilder();
         setLimits();
@@ -301,20 +302,14 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-
+        headingTrue=(robotpose.getRotation().getRadians()-headingOffset)%360;
         // added static robotpose  so AprilTagCamera can get the pose for simulation
         robotpose=this.getPose();
         SmartDashboard.putNumber("Pose X",robotpose.getX());
         SmartDashboard.putNumber("Pose Y",robotpose.getY());
         SmartDashboard.putNumber("Pose Z",robotpose.getRotation().getDegrees());
-        SmartDashboard.putNumber("DriveCur1", this.getModule(0).getDriveMotor().getStatorCurrent().getValueAsDouble());
-        SmartDashboard.putNumber("DriveCur2", this.getModule(1).getDriveMotor().getStatorCurrent().getValueAsDouble());
-        SmartDashboard.putNumber("DriveCur3", this.getModule(2).getDriveMotor().getStatorCurrent().getValueAsDouble());
-        SmartDashboard.putNumber("DriveCur4", this.getModule(3).getDriveMotor().getStatorCurrent().getValueAsDouble());
-        SmartDashboard.putNumber("TurnCur1", this.getModule(0).getSteerMotor().getStatorCurrent().getValueAsDouble());
-        SmartDashboard.putNumber("TurnCur2", this.getModule(1).getSteerMotor().getStatorCurrent().getValueAsDouble());
-        SmartDashboard.putNumber("TurnCur3", this.getModule(2).getSteerMotor().getStatorCurrent().getValueAsDouble());
-        SmartDashboard.putNumber("TurnCur4", this.getModule(3).getSteerMotor().getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("HeadingTrue",
+        Math.toDegrees(headingTrue));
 
     }
 
@@ -391,14 +386,14 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
 
     public void setTargetHeading(double heading){
         resetHeadingController();
-        targetHeading=heading-headingTrue;
+        targetHeading=heading-headingOffset;
         pointInDirection=true;  
         headingController.setGoal(targetHeading); 
     }
 
     public void resetHeadingController(double angle){
         headingController.reset(angle);
-        targetHeading=angle - headingTrue;
+        targetHeading=angle - headingOffset;
         targetHeadingPrev=targetHeading;
         headingController.setGoal(targetHeading);
       }
@@ -433,21 +428,23 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
 
     public void setTrueHeading(){
             seedFieldCentric();
-            headingTrue=0;
+            headingOffset=0;
     }
 
     public void zeroGyro(){
         reverseDirection=1;
         turnOffHeadingControl();
-        headingTrue = headingTrue - this.getPose().getRotation().getRadians();
+        headingOffset = headingOffset - this.getPose().getRotation().getRadians();
         seedFieldCentric();
         resetHeadingController(this.getPose().getRotation().getRadians());        
     }
 
+
+
     public void zeroGyroFlip(){
         reverseDirection=-1;
         turnOffHeadingControl();
-        headingTrue = headingTrue - this.getPose().getRotation().getRadians();
+        headingOffset = headingOffset - this.getPose().getRotation().getRadians();
         seedFieldCentric();
         resetHeadingController(this.getPose().getRotation().getRadians());        
 
@@ -518,9 +515,9 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         SmartDashboard.putNumber("Drive kS",0.0);  // 0 for TC
 
 
-        SmartDashboard.putNumber("Drive Auto kP",7); 
-        SmartDashboard.putNumber("Drive Auto kD",.2);         
-        SmartDashboard.putNumber("Drive Auto rot kP", 8);
+        SmartDashboard.putNumber("Drive Auto kP",5); 
+        SmartDashboard.putNumber("Drive Auto kD",0);         
+        SmartDashboard.putNumber("Drive Auto rot kP", 3);
         SmartDashboard.putNumber("Drive Auto rot kD", 0);
 
 
@@ -543,6 +540,8 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
      
         initializeAutoBuilder();
 
+        
+
     }
 
     public Command Stop(){
@@ -559,8 +558,8 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
 
     private void setLimits(){
         CurrentLimitsConfigs clc = new CurrentLimitsConfigs();
-        clc.StatorCurrentLimit=30;
-        clc.SupplyCurrentLimit=30;
+        clc.StatorCurrentLimit=60;
+        clc.SupplyCurrentLimit=40;
         clc.StatorCurrentLimitEnable=true;
 
 

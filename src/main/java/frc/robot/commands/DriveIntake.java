@@ -19,11 +19,12 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class DriveIntakeLeft extends Command {
+public class DriveIntake extends Command {
     private PathConstraints constraints;
     double rotTarget,rotRobot;
     Pose2d targetPose;
-    private  double reefOffsetX = 0,reefOffsetY=.75;
+    private  double intakeOffsetX = VisionSystem.intakeOffsetX;
+    private  double intakeOffsetY = VisionSystem.intakeOffsetX;
     private CommandSwerveDrivetrain sd;
     private Command drivePath;
 
@@ -33,7 +34,7 @@ public class DriveIntakeLeft extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveIntakeLeft(CommandSwerveDrivetrain m_sd) {
+  public DriveIntake(CommandSwerveDrivetrain m_sd) {
         sd=m_sd;
 
         constraints = new PathConstraints(
@@ -56,10 +57,10 @@ public class DriveIntakeLeft extends Command {
 
     targetPose = VisionConstants.AprilTagList.get(id-1).pose.toPose2d();
     rotTarget = targetPose.getRotation().getRadians();
-    rotRobot=rotTarget+Math.PI;
+    rotRobot=rotTarget;
     targetPose = new Pose2d(
-        targetPose.getX()+reefOffsetX*Math.sin(rotTarget)+reefOffsetY*Math.cos(rotTarget),
-        targetPose.getY()-reefOffsetX*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
+        targetPose.getX()+intakeOffsetX*Math.sin(rotTarget)+intakeOffsetY*Math.cos(rotTarget),
+        targetPose.getY()-intakeOffsetX*Math.cos(rotTarget)+intakeOffsetY*Math.sin(rotTarget),
         new Rotation2d(rotRobot));
             
 

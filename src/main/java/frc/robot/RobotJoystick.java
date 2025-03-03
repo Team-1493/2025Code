@@ -13,7 +13,7 @@ public class RobotJoystick extends CommandXboxController {
     private SlewRateLimiter srlx= new SlewRateLimiter(4);
     private SlewRateLimiter srly= new SlewRateLimiter(4);
     double scaleFactorRotate=scaleFactorRotateFast;
-    int rotateAxis=2;
+    int rotateAxis=4;
    // int rotateAxis=3;
 
     public RobotJoystick(int port){

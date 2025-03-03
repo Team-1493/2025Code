@@ -154,10 +154,10 @@ import com.ctre.phoenix6.Utils;
                 
                 Pose2d tmpPose2=new Pose2d(tmpPose1.getX(),tmpPose1.getY(),new Rotation2d(newRot));
 
-//                dt.addVisionMeasurement(
-             //       visionEst.get().estimatedPose.toPose2d(),
- //                   tmpPose2,
- //                   Utils.fpgaToCurrentTime(visionEst.get().timestampSeconds), curStdDevs);
+                dt.addVisionMeasurement(
+//                    visionEst.get().estimatedPose.toPose2d(),
+                    tmpPose2,
+                    Utils.fpgaToCurrentTime(visionEst.get().timestampSeconds), curStdDevs);
                     
                 printResults(visionEst);
 
@@ -233,11 +233,10 @@ import com.ctre.phoenix6.Utils;
                  // One or more tags visible, run the full heuristic.
                  avgDist /= numTags;
                  // Decrease std devs if multiple targets are visible
-                 if (numTags > 1) estStdDevs = VisionSystem.kMultiTagStdDevs;
-                 // Increase std devs based on (average) distance
-                 if (numTags == 1 && avgDist > 4)
-                     estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-                 else estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / VisionSystem.stdFactor));//30
+                 if(avgDist>2.5 ) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+                 else if (numTags > 1) estStdDevs = VisionSystem.kMultiTagStdDevs;
+                 else    estStdDevs=VisionSystem.kSingleTagStdDevs;
+//                 else estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / VisionSystem.stdFactor));//30
                  curStdDevs = estStdDevs;
              }
          }

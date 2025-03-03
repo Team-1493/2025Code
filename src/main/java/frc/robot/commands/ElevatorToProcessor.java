@@ -27,8 +27,9 @@ public class ElevatorToProcessor extends Command {
 
   @Override
   public void initialize() {
-    elevator.stopElevator();
+//    elevator.stopElevator();
     elevFlag=false;
+    claw.hashCode();
     claw.toPosition(claw.positionProcessor);
 
 

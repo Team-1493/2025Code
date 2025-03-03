@@ -43,7 +43,8 @@ private VoltageOut  voltOutFrontHold= new VoltageOut(-.6);
 private VoltageOut  voltOutRearHold= new VoltageOut(.6);
 private VoltageOut  voltOutFrontSpitAlgae= new VoltageOut(12);
 private VoltageOut  voltOutRearSpitAlgae= new VoltageOut(-12);
-
+private VoltageOut  voltOutFrontRevSpitAlgae= new VoltageOut(-12);
+private VoltageOut  voltOutRearRevSpitAlgae= new VoltageOut(12);
 
     
 
@@ -52,12 +53,12 @@ public double
         positionNet=.13,positionProcessor=-0.17, 
         positionCoral1=.25, positionCoral2=.25,
         positionCoral3=.25,positionCoral4=.205,
-        positionIntake=0.314,positionNeutral=0.25;   
+        positionIntake=0.322,positionNeutral=0.25;   
 
 
 private DigitalInput limitLower = new DigitalInput(4);
 private DigitalInput limitUpper = new DigitalInput(1);
-private DigitalInput coralSensor = new DigitalInput(5);
+private DigitalInput coralSensor = new DigitalInput(7);
 
 private boolean atLowerLimit=false,atUpperLimit=false;
 public boolean hasCoral = false, prevHasCoral=false;
@@ -101,6 +102,7 @@ public Claw(){
         if (prevHasCoral &&  !hasCoral) stopRollers();
 
         SmartDashboard.putNumber("Claw Enc AbsPos", encPosition);    
+        SmartDashboard.putNumber("Claw Enc SetPosition", clawMotor.getClosedLoopReference().getValueAsDouble());    
 
         SmartDashboard.putNumber("Claw Voltqqq",voltage);
         SmartDashboard.putNumber("Claw Current", current);
@@ -245,6 +247,12 @@ public Claw(){
         hasAlgae=false;
     }
 
+    public void spitReverseAlgae(){
+        clawFrontRoller.setControl(voltOutFrontRevSpitAlgae);
+        clawRearRoller.setControl(voltOutRearRevSpitAlgae);
+        hasAlgae=false;
+    }
+
     public void rollersRun(double front,double rear){
         clawFrontRoller.setControl(new VoltageOut(front));
         clawRearRoller.setControl(new VoltageOut(rear));
@@ -316,7 +324,7 @@ public Claw(){
     
     cfg.Slot0.GravityType=GravityTypeValue.Arm_Cosine;
     cfg.Slot0.kG = 0.31;
-    cfg.Slot0.kP = 3;
+    cfg.Slot0.kP = 9;
     cfg.Slot0.kI = 0;
     cfg.Slot0.kD = 0;
     cfg.Slot0.kS = 0.07;

@@ -29,9 +29,9 @@ public class Elevator extends SubsystemBase{
     
     public double 
             positionAlgae1=15,positionAlgae2 = 30, 
-            positionNet=44, positionProcessor=5, 
-            positionCoral1=5, positionCoral2=7.5,
-            positionCoral3=20,positionCoral4=43,
+            positionNet=43, positionProcessor=5, 
+            positionCoral1=5.5, positionCoral2=7.5,
+            positionCoral3=19.5,positionCoral4=42,
             positionIntake=0;
     public double elevatorPos=0;
     boolean zeroed=false,atLowerLimit=false,atUpperLimit=false;
@@ -59,6 +59,9 @@ public Elevator(){
     public void periodic(){
 //        if (!Robot.enabled) zeroed=false;
 //        if(!zeroed && Robot.enabled)zeroElevator();
+
+    //atLowerLimit=!limitLower.get()&& elevatorRight.getVelocity().getValueAsDouble()<0.01 && 
+    //                elevatorRight.getStatorCurrent().getValueAsDouble()>1;
         atLowerLimit=!limitLower.get();
         atUpperLimit=!limitUpper.get();
 
@@ -174,7 +177,6 @@ public Elevator(){
         }
 
     public void stopElevator(){
-        SmartDashboard.putString("Man Dir", "stop");
         elevatorRight.stopMotor();
     }
 
@@ -250,7 +252,7 @@ public Elevator(){
     positionCoral4= SmartDashboard.getNumber("Elevator positionCoral4", positionCoral4);
     SmartDashboard.putNumber("Elevator p1", positionCoral1);
     SmartDashboard.putNumber("Elevator p4", positionCoral4);
-    System.out.println("GGG  pos4  "+positionCoral4);
+//    System.out.println("GGG  pos4  "+positionCoral4);
   }
 
 }

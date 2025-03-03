@@ -24,10 +24,10 @@ public class VisionSystem extends SubsystemBase {
     public static boolean hasReefTarget;
     public static int closestReefID=0;
     public static double closestReefDist=999;
-    public static double reefOffsetX=0.2;
-    public static double reefOffsetY=.55;
-    public static double intakeOffsetX=0;
-    public static double intakeOffsetY=.75;
+    public static double reefOffsetX=0.185;
+    public static double reefOffsetY=.210;
+    public static double intakeOffsetX=.6;
+    public static double intakeOffsetY=2;
     public static double stdFactor=30;
 
 
@@ -69,10 +69,11 @@ public class VisionSystem extends SubsystemBase {
 
 
         if (Robot.isSimulation()) {
-             // Create the vision system simulation which handles cameras and targets on the field.
-             visionSim = new VisionSystemSim("visionSim");
+            
+             // Create the vision system simulation which handles cameras and targets on the //field.
+      //       visionSim = new VisionSystemSim("visionSim");
              // Add all the AprilTags inside the tag layout as visible targets to this simulated field.
-             visionSim.addAprilTags(VisionConstants.FieldLayout);
+      //       visionSim.addAprilTags(VisionConstants.FieldLayout);
         }
 
         dt=m_dt;
@@ -98,7 +99,7 @@ public class VisionSystem extends SubsystemBase {
             camFL.getEstimatedGlobalPose();
             camFR.getEstimatedGlobalPose();
 //            camB.getEstimatedGlobalPose();
-            visionSim.update(dt.getPose());
+//            visionSim.update(dt.getPose());
 
             if (camFL.closestTargetDist<camFR.closestTargetDist){
                 closestReefDist=camFL.closestTargetDist;

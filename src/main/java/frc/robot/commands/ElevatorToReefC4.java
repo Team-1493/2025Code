@@ -27,7 +27,7 @@ public class ElevatorToReefC4 extends Command {
 
   @Override
   public void initialize() {
-    elevator.stopElevator();
+//    elevator.stopElevator();
     claw.stopRollers();
     elevFlag=false;
     claw.toPosition(claw.positionNeutral);

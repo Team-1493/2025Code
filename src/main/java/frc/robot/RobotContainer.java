@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.DriveIntake;
 import frc.robot.commands.DriveIntakeRight;
 import frc.robot.commands.DriveReefLeft;
 import frc.robot.commands.DriveReefRight;
@@ -76,7 +77,7 @@ public class RobotContainer {
 
     public RobotContainer() {
         receivedCoral = new Trigger ( ()-> claw.pickedUpCoral());
-        setSlow = new Trigger ( ()-> stickDriver.getRawAxis(4)>0.5);
+        setSlow = new Trigger ( ()-> stickDriver.getRawAxis(3)>0.5);
         configureBindings();        
     }
 
@@ -100,7 +101,7 @@ public class RobotContainer {
         
 /* 
         stickDriver.button(2).onTrue(new InstantCommand(() 
-        -> drivetrain.setTargetHeading(Math.toRadians(-90))));
+        -> drivetrain.setTarget(Math.toRadians(-90))));
         stickDriver.button(1).onTrue(new InstantCommand(() ->
             drivetrain.setTargetHeading( Math.toRadians(54))));
         stickDriver.button(3).onTrue(new InstantCommand(() ->
@@ -108,7 +109,7 @@ public class RobotContainer {
         stickDriver.button(4).onTrue(new InstantCommand(() ->
             drivetrain.setTargetHeading(Math.toRadians( 0))));   
 */
-        stickDriver.pov(90).onTrue(new InstantCommand(() ->
+/*        stickDriver.pov(90).onTrue(new InstantCommand(() ->
             drivetrain.setTargetHeading(Math.toRadians( 120))));   
         stickDriver.pov(270).onTrue(new InstantCommand(() ->
             drivetrain.setTargetHeading(Math.toRadians( -120))));
@@ -117,15 +118,15 @@ public class RobotContainer {
             drivetrain.setTargetHeading(Math.toRadians( 60))));   
         stickDriver.pov(180).onTrue(new InstantCommand(() ->
             drivetrain.setTargetHeading(Math.toRadians( -60))));
-
+*/
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
          
-        (stickDriver.button(1)).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        (stickDriver.button(2)).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        (stickDriver.button(3)).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        (stickDriver.button(4)).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+//        (stickDriver.button(1)).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+//        (stickDriver.button(2)).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+//        (stickDriver.button(3)).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+//       (stickDriver.button(4)).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
         
 
         // reset the field-centric heading on left bumper press
@@ -138,23 +139,18 @@ public class RobotContainer {
         
         stickDriver.button(10).onTrue( new InstantCommand(()-> drivetrain.setTrueHeading()));
 
-
-//        stickDriver.button(7).whileTrue( new FollowPoseDirect(drivetrain));                  
-        stickDriver.button(7).whileTrue( autoGenerator.IntakeR_DR());                 
-
-//        stickDriver.button(7).whileTrue( new DriveIntakeRight(drivetrain));                    
-//               stickDriver.button(10).whileTrue( 
-//                getReefRight().andThen(drivetrain.Stop()).
-//                andThen(drivetrain.ResetHeadingController()));  
+        stickDriver.button(3).whileTrue(new DriveReefLeft(drivetrain));                 
+        stickDriver.button(2).whileTrue( new DriveReefRight(drivetrain));                 
+//        stickDriver.button(4).whileTrue( new DriveIntake(drivetrain));                 
 
         stickOperator.button(1).onTrue(new ElevatorToReefC1(elevator,claw));                     
         stickOperator.button(2).onTrue(new ElevatorToReefC2(elevator,claw));                     
         stickOperator.button(3).onTrue(new ElevatorToReefC3(elevator,claw)); 
         stickOperator.button(4).onTrue(new ElevatorToReefC4(elevator,claw)); 
         
-        stickOperator.button(14).whileTrue(new ElevatorToReefA1(elevator,claw));                 
-        stickOperator.button(13).whileTrue(new ElevatorToReefA2(elevator,claw));    
-        stickOperator.button(9).onTrue(new ElevatorToNet(elevator,claw));                                                  
+        stickOperator.button(14).onTrue(new ElevatorToReefA1(elevator,claw));                 
+        stickOperator.button(13).onTrue(new ElevatorToReefA2(elevator,claw));    
+        //stickOperator.button(9).onTrue(new ElevatorToNet(elevator,claw));                                                  
 
         stickOperator.button(7).onTrue(new IntakeCoral(elevator,claw));
 
@@ -185,7 +181,7 @@ public class RobotContainer {
     private void updateConstants(){
         claw.updateConstants();
         elevator.updateConstants();
-//        vision.configure();
+        vision.configure();
 //        drivetrain.configure();
      }
 

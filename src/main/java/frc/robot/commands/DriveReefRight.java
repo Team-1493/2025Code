@@ -16,6 +16,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
@@ -36,8 +37,8 @@ public class DriveReefRight extends Command {
         sd=m_sd;
 
         constraints = new PathConstraints(
-            1, 
-         2,
+            1.25, 
+         2.5,
          Units.degreesToRadians(360),
          Units.degreesToRadians(450));
 
@@ -49,12 +50,11 @@ public class DriveReefRight extends Command {
             
             double reefOffsetX = -VisionSystem.reefOffsetX;
             double reefOffsetY = VisionSystem.reefOffsetY;
-
-            Pose2d robotPose = sd.getPose();
+            Pose2d robotPose = new Pose2d(sd.getPose().getX(),sd.getPose().getY(),new Rotation2d(sd.headingTrue));
+            sd.resetPose(robotPose);
             robotPose=new Pose2d(robotPose.getX(),robotPose.getY(),new Rotation2d(robotPose.getRotation().getRadians()));
             double xr=robotPose.getX();
             double yr=robotPose.getY();
-            System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
             System.out.println("X  "+xr);
             System.out.println("Y  "+yr);
             int id;
@@ -71,9 +71,8 @@ public class DriveReefRight extends Command {
             if (xr>0 && yr>xr/2) id = 20;    
             if (yr<xr/2 && yr>-xr/2) id = 21;
             if (xr>0 && yr<-xr/2 ) id = 22;
-            System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
-            System.out.println("ID  "+id);
 
+             SmartDashboard.putNumber("Target ID", id);
              int index = id-1;
             targetPose = VisionConstants.AprilTagList.get(index).pose.toPose2d();
             rotTarget = targetPose.getRotation().getRadians();
@@ -84,7 +83,7 @@ public class DriveReefRight extends Command {
                 new Rotation2d(rotRobot));
 
 
-            sd.turnOffHeadingControl();
+//            sd.turnOffHeadingControl();
             drivePath= AutoBuilder.pathfindToPose(
                 targetPose,
                 constraints,
