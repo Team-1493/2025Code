@@ -49,9 +49,9 @@ public class ElevatorToNet extends Command {
 
   @Override
   public void execute() {
-    System.out.println(elevator.elevatorPos+"   "+claw.encPosition +"   " +elevFlag+"    "+clawFlag+"   "+clawFlag2 );
+//    System.out.println(elevator.elevatorPos+"   "+claw.encPosition +"   " +elevFlag+"    "+clawFlag+"   "+clawFlag2 );
 
-    if (Math.abs(claw.encPosition-claw.positionAlgae1)<0.03 && !elevFlag) {
+    if (Math.abs(claw.encPosition-claw.positionAlgae1)<0.025 && !elevFlag) {
       elevator.toPosition(elevator.positionNet);
       elevFlag=true;}
 

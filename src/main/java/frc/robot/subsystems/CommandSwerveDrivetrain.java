@@ -53,7 +53,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
 //  ***Added to default code!    
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    private double MaxAngularRate = RotationsPerSecond.of(1.5).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
     private double targetHeading=0, targetHeadingPrev=0,headingRateDeadband=1;
     boolean pointInDirection=false;
     private double reverseDirection=1;
@@ -302,7 +302,8 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-        headingTrue=(robotpose.getRotation().getRadians()-headingOffset)%360;
+        headingTrue=getHeadingTrue();
+
         // added static robotpose  so AprilTagCamera can get the pose for simulation
         robotpose=this.getPose();
         SmartDashboard.putNumber("Pose X",robotpose.getX());
@@ -572,6 +573,13 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         this.getModule(2).getSteerMotor().getConfigurator().apply(clc);
         this.getModule(3).getSteerMotor().getConfigurator().apply(clc);
 
+    }
+
+    private double getHeadingTrue(){
+        double ht=(robotpose.getRotation().getRadians()-headingOffset);
+        if(ht>Math.PI)ht=ht-2*Math.PI;
+        else if (ht<-Math.PI) ht=ht+2*Math.PI;
+        return (ht);
     }
 
 }

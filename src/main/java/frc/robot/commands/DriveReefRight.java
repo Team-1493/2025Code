@@ -50,16 +50,16 @@ public class DriveReefRight extends Command {
             
             double reefOffsetX = -VisionSystem.reefOffsetX;
             double reefOffsetY = VisionSystem.reefOffsetY;
-            Pose2d robotPose = new Pose2d(sd.getPose().getX(),sd.getPose().getY(),new Rotation2d(sd.headingTrue));
-            sd.resetPose(robotPose);
-            robotPose=new Pose2d(robotPose.getX(),robotPose.getY(),new Rotation2d(robotPose.getRotation().getRadians()));
-            double xr=robotPose.getX();
-            double yr=robotPose.getY();
-            System.out.println("X  "+xr);
-            System.out.println("Y  "+yr);
-            int id;
 
-            // y = -1/2x  ,  y = 1/2 x  ,   x = 0
+
+          sd.resetRotation(new Rotation2d(sd.headingTrue));
+            
+          Pose2d robotPose = sd.getPose();
+          double xr=robotPose.getX();
+          double yr=robotPose.getY();
+          int id;
+
+       
             // coord reef center 4.508,4.055
             xr=xr - 4.058;
             yr=yr - 4.055;  

@@ -42,7 +42,7 @@ public class ElevatorToProcessor extends Command {
   @Override
   public void execute() {
     
-    if (Math.abs(claw.encPosition-claw.positionProcessor)<0.04 && !elevFlag) {
+    if (Math.abs(claw.encPosition-claw.positionProcessor)<0.025 && !elevFlag) {
       elevator.toPosition(elevator.positionProcessor);
       elevFlag=true;}
 

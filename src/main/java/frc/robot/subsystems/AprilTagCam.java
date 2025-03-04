@@ -66,7 +66,7 @@ import com.ctre.phoenix6.Utils;
                     labelClosestDist; 
     boolean hasVisionMeasure=false;
     public int numTargets;
- 
+    private boolean blue;
 
      // *** For Simulation
      private PhotonCameraSim cameraSim;
@@ -77,11 +77,13 @@ import com.ctre.phoenix6.Utils;
                 String kCameraName, 
                 Transform3d kRobotToCam,
                 CommandSwerveDrivetrain m_dt,
+                Boolean m_blue,
                 VisionSystemSim m_visionSystemSim) {
 
         visionSim = m_visionSystemSim;
 
         dt=m_dt;
+        blue=m_blue;
 
         labelX=kCameraName+" X";
         labelY=kCameraName+" Y";
@@ -151,8 +153,9 @@ import com.ctre.phoenix6.Utils;
                 updateEstimationStdDevs(visionEst, change.getTargets());
                 Pose2d tmpPose1 =visionEst.get().estimatedPose.toPose2d();
                 double newRot=dt.getPose().getRotation().getRadians();
-                
-                Pose2d tmpPose2=new Pose2d(tmpPose1.getX(),tmpPose1.getY(),new Rotation2d(newRot));
+                double x=tmpPose1.getX();
+                 if(!blue)x =17.55-x;
+                Pose2d tmpPose2=new Pose2d(x,tmpPose1.getY(),new Rotation2d(newRot));
 
                 dt.addVisionMeasurement(
 //                    visionEst.get().estimatedPose.toPose2d(),
@@ -275,11 +278,13 @@ import com.ctre.phoenix6.Utils;
         
         if(hasVisionMeasure){
         SmartDashboard.putBoolean(labelHas, hasVisionMeasure);
-
+            
         Pose2d estpose2d = visionEst.get().estimatedPose.toPose2d();
+        double x=estpose2d.getX();
+        if(!blue)    x=17.55-x;
         SmartDashboard.putNumber(
             labelX,
-            estpose2d.getX());
+            x);
 
         SmartDashboard.putNumber(
             labelY,

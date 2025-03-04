@@ -9,6 +9,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -37,12 +39,13 @@ public class VisionSystem extends SubsystemBase {
         new Transform3d(0,.247,.188,new Rotation3d(0,0,Math.toRadians(-30)));
     
     Transform3d camB_RobotToCam = 
-        new Transform3d(-.1,0,1,new Rotation3d(0,0,Math.PI));
+        new Transform3d(-.2794,0,1.003,new Rotation3d(0,.2146,Math.PI));
 
     // TODO - pick correct deviations
     public static Matrix<N3, N1> kSingleTagStdDevs;
     public static Matrix<N3, N1> kMultiTagStdDevs;
-
+    private boolean blue=true;
+    
 
     private VisionSystemSim visionSim;
 
@@ -50,7 +53,12 @@ public class VisionSystem extends SubsystemBase {
 
     public VisionSystem(CommandSwerveDrivetrain m_dt) {
 
+
+        DriverStation.getAlliance().ifPresent(allianceColor -> {
+                if (allianceColor == Alliance.Red) blue=false;
+        });
             
+        SmartDashboard.putBoolean("Alliance", blue);
         SmartDashboard.putNumber("std single X", .3);    
         SmartDashboard.putNumber("std single Y", .3);    
         SmartDashboard.putNumber("std single Rot", 9999);    
@@ -79,13 +87,13 @@ public class VisionSystem extends SubsystemBase {
         dt=m_dt;
 
         camFL = new AprilTagCam("Spinel_1", camFL_RobotToCam,
-            dt,visionSim);
+            dt, blue,visionSim);
         
         camFR = new AprilTagCam("Spinel_2", camFR_RobotToCam,
-            dt,visionSim);
+            dt,blue, visionSim);
 
- //       camB = new AprilTagCam("OV9281_1", camB_RobotToCam,
- //           dt,visionSim);           
+        camB = new AprilTagCam("OV9281_2", camB_RobotToCam,
+               dt,blue, visionSim);           
             
 
 
@@ -98,7 +106,7 @@ public class VisionSystem extends SubsystemBase {
   public void periodic(){ 
             camFL.getEstimatedGlobalPose();
             camFR.getEstimatedGlobalPose();
-//            camB.getEstimatedGlobalPose();
+            camB.getEstimatedGlobalPose();
 //            visionSim.update(dt.getPose());
 
             if (camFL.closestTargetDist<camFR.closestTargetDist){

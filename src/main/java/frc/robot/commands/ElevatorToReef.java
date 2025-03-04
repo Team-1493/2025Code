@@ -43,7 +43,7 @@ public class ElevatorToReef extends Command {
   @Override
   public void execute() {
     
-    if (Math.abs(claw.encPosition-claw.positionNeutral)<0.05 && !elevFlag) {
+    if (Math.abs(claw.encPosition-claw.positionNeutral)<0.025 && !elevFlag) {
       elevator.toPosition(pos);
       elevFlag=true;}
 

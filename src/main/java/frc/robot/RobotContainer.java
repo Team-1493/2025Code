@@ -74,9 +74,10 @@ public class RobotContainer {
 
     private Trigger receivedCoral;
     private Trigger setSlow;
+    
 
     public RobotContainer() {
-        receivedCoral = new Trigger ( ()-> claw.pickedUpCoral());
+        receivedCoral = new Trigger ( ()-> claw.pickedUpCoral() );
         setSlow = new Trigger ( ()-> stickDriver.getRawAxis(3)>0.5);
         configureBindings();        
     }
@@ -165,7 +166,8 @@ public class RobotContainer {
 
         stickOperator.button(5).onTrue(new SpitCoral(claw));
 
-        receivedCoral.onTrue(claw.StopRollers().andThen(new ElevatorToReefC3(elevator,claw)));
+//        receivedCoral.onTrue(claw.StopRollers().andThen(new ElevatorToReefC2(elevator,claw)));
+        receivedCoral.onTrue(claw.StopRollers());
 
 //        stickOperator.button(12).onTrue(new InstantCommand(() -> elevator.elevatorRight.setPosition(0)));
 
