@@ -20,6 +20,8 @@ public class FollowPoseDirect extends Command {
     Pose2d goalPose= new Pose2d();
     double finalRawRotation;
     double deltaRot;
+    VisionConstants vc = new VisionConstants();
+
 
     public Pose2d targetPose2d     = new Pose2d();
     ProfiledPIDController pidx, pidy, pidr; 
@@ -134,7 +136,7 @@ public class FollowPoseDirect extends Command {
         if (xr>0 && yr<-xr/2 ) id = 22;
 
          int index = id-1;
-        targetPose = VisionConstants.AprilTagList.get(index).pose.toPose2d();
+        targetPose = vc.aprilTagList.get(index).pose.toPose2d();
         System.out.println("***********************  "+targetPose.getX());
         System.out.println("***********************  "+targetPose.getY());
         rotTarget = targetPose.getRotation().getRadians();

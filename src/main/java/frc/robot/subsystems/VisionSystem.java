@@ -33,7 +33,7 @@ public class VisionSystem extends SubsystemBase {
     public static double stdFactor=30;
 
 
-    Transform3d camFR_RobotToCam = 
+    Transform3d camFR_RobotToCam =
         new Transform3d(0,-.247,.188,new Rotation3d(0,0,Math.toRadians(33)));
     Transform3d camFL_RobotToCam = 
         new Transform3d(0,.247,.188,new Rotation3d(0,0,Math.toRadians(-30)));
@@ -54,11 +54,6 @@ public class VisionSystem extends SubsystemBase {
     public VisionSystem(CommandSwerveDrivetrain m_dt) {
 
 
-        DriverStation.getAlliance().ifPresent(allianceColor -> {
-                if (allianceColor == Alliance.Red) blue=false;
-        });
-            
-        SmartDashboard.putBoolean("Alliance", blue);
         SmartDashboard.putNumber("std single X", .3);    
         SmartDashboard.putNumber("std single Y", .3);    
         SmartDashboard.putNumber("std single Rot", 9999);    
@@ -86,14 +81,14 @@ public class VisionSystem extends SubsystemBase {
 
         dt=m_dt;
 
-        camFL = new AprilTagCam("Spinel_1", camFL_RobotToCam,
-            dt, blue,visionSim);
+        camFL = new AprilTagCam("Spinel_L", camFL_RobotToCam,
+            dt, visionSim);
         
-        camFR = new AprilTagCam("Spinel_2", camFR_RobotToCam,
-            dt,blue, visionSim);
+        camFR = new AprilTagCam("Spinel_R", camFR_RobotToCam,
+            dt,visionSim);
 
-        camB = new AprilTagCam("OV9281_2", camB_RobotToCam,
-               dt,blue, visionSim);           
+//        camB = new AprilTagCam("OV9281_1", camB_RobotToCam,
+//               dt,visionSim);           
             
 
 
@@ -106,7 +101,7 @@ public class VisionSystem extends SubsystemBase {
   public void periodic(){ 
             camFL.getEstimatedGlobalPose();
             camFR.getEstimatedGlobalPose();
-            camB.getEstimatedGlobalPose();
+//            camB.getEstimatedGlobalPose();
 //            visionSim.update(dt.getPose());
 
             if (camFL.closestTargetDist<camFR.closestTargetDist){

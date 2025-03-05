@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.323589743589743,
-        "y": 7.039
+        "x": 0.901541095890411,
+        "y": 7.03013698630137
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2656446678321682,
-        "y": 6.758424898018648
+        "x": 1.843596020132836,
+        "y": 6.749561884320018
       },
       "isLocked": false,
       "linkedName": "Coral_Intake_1"
@@ -45,8 +45,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 1.1,
+    "maxAcceleration": 3.3,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -57,7 +57,7 @@
     "rotation": -58.642999999999994
   },
   "reversed": false,
-  "folder": "3 Coral Auto L Paths",
+  "folder": "2 Coral Auto L Paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -52.50130060603152

@@ -11,10 +11,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSystem;
 
+
 public class Utilities {
 
     CommandSwerveDrivetrain sd;
     VisionSystem vs;
+    VisionConstants vc = new VisionConstants();
 
     Utilities(CommandSwerveDrivetrain m_sd, VisionSystem m_vs){
         sd=m_sd;
@@ -48,7 +50,7 @@ public class Utilities {
         if (xr>0 && yr<-xr/2 ) id = 22;
 
          int index = id-1;
-        targetPose = VisionConstants.AprilTagList.get(index).pose.toPose2d();
+        targetPose = vc.aprilTagList.get(index).pose.toPose2d();
         System.out.println("***********************  "+targetPose.getX());
         System.out.println("***********************  "+targetPose.getY());
         rotTarget = targetPose.getRotation().getRadians();
@@ -94,7 +96,7 @@ public class Utilities {
 
 //            int index=  VisionSystem.closestReefID-1;
              int index = id-1;
-            targetPose = VisionConstants.AprilTagList.get(index).pose.toPose2d();
+            targetPose = vc.aprilTagList.get(index).pose.toPose2d();
             System.out.println("***********************  "+targetPose.getX());
             System.out.println("***********************  "+targetPose.getY());
             rotTarget = targetPose.getRotation().getRadians();

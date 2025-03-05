@@ -20,7 +20,13 @@ public class AutoGenerator {
     Elevator elevator;
     Claw claw;
     ActionCommands actions;
-    private void defineCommands(Command simIntakeCoral, Command simIntakeAlgae, Command simScoreCoral, Command simDropAlgae, Command toReef1, Command toReef2, Command toReef3, Command toReef4, Command toIntake, Command driveToReefWall, Command driveToIntakeWall, Command intakeCoral, Command spitCoral, Command autoComplete){
+    private void defineCommands(Command simIntakeCoral, Command simIntakeAlgae, 
+    Command simScoreCoral, 
+    Command simDropAlgae, Command toReef1, Command toReef2, 
+    Command toReef3, Command toReef4, Command toIntake, 
+    Command driveToReefWall, Command driveToIntakeWall, 
+    Command intakeCoral, Command spitCoral, Command  checkForCoralAuto,
+    Command autoComplete){
         NamedCommands.registerCommand("simIntakeCoral", simIntakeCoral);
         NamedCommands.registerCommand("simIntakeAlgae", simIntakeAlgae);
         NamedCommands.registerCommand("simScoreCoral", simScoreCoral);
@@ -110,6 +116,8 @@ public class AutoGenerator {
             m_actions.elevatorToIntake,
             new InstantCommand(() -> SmartDashboard.putString("autoSim elevatorGoal", "endToIntake"))
         );
+
+        Command checkForCoralAuto = m_actions.checkForCoralAuto;
         
         Command driveToReefWall = m_actions.bumpIntoWall;
         Command driveToIntakeWall = m_actions.bumpIntoWallReverse;
@@ -131,7 +139,8 @@ public class AutoGenerator {
 
         InstantCommand autoComplete = new InstantCommand(() -> SmartDashboard.putBoolean("autoSim autoComplete", true));
 
-        defineCommands(simIntakeCoral, simIntakeAlgae, simScoreCoral, simDropAlgae, toReef1, toReef2, toReef3, toReef4, toIntake, driveToReefWall, driveToIntakeWall, intakeCoral, spitCoral, autoComplete);
+        defineCommands(simIntakeCoral, simIntakeAlgae, simScoreCoral, simDropAlgae, toReef1, toReef2, toReef3, toReef4, toIntake, driveToReefWall, driveToIntakeWall, intakeCoral, spitCoral,
+        checkForCoralAuto, autoComplete);
         
 
 

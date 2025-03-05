@@ -25,6 +25,8 @@ public class DriveReefLeft extends Command {
     Pose2d targetPose;
     private CommandSwerveDrivetrain sd;
     private Command drivePath;
+    VisionConstants vc = new VisionConstants();
+
 
     
   /**
@@ -73,7 +75,7 @@ public class DriveReefLeft extends Command {
 //    if(VisionSystem.hasReefTarget){
 //      int index=  VisionSystem.closestReefID-1;
     int index = id-1;
-      targetPose = VisionConstants.AprilTagList.get(index).pose.toPose2d();
+      targetPose = vc.aprilTagList.get(index).pose.toPose2d();
       rotTarget = targetPose.getRotation().getRadians();
       rotRobot=rotTarget+Math.PI;
       targetPose = new Pose2d(

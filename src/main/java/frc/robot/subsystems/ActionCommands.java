@@ -16,12 +16,15 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.VisionConstants;
 import frc.robot.commands.BumpIntoWall;
 import frc.robot.commands.BumpIntoWallReverse;
+import frc.robot.commands.CheckForCoralAuto;
 import frc.robot.commands.ElevatorToReefA1;
 import frc.robot.commands.ElevatorToReefA2;
 import frc.robot.commands.ElevatorToReefC1;
 import frc.robot.commands.ElevatorToReefC2;
 import frc.robot.commands.ElevatorToReefC3;
 import frc.robot.commands.ElevatorToReefC4;
+import frc.robot.commands.IntakeCoral;
+import frc.robot.commands.IntakeCoralAuto;
 
 public class ActionCommands {
 
@@ -33,7 +36,7 @@ public class ActionCommands {
         elevatorToReef4, elevatorToIntake,elevatorToAlgae1,elevatorToAlgae2;
     public Command intakeCoral,spitCoral,bumpIntoWall,elevatorToReef1;
     public Command bumpIntoWallReverse;
-
+    public Command checkForCoralAuto;
 
     
     
@@ -51,10 +54,7 @@ public  ActionCommands(CommandSwerveDrivetrain m_sd,Elevator m_elevator,Claw m_c
         Units.degreesToRadians(450));
                 
         
-        elevatorToIntake = new SequentialCommandGroup( 
-            claw.ToPosition(claw.positionIntake), 
-            new InstantCommand(()->Timer.delay(.5)),
-            elevator.ToPosition(elevator.positionIntake));
+        elevatorToIntake = new IntakeCoralAuto(m_elevator, m_claw);
 
         elevatorToReef1 = new ElevatorToReefC1(elevator, claw);
         
@@ -75,6 +75,7 @@ public  ActionCommands(CommandSwerveDrivetrain m_sd,Elevator m_elevator,Claw m_c
 
         bumpIntoWall = new BumpIntoWall(sd);
         bumpIntoWallReverse = new BumpIntoWallReverse(sd);
+        checkForCoralAuto = new CheckForCoralAuto(claw); 
 }
 }
 

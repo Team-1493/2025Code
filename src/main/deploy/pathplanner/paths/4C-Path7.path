@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.323589743589743,
-        "y": 7.039
+        "x": 0.901541095890411,
+        "y": 7.03013698630137
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6426329863292297,
-        "y": 6.201026334185235
+        "x": 2.2205843386298976,
+        "y": 6.192163320486605
       },
       "isLocked": false,
       "linkedName": "Coral_Intake_1"
     },
     {
       "anchor": {
-        "x": 3.934679487179486,
-        "y": 5.346025641025641
+        "x": 4.162114726027397,
+        "y": 4.941566780821918
       },
       "prevControl": {
-        "x": 3.2545578433966984,
-        "y": 5.777906626076055
+        "x": 3.4819930822446095,
+        "y": 5.373447765872332
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 1.1,
+    "maxAcceleration": 3.3,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.038974358974358,
-        "y": 5.3870000000000005
+        "x": 4.778167808219178,
+        "y": 4.926541095890411
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.567468677156177,
-        "y": 6.314357954545456
+        "x": 5.3066621264009965,
+        "y": 5.853899050435866
       },
       "isLocked": false,
       "linkedName": "Coral_Score_J"
     },
     {
       "anchor": {
-        "x": 1.323589743589743,
-        "y": 7.039
+        "x": 0.901541095890411,
+        "y": 7.03013698630137
       },
       "prevControl": {
-        "x": 2.305531031468532,
-        "y": 6.529078307109556
+        "x": 1.8834823837692012,
+        "y": 6.520215293410926
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,8 +34,8 @@
   "eventMarkers": [
     {
       "name": "toIntake",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": 1.0,
+      "waypointRelativePos": 0.3389830508474575,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
@@ -45,8 +45,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 1.1,
+    "maxAcceleration": 3.3,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -57,10 +57,10 @@
     "rotation": -52.50130060603152
   },
   "reversed": false,
-  "folder": "3 Coral Auto L Paths",
+  "folder": "2 Coral Auto L Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 119.89586597075329
+    "rotation": -119.99999999999999
   },
   "useDefaultConstraints": true
 }

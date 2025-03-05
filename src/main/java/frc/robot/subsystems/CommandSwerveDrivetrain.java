@@ -292,7 +292,8 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
          * Otherwise, only check and apply the operator perspective if the DS is disabled.
          * This ensures driving behavior doesn't change until an explicit disable event occurs during testing.
          */
-        if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
+
+/*          if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent(allianceColor -> {
                 setOperatorPerspectiveForward(
                     allianceColor == Alliance.Red
@@ -302,6 +303,7 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+            */
         headingTrue=getHeadingTrue();
 
         // added static robotpose  so AprilTagCamera can get the pose for simulation
@@ -493,13 +495,14 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
                 new PIDConstants(kProtAuto, 0.0, kDrotAuto)
             ),
             config,
-            () -> {
+            /*() -> {
                 var alliance = DriverStation.getAlliance();
                 if (alliance.isPresent()){
                     return alliance.get() == DriverStation.Alliance.Blue;  
                 }
                 return false;
-            },
+            }*/
+            () -> {return false;},
             this
         );
         } catch (Exception e) {
@@ -516,9 +519,9 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         SmartDashboard.putNumber("Drive kS",0.0);  // 0 for TC
 
 
-        SmartDashboard.putNumber("Drive Auto kP",5); 
+        SmartDashboard.putNumber("Drive Auto kP",10); 
         SmartDashboard.putNumber("Drive Auto kD",0);         
-        SmartDashboard.putNumber("Drive Auto rot kP", 3);
+        SmartDashboard.putNumber("Drive Auto rot kP", 5);
         SmartDashboard.putNumber("Drive Auto rot kD", 0);
 
 

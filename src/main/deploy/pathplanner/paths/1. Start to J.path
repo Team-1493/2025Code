@@ -4,31 +4,36 @@
     {
       "anchor": {
         "x": 8.057045454545454,
-        "y": 6.133991477272727
+        "y": 6.138
       },
       "prevControl": null,
       "nextControl": {
         "x": 6.673084788139243,
-        "y": 5.961797683000124
+        "y": 5.965806205727397
       },
       "isLocked": false,
       "linkedName": "Up Middle Start"
     },
     {
       "anchor": {
-        "x": 5.038974358974358,
-        "y": 5.3870000000000005
+        "x": 4.778167808219178,
+        "y": 4.926541095890411
       },
       "prevControl": {
-        "x": 5.871420607077772,
-        "y": 5.5428191518337835
+        "x": 5.43929794520548,
+        "y": 5.362285958904108
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Coral_Score_J"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": -119.99999999999999
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
@@ -45,8 +50,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 1.1,
+    "maxAcceleration": 3.3,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -54,10 +59,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 119.89586597075329
+    "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "3 Coral Auto L Paths",
+  "folder": "2 Coral Auto L Paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

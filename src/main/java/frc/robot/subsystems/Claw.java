@@ -4,8 +4,10 @@ import java.time.Period;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -41,8 +43,12 @@ private VoltageOut  voltOutFrontReverse= new VoltageOut(-4);
 private VoltageOut  voltOutSpitCoral = new VoltageOut(-8);
 private VoltageOut  voltOutFrontHold= new VoltageOut(-.6);
 private VoltageOut  voltOutRearHold= new VoltageOut(.6);
-private VoltageOut  voltOutFrontSpitAlgae= new VoltageOut(12);
-private VoltageOut  voltOutRearSpitAlgae= new VoltageOut(-12);
+private VoltageOut  voltOutFrontSpitAlgae= new VoltageOut(13);
+private VoltageOut  voltOutRearSpitAlgae= new VoltageOut(-13);
+private DutyCycleOut dutyFrontSpitAlgae = new DutyCycleOut(1);
+private DutyCycleOut dutyRearSpitAlgae = new DutyCycleOut(-1); 
+private TorqueCurrentFOC torqueFrontSpitAlgae = new TorqueCurrentFOC(40);
+private TorqueCurrentFOC torqueRearSpitAlgae = new TorqueCurrentFOC(-40);
 private VoltageOut  voltOutFrontRevSpitAlgae= new VoltageOut(-12);
 private VoltageOut  voltOutRearRevSpitAlgae= new VoltageOut(12);
 
@@ -50,7 +56,7 @@ private VoltageOut  voltOutRearRevSpitAlgae= new VoltageOut(12);
 
 public double 
         positionAlgae1=-.125,positionAlgae2 = -0.125, 
-        positionNet=.13,positionProcessor=-0.17, 
+        positionNet=.17,positionProcessor=-0.17, 
         positionCoral1=.25, positionCoral2=.25,
         positionCoral3=.25,positionCoral4=.205,
         positionIntake=0.322,positionNeutral=0.25;   
@@ -58,7 +64,7 @@ public double
 
 private DigitalInput limitLower = new DigitalInput(4);
 private DigitalInput limitUpper = new DigitalInput(1);
-private DigitalInput coralSensor = new DigitalInput(7);
+public DigitalInput coralSensor = new DigitalInput(7);
 
 private boolean atLowerLimit=false,atUpperLimit=false;
 public boolean hasCoral = false, prevHasCoral=false;
@@ -100,6 +106,7 @@ public Claw(){
       
 
         if (prevHasCoral &&  !hasCoral) stopRollers();
+        if(!prevHasCoral && hasCoral) stopRollers();
 
         SmartDashboard.putNumber("Claw Enc AbsPos", encPosition);    
         SmartDashboard.putNumber("Claw Enc SetPosition", clawMotor.getClosedLoopReference().getValueAsDouble());    
@@ -242,8 +249,10 @@ public Claw(){
     }
 
     public void spitAlgae(){
-        clawFrontRoller.setControl(voltOutFrontSpitAlgae);
-        clawRearRoller.setControl(voltOutRearSpitAlgae);
+        clawFrontRoller.setControl(dutyFrontSpitAlgae);
+      clawRearRoller.setControl(dutyRearSpitAlgae);
+  //      clawFrontRoller.setControl(torqueFrontSpitAlgae);
+//        clawRearRoller.setControl(torqueRearSpitAlgae);
         hasAlgae=false;
     }
 

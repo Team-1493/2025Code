@@ -27,6 +27,9 @@ public class DriveIntake extends Command {
     private  double intakeOffsetY = VisionSystem.intakeOffsetX;
     private CommandSwerveDrivetrain sd;
     private Command drivePath;
+    VisionConstants vc = new VisionConstants();
+
+    
 
     
   /**
@@ -55,7 +58,7 @@ public class DriveIntake extends Command {
     else id = 12;
     
 
-    targetPose = VisionConstants.AprilTagList.get(id-1).pose.toPose2d();
+    targetPose = vc.aprilTagList.get(id-1).pose.toPose2d();
     rotTarget = targetPose.getRotation().getRadians();
     rotRobot=rotTarget;
     targetPose = new Pose2d(

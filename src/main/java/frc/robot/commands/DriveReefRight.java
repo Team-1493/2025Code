@@ -26,7 +26,7 @@ public class DriveReefRight extends Command {
     Pose2d targetPose;
     private CommandSwerveDrivetrain sd;
     private Command drivePath;
-
+    VisionConstants vc = new VisionConstants();
     
   /**
    * Creates a new ExampleCommand.
@@ -74,7 +74,7 @@ public class DriveReefRight extends Command {
 
              SmartDashboard.putNumber("Target ID", id);
              int index = id-1;
-            targetPose = VisionConstants.AprilTagList.get(index).pose.toPose2d();
+            targetPose = vc.aprilTagList.get(index).pose.toPose2d();
             rotTarget = targetPose.getRotation().getRadians();
             rotRobot=rotTarget+Math.PI;
             targetPose = new Pose2d(

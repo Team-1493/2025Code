@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.934679487179486,
-        "y": 5.346025641025641
+        "x": 4.162114726027397,
+        "y": 4.941566780821918
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2146853063296863,
-        "y": 6.040005741275227
+        "x": 3.4421205451775974,
+        "y": 5.635546881071504
       },
       "isLocked": false,
       "linkedName": "Coral_Score_K"
     },
     {
       "anchor": {
-        "x": 1.323589743589743,
-        "y": 7.039
+        "x": 0.901541095890411,
+        "y": 7.03013698630137
       },
       "prevControl": {
-        "x": 2.2870894844290204,
-        "y": 6.771290737174361
+        "x": 1.8650408367296882,
+        "y": 6.7624277234757315
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,8 +45,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 1.1,
+    "maxAcceleration": 3.3,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -57,7 +57,7 @@
     "rotation": -52.50130060603152
   },
   "reversed": false,
-  "folder": "3 Coral Auto L Paths",
+  "folder": "2 Coral Auto L Paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -58.642999999999994

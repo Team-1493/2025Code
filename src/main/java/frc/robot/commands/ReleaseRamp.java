@@ -6,55 +6,49 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.RearIntake;
+
+import com.ctre.phoenix6.controls.VoltageOut;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class ElevatorToNet extends Command {
+public class ReleaseRamp extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Elevator elevator;
-  private final Claw claw;
-  boolean elevFlag=false;
+  private final RearIntake intake;
+  private VoltageOut  voltOut= new VoltageOut(1);
+  
 
   /**
    * @param subsystem The subsystem used by this command.
    */
-  public ElevatorToNet(Elevator m_elevator,Claw m_claw) {
-    claw=m_claw;
-    elevator=m_elevator;
-    elevFlag=false;
-    addRequirements(claw,elevator);
+  public ReleaseRamp(RearIntake m_intake) {
+    intake=m_intake;
+    addRequirements(intake);
   }
 
   @Override
   public void initialize() {
-//    elevator.stopElevator();
-    elevFlag=false;
-    elevator.toPosition(elevator.positionNet);
-
-
-
-    //claw.toPosition(claw.positionIntake);
-    
-
+    intake.motor.setControl(voltOut);
+    RearIntake.releasedRamp=true;
   }
 
   @Override
   public void execute() {
-    
-    if (Math.abs(elevator.elevatorPos-elevator.positionNet)<0.5 && !elevFlag) {
-      elevFlag=true;}
+    }
 
 
-
-  }
+     
+  
 
   @Override
   public void end(boolean interrupted) {
-    claw.toPosition(claw.positionNet);
+    intake.motor.stopMotor();
   }
 
   @Override
   public boolean isFinished() {
-    return (elevFlag);
+    return (!intake.limitSwitch.get());
   }
 }

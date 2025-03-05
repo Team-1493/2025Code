@@ -3,38 +3,43 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.057045454545454,
-        "y": 1.866
+        "x": 8.057,
+        "y": 1.915
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.4159674657534245,
-        "y": 2.176840753424659
+        "x": 6.415922011207971,
+        "y": 2.225840753424659
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.038974358974358,
-        "y": 2.6129999999999995
+        "x": 4.838270547945205,
+        "y": 3.0633561643835616
       },
       "prevControl": {
-        "x": 5.950171232876712,
-        "y": 2.3571489726027393
+        "x": 5.749467337095663,
+        "y": 2.8075048351481007
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Coral_Score_E"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.6604278074866314,
+      "rotationDegrees": 119.99999999999999
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "toReef4",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": 1.0,
       "command": {
         "type": "named",
@@ -45,8 +50,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 1.1,
+    "maxAcceleration": 3.3,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -54,10 +59,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 119.89586597075329
+    "rotation": 119.99999999999999
   },
   "reversed": false,
-  "folder": "3 Coral Auto R Paths ",
+  "folder": "2 Coral Auto R Paths ",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

@@ -9,16 +9,18 @@ import frc.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class ElevatorToNet extends Command {
+public class IntakeCoralAuto extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Elevator elevator;
   private final Claw claw;
   boolean elevFlag=false;
+  boolean clawFlag=false;
+  int i = 0;
 
   /**
    * @param subsystem The subsystem used by this command.
    */
-  public ElevatorToNet(Elevator m_elevator,Claw m_claw) {
+  public IntakeCoralAuto(Elevator m_elevator,Claw m_claw) {
     claw=m_claw;
     elevator=m_elevator;
     elevFlag=false;
@@ -27,22 +29,29 @@ public class ElevatorToNet extends Command {
 
   @Override
   public void initialize() {
-//    elevator.stopElevator();
+    claw.StopRollers();  
     elevFlag=false;
-    elevator.toPosition(elevator.positionNet);
+    clawFlag=false;
+//    if(elevator.elevatorPos>0.15 && claw.encPosition>.15) claw.toPosition(.15);
+    claw.toPosition(.15);
+claw.rearRollerRev();
 
 
 
-    //claw.toPosition(claw.positionIntake);
     
 
   }
 
   @Override
   public void execute() {
-    
-    if (Math.abs(elevator.elevatorPos-elevator.positionNet)<0.5 && !elevFlag) {
-      elevFlag=true;}
+//    if (claw.encPosition<0.22 && claw.encPosition>-0.1 &&!elevFlag) {
+  if (claw.encPosition<0.22 &&!elevFlag) {
+      elevator.toPosition(elevator.positionIntake);
+      elevFlag=true;}   
+    if (elevator.elevatorPos<0.25){
+      claw.toPosition(claw.positionIntake);
+      clawFlag=true;
+    } 
 
 
 
@@ -50,11 +59,12 @@ public class ElevatorToNet extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    claw.toPosition(claw.positionNet);
+    
   }
 
   @Override
   public boolean isFinished() {
-    return (elevFlag);
+    return (clawFlag && elevFlag);
+
   }
 }
