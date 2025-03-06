@@ -25,6 +25,7 @@ import frc.robot.commands.ElevatorToReefC3;
 import frc.robot.commands.ElevatorToReefC4;
 import frc.robot.commands.IntakeCoral;
 import frc.robot.commands.IntakeCoralAuto;
+import frc.robot.commands.ReleaseRamp;
 
 public class ActionCommands {
 
@@ -36,12 +37,13 @@ public class ActionCommands {
         elevatorToReef4, elevatorToIntake,elevatorToAlgae1,elevatorToAlgae2;
     public Command intakeCoral,spitCoral,bumpIntoWall,elevatorToReef1;
     public Command bumpIntoWallReverse;
-    public Command checkForCoralAuto;
+    public Command checkForCoralAuto, releaseRamp;
 
     
     
 
-public  ActionCommands(CommandSwerveDrivetrain m_sd,Elevator m_elevator,Claw m_claw){
+public  ActionCommands(CommandSwerveDrivetrain m_sd,Elevator m_elevator,Claw m_claw,
+            RearIntake rearIntake){
 
     sd=m_sd;
     elevator=m_elevator;
@@ -75,7 +77,9 @@ public  ActionCommands(CommandSwerveDrivetrain m_sd,Elevator m_elevator,Claw m_c
 
         bumpIntoWall = new BumpIntoWall(sd);
         bumpIntoWallReverse = new BumpIntoWallReverse(sd);
-        checkForCoralAuto = new CheckForCoralAuto(claw); 
+        checkForCoralAuto = new CheckForCoralAuto(claw);
+        releaseRamp = new ReleaseRamp(rearIntake);
+        
 }
 }
 

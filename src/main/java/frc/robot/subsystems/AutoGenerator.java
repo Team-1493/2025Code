@@ -26,7 +26,7 @@ public class AutoGenerator {
     Command toReef3, Command toReef4, Command toIntake, 
     Command driveToReefWall, Command driveToIntakeWall, 
     Command intakeCoral, Command spitCoral, Command  checkForCoralAuto,
-    Command autoComplete){
+    Command autoComplete, Command releaseRamp){
         NamedCommands.registerCommand("simIntakeCoral", simIntakeCoral);
         NamedCommands.registerCommand("simIntakeAlgae", simIntakeAlgae);
         NamedCommands.registerCommand("simScoreCoral", simScoreCoral);
@@ -42,6 +42,7 @@ public class AutoGenerator {
         NamedCommands.registerCommand("intakeCoral", intakeCoral);
         NamedCommands.registerCommand("spitCoral", spitCoral);
         NamedCommands.registerCommand("autoComplete", autoComplete);
+        NamedCommands.registerCommand("releaseRamp", releaseRamp);
     }
 
     private void autoChooserInit(){
@@ -129,19 +130,17 @@ public class AutoGenerator {
             m_actions.intakeCoral
         );
 
-        //SequentialCommandGroup spitCoral = m_actions.spitCoral;
-        //autoSim version
         SequentialCommandGroup spitCoral = new SequentialCommandGroup(
-            new InstantCommand(() -> SmartDashboard.putBoolean("autoSim holdingCoral", false)),
-            new InstantCommand(() -> SmartDashboard.putNumber("autoSim coralScored", 1+SmartDashboard.getNumber("autoSim coralScored", 0))),
             m_actions.spitCoral
         );
 
         InstantCommand autoComplete = new InstantCommand(() -> SmartDashboard.putBoolean("autoSim autoComplete", true));
 
+        Command releaseRamp = m_actions.releaseRamp;
+
         defineCommands(simIntakeCoral, simIntakeAlgae, simScoreCoral, simDropAlgae, toReef1, toReef2, toReef3, toReef4, toIntake, driveToReefWall, driveToIntakeWall, intakeCoral, spitCoral,
-        checkForCoralAuto, autoComplete);
-        
+        checkForCoralAuto, autoComplete, releaseRamp);
+
 
 
         autoChooserInit();    

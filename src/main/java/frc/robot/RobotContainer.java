@@ -63,7 +63,7 @@ public class RobotContainer {
     public final VisionSystem vision = new VisionSystem(drivetrain);
 
     public IntakeCoral intakeCoral=new IntakeCoral(elevator, claw);
-    public ActionCommands actions = new ActionCommands(drivetrain,elevator,claw );
+    public ActionCommands actions = new ActionCommands(drivetrain,elevator,claw,rearIntake );
     public ElevatorToReef elevatorToReef;
 
     //The auto generator was originally defined just as public, but I changed that, may need to be changed back?
@@ -127,10 +127,10 @@ public class RobotContainer {
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
          
-        (stickDriver.button(1)).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        (stickDriver.button(2)).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        (stickDriver.button(3)).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-       (stickDriver.button(4)).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+//        (stickDriver.button(1)).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+//        (stickDriver.button(2)).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+//        (stickDriver.button(3)).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+//       (stickDriver.button(4)).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
         
 
         // reset the field-centric heading on left bumper press
@@ -141,13 +141,12 @@ public class RobotContainer {
         setSlow.onFalse(new InstantCommand(() ->stickDriver.setFastScaleFactor()  )  );
         
         
-        stickDriver.button(10).onTrue( new InstantCommand(()-> drivetrain.setTrueHeading()));
+//        stickDriver.button(10).onTrue( new InstantCommand(()-> drivetrain.setTrueHeading()));
 //        stickDriver.button(3).whileTrue(new DriveReefLeft(drivetrain));                 
 //        stickDriver.button(2).whileTrue( new DriveReefRight(drivetrain));                 
 //        stickDriver.button(4).whileTrue( new DriveIntake(drivetrain));                 
 //        stickDriver.button(4).onTrue(new ReleaseRamp(rearIntake));
 
-  //      stickDriver.button(4).whileTrue(autoGenerator.Straight2m());
 
         stickOperator.button(1).onTrue(new ElevatorToReefC1(elevator,claw));                     
         stickOperator.button(2).onTrue(new ElevatorToReefC2(elevator,claw));                     
@@ -199,7 +198,10 @@ public class RobotContainer {
 
      public Command zeroGyro(){
         return (drivetrain.runOnce(() -> drivetrain.zeroGyro()));
+     }
 
+     public Command releaseRamp(){
+        return (new ReleaseRamp(rearIntake));
      }
 
     }

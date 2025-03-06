@@ -37,11 +37,12 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     enabled=true;
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand().alongWith(m_robotContainer.releaseRamp());
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+    else m_robotContainer.releaseRamp().schedule();;
   }
 
   @Override
@@ -52,11 +53,13 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     enabled=true;
-    m_robotContainer.zeroGyro().schedule();;
-    m_robotContainer.zeroElevator().schedule();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+//    m_robotContainer.zeroGyro().schedule();;
+//    m_robotContainer.zeroElevator().schedule();
+      m_robotContainer.releaseRamp().schedule();
+
   }
 
   @Override
