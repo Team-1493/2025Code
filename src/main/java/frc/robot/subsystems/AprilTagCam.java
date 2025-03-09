@@ -76,10 +76,8 @@ import com.ctre.phoenix6.Utils;
      public AprilTagCam(
                 String kCameraName, 
                 Transform3d kRobotToCam,
-                CommandSwerveDrivetrain m_dt,
-                VisionSystemSim m_visionSystemSim) {
+                CommandSwerveDrivetrain m_dt) {
 
-        visionSim = m_visionSystemSim;
 
         dt=m_dt;
 
@@ -103,6 +101,8 @@ import com.ctre.phoenix6.Utils;
                  photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
  
          // ----- Simulation
+
+/* 
          if(Robot.isSimulation()){
              // Create simulated camera properties. These can be set to mimic your actual camera.
              var cameraProp = new SimCameraProperties();
@@ -120,6 +120,7 @@ import com.ctre.phoenix6.Utils;
             
              cameraSim.enableDrawWireframe(false);
          }
+          */   
      }
  
      /**
@@ -164,7 +165,7 @@ import com.ctre.phoenix6.Utils;
 
                 }
 
-
+/* 
              if (Robot.isSimulation()) {
                  visionEst.ifPresentOrElse(
                          est ->
@@ -175,6 +176,8 @@ import com.ctre.phoenix6.Utils;
                              getSimDebugField().getObject("VisionEstimation").setPoses();
                          });
              }
+*/
+
          }
          
  
@@ -274,7 +277,7 @@ import com.ctre.phoenix6.Utils;
     private void printResults(Optional<EstimatedRobotPose> visionEst){
         
         if(hasVisionMeasure){
-        SmartDashboard.putBoolean(labelHas, hasVisionMeasure);
+//        SmartDashboard.putBoolean(labelHas, hasVisionMeasure);
             
         Pose2d estpose2d = visionEst.get().estimatedPose.toPose2d();
             SmartDashboard.putNumber(
@@ -284,7 +287,7 @@ import com.ctre.phoenix6.Utils;
         SmartDashboard.putNumber(
             labelY,
             estpose2d.getY());
-        
+/*         
         SmartDashboard.putNumber(
             labelRot,
             estpose2d.getRotation().getDegrees());  
@@ -300,17 +303,17 @@ import com.ctre.phoenix6.Utils;
         SmartDashboard.putNumber(
             labelDevRot,
             curStdDevs.get(2,0));
-                
+  */              
         SmartDashboard.putNumber(
             labelClosestID,
             closestTargetID); 
                 
-        SmartDashboard.putNumber(
-            labelClosestDist,
-            closestTargetDist);                         
+  //      SmartDashboard.putNumber(
+  //          labelClosestDist,
+  //          closestTargetDist);                         
         }
 
-        else SmartDashboard.putBoolean(labelHas, hasVisionMeasure);
+  //      else SmartDashboard.putBoolean(labelHas, hasVisionMeasure);
 
      }
 

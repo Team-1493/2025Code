@@ -63,7 +63,6 @@ public class Utilities {
     }
 
     public Command getReefRight(){
-        System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
         Command driveReefRight;
         PathConstraints constraints = new PathConstraints(
             1.5, 
@@ -97,8 +96,6 @@ public class Utilities {
 //            int index=  VisionSystem.closestReefID-1;
              int index = id-1;
             targetPose = vc.aprilTagList.get(index).pose.toPose2d();
-            System.out.println("***********************  "+targetPose.getX());
-            System.out.println("***********************  "+targetPose.getY());
             rotTarget = targetPose.getRotation().getRadians();
             rotRobot=rotTarget+Math.PI;
             targetPose = new Pose2d(

@@ -1,19 +1,7 @@
 package frc.robot.subsystems;
-
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
-
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.VisionConstants;
 import frc.robot.commands.BumpIntoWall;
 import frc.robot.commands.BumpIntoWallReverse;
 import frc.robot.commands.CheckForCoralAuto;
@@ -23,7 +11,6 @@ import frc.robot.commands.ElevatorToReefC1;
 import frc.robot.commands.ElevatorToReefC2;
 import frc.robot.commands.ElevatorToReefC3;
 import frc.robot.commands.ElevatorToReefC4;
-import frc.robot.commands.IntakeCoral;
 import frc.robot.commands.IntakeCoralAuto;
 import frc.robot.commands.ReleaseRamp;
 

@@ -1,7 +1,4 @@
 package frc.robot.subsystems;
-
-import java.time.Period;
-
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -111,14 +108,14 @@ public Claw(){
         SmartDashboard.putNumber("Claw Enc AbsPos", encPosition);    
         SmartDashboard.putNumber("Claw Enc SetPosition", clawMotor.getClosedLoopReference().getValueAsDouble());    
 
-        SmartDashboard.putNumber("Claw Voltqqq",voltage);
-        SmartDashboard.putNumber("Claw Current", current);
+//        SmartDashboard.putNumber("Claw Voltqqq",voltage);
+//        SmartDashboard.putNumber("Claw Current", current);
 
-        SmartDashboard.putBoolean("Claw LLS",atLowerLimit);
-        SmartDashboard.putBoolean("Claw ULS",atUpperLimit);
+//        SmartDashboard.putBoolean("Claw LLS",atLowerLimit);
+//        SmartDashboard.putBoolean("Claw ULS",atUpperLimit);
 
         SmartDashboard.putBoolean("Coral Sensor", hasCoral);
-        SmartDashboard.putBoolean("Algae Sensor", hasAlgae);
+//        SmartDashboard.putBoolean("Algae Sensor", hasAlgae);
     }
 
 

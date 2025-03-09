@@ -25,7 +25,7 @@ public class Elevator extends SubsystemBase{
     private TalonFXConfiguration cfg = new TalonFXConfiguration();
     private MotionMagicVoltage  magicToPos= new MotionMagicVoltage(0);
     private VoltageOut voltOutUp = new VoltageOut(.75);
-    private VoltageOut voltOutDown = new VoltageOut(-.4);
+    private VoltageOut voltOutDown = new VoltageOut(-.6);
     
     public double 
             positionAlgae1=15,positionAlgae2 = 30, 
@@ -52,6 +52,9 @@ public Elevator(){
     
     configure();
     stopElevator();
+    elevatorRight.setPosition(0);
+    elevatorFollower.setPosition(0);
+
   
 
 }
@@ -80,7 +83,7 @@ public Elevator(){
         SmartDashboard.putBoolean("Elevator ULS",atUpperLimit);
         // check mag limit switches
         if (atUpperLimit && v>0 ) stopElevator();
-        if (atLowerLimit && v<0 ) stopElevator();
+//        if (atLowerLimit && v<0 ) stopElevator();
 //        if (i>currentLimit) stopElevator();
         
         SmartDashboard.putNumber("Elevator set", elevatorRight.getClosedLoopReference().getValueAsDouble());
@@ -104,8 +107,7 @@ public Elevator(){
         }
 
     public void manualDown(){
-        if (!atLowerLimit) elevatorRight.setControl(voltOutDown);
-        else stopElevator();
+        elevatorRight.setControl(voltOutDown);
     }
 
 
@@ -181,7 +183,7 @@ public Elevator(){
     }
 
 
-/* 
+ 
     public void zeroElevator(){
         if(!limitLower.get()){
             while(!limitLower.get()){
@@ -191,24 +193,19 @@ public Elevator(){
         }
 
         manualDown();
-        System.out.println("A1  "+elevatorRight.getVelocity().getValueAsDouble());
-        System.out.println("A2  "+elevatorRight.getVelocity().getValueAsDouble());
         
         int i = 0;
         while(elevatorRight.getVelocity().getValueAsDouble()<-0.001 && i>20){
             i++;
-            System.out.println("C "+ elevatorRight.getVelocity().getValueAsDouble());
         }
         stopElevator();
         zeroed=true;
         elevatorRight.setPosition(0);
         elevatorFollower.setPosition(0);
         elevatorPos=elevatorRight.getPosition().getValueAsDouble();
-        System.out.println("D "+ elevatorRight.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("Elevator Pos", elevatorPos);
     }
 
-*/
+
 
 
   
@@ -236,6 +233,13 @@ public Elevator(){
     cfg.CurrentLimits.SupplyCurrentLimit=50;
     cfg.CurrentLimits.SupplyCurrentLimitEnable=true;
 
+    cfg.SoftwareLimitSwitch.ForwardSoftLimitEnable=true;
+    cfg.SoftwareLimitSwitch.ForwardSoftLimitThreshold=44;
+
+    cfg.SoftwareLimitSwitch.ReverseSoftLimitEnable=true;
+    cfg.SoftwareLimitSwitch.ReverseSoftLimitThreshold=0;
+
+
     elevatorRight.getConfigurator().apply(cfg);
 
   }
@@ -252,7 +256,6 @@ public Elevator(){
     positionCoral4= SmartDashboard.getNumber("Elevator positionCoral4", positionCoral4);
     SmartDashboard.putNumber("Elevator p1", positionCoral1);
     SmartDashboard.putNumber("Elevator p4", positionCoral4);
-//    System.out.println("GGG  pos4  "+positionCoral4);
   }
 
 }

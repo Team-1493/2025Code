@@ -77,10 +77,20 @@ public class RobotContainer {
 
     private Trigger receivedCoral;
     private Trigger setSlow;
+    //private Trigger manualClawUp;
+    //private Trigger manualClawDown;
+    //private Trigger manualElevatorUp;
+    //private Trigger manualElevatorDown;
+
     
 
     public RobotContainer() {
         receivedCoral = new Trigger ( ()-> claw.pickedUpCoral() );
+     //   manualClawUp = new Trigger(() -> stickDriver.getRawAxis(3)>.1);
+     //   manualClawDown = new Trigger(() -> stickDriver.getRawAxis(3)<-.1);
+     //   manualElevatorUp = new Trigger(() -> stickDriver.getRawAxis(1)>.1);
+    //   manualElevatorDown = new Trigger(() -> stickDriver.getRawAxis(1)<-.1);
+
         setSlow = new Trigger ( ()-> stickDriver.getRawAxis(3)>0.5);
         configureBindings();        
     }
@@ -159,7 +169,6 @@ public class RobotContainer {
 
         stickOperator.button(7).onTrue(new IntakeCoral(elevator,claw));
 
-        
         stickOperator.button(9).onTrue
                 (new ElevatorToProcessor(elevator,claw));
         stickOperator.button(10).onTrue
@@ -173,9 +182,12 @@ public class RobotContainer {
 //        receivedCoral.onTrue(claw.StopRollers().andThen(new ElevatorToReefC2(elevator,claw)));
 //        receivedCoral.onTrue(claw.StopRollers());
 
-//        stickOperator.button(12).onTrue(new InstantCommand(() -> elevator.elevatorRight.setPosition(0)));
+        stickOperator.button(12).onTrue(new InstantCommand(() -> elevator.elevatorRight.setPosition(0)));
+        stickOperator.button(11).whileTrue(elevator.ManualDown());
+        stickOperator.button(11).onFalse(elevator.StopElevator());
 
-        stickOperator.button(11).onTrue(new InstantCommand( () -> {updateConstants();}));
+
+//        stickOperator.button(11).onTrue(new InstantCommand( () -> {updateConstants();}));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

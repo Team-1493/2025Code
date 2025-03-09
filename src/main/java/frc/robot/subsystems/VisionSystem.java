@@ -47,7 +47,7 @@ public class VisionSystem extends SubsystemBase {
     private boolean blue=true;
     
 
-    private VisionSystemSim visionSim;
+//    private VisionSystemSim visionSim;
 
     
 
@@ -82,13 +82,13 @@ public class VisionSystem extends SubsystemBase {
         dt=m_dt;
 
         camFL = new AprilTagCam("Spinel_L", camFL_RobotToCam,
-            dt, visionSim);
+            dt);
         
         camFR = new AprilTagCam("Spinel_R", camFR_RobotToCam,
-            dt,visionSim);
+            dt);
 
 //        camB = new AprilTagCam("OV9281_1", camB_RobotToCam,
-//               dt,visionSim);           
+//               dt);           
             
 
 

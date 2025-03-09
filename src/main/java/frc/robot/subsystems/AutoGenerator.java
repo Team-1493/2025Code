@@ -144,8 +144,8 @@ public class AutoGenerator {
 
 
         autoChooserInit();    
-        autoChooser.addOption("Auto1", auto1);
-        autoChooser.addOption("Command1", command1);
+//        autoChooser.addOption("Auto1", auto1);
+//        autoChooser.addOption("Command1", command1);
 
     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 
