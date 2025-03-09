@@ -5,7 +5,8 @@
   "pathFolders": [
     "2 Coral Auto L Paths",
     "2 Coral Auto R Paths ",
-    "4 Coral Auto Paths"
+    "4 Coral Auto Paths",
+    "PathFindingFinalPaths"
   ],
   "autoFolders": [],
   "defaultMaxVel": 1.1,
