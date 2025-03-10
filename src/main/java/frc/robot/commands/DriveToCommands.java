@@ -1,32 +1,23 @@
 package frc.robot.commands;
-
-import java.util.List;
-
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathfindingCommand;
-import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.Waypoint;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import frc.robot.Utilities.VisionConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSystem;
 
 public class DriveToCommands {
-public  Command driveReef_FML, driveReef_FMR,
+public  Command driveReef_FML,driveReef_FMR,
           driveReef_FLR,driveReef_FLL,
           driveReef_FRL,driveReef_FRR,
           driveReef_BML,driveReef_BMR,
           driveReef_BLL,driveReef_BLR,
           driveReef_BRL,driveReef_BRR,
           driveIntake_R, driveIntake_L;
-
   Pose2d targetPose;
   double reefOffsetX = VisionSystem.reefOffsetX;
   double reefOffsetY = VisionSystem.reefOffsetY;
@@ -41,7 +32,6 @@ public  Command driveReef_FML, driveReef_FMR,
 
   Rotation2d rotZero=new Rotation2d(0);
 
-  Pose2d poseA1=new Pose2d(2.5, 4, rotZero);
 
   public DriveToCommands(){
 
@@ -49,7 +39,7 @@ public  Command driveReef_FML, driveReef_FMR,
 
       if (VisionConstants.blue) driveReef_FML=getCommandLeft(18);
       else driveReef_FML=getCommandLeft(7);
-      
+ 
 
       if (VisionConstants.blue) driveReef_FLL=getCommandLeft(19);
       else driveReef_FLL=getCommandLeft(6);
@@ -108,13 +98,15 @@ private Command getCommandLeft(int id){
 
       Command drivePath= AutoBuilder.pathfindToPose(
         targetPose,constraints, 0.0);
+      
+    double dist = distanceToTarget();
 
 
   return (drivePath);
 }
 
 
-private Command getCommandRight(int id){
+public Command getCommandRight(int id){
   int index = id-1;
   targetPose = VisionConstants.aprilTagList.get(index).pose.toPose2d();
   double rotTarget = targetPose.getRotation().getRadians();
@@ -124,9 +116,10 @@ private Command getCommandRight(int id){
     targetPose.getY()+reefOffsetX*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
     new Rotation2d(rotRobot));
   
-      Command drivePath= AutoBuilder.pathfindToPose(
-        targetPose,constraints, 0.0);
+    Command drivePath= AutoBuilder.pathfindToPose(
+      targetPose,constraints, 0.0);
 
+    double dist = distanceToTarget();
 
   return (drivePath);
 }
@@ -141,6 +134,8 @@ private Command getIntakeCommandLeft(int id){
       targetPose.getX()+intakeOffsetX*Math.sin(rotTarget)+intakeOffsetY*Math.cos(rotTarget),
       targetPose.getY()-intakeOffsetX*Math.cos(rotTarget)+intakeOffsetY*Math.sin(rotTarget),
       new Rotation2d(rotRobot));
+
+
   
       Command drivePath= AutoBuilder.pathfindToPose(
         targetPose,constraints, 0.0);
@@ -161,30 +156,27 @@ private Command getIntakeCommandRight(int id){
       new Rotation2d(rotRobot));
   
       Command drivePath= AutoBuilder.pathfindToPose(
-        targetPose,constraints, 0.0);
+        targetPose,constraints, 1.0);
 
 
   return (drivePath);
 }
 
 
-public Command getDriveToA1(){
+
+private double distanceToTarget(){
+  Pose2d robotPose = CommandSwerveDrivetrain.robotpose;
+
+  double distance=
+      Math.hypot(targetPose.getX()-robotPose.getX(), 
+      targetPose.getY()-robotPose.getY());
 
 
-  List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
-        CommandSwerveDrivetrain.robotpose,poseA1);
-        
-
-  PathPlannerPath path = new PathPlannerPath(
-        waypoints,
-        constraints,
-        null,
-        new GoalEndState(0.0, Rotation2d.fromDegrees(0)));
-
-  path.preventFlipping = true;
-  return AutoBuilder.followPath(path);
+      System.out.println("******************************   ");         
+  System.out.println("******************************   "+distance);
+  System.out.println("******************************   ");      
+  return distance;
 }
-
 
 
 }

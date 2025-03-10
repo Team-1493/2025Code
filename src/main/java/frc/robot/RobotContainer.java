@@ -79,18 +79,10 @@ public class RobotContainer {
     public DriveToCommands driveToCommands = new DriveToCommands();
 
     private Trigger setSlow;
-    //private Trigger manualClawUp;
-    //private Trigger manualClawDown;
-    //private Trigger manualElevatorUp;
-    //private Trigger manualElevatorDown;
 
     
 
     public RobotContainer() {
-     //   manualClawUp = new Trigger(() -> stickDriver.getRawAxis(3)>.1);
-     //   manualClawDown = new Trigger(() -> stickDriver.getRawAxis(3)<-.1);
-     //   manualElevatorUp = new Trigger(() -> stickDriver.getRawAxis(1)>.1);
-    //   manualElevatorDown = new Trigger(() -> stickDriver.getRawAxis(1)<-.1);
 
         setSlow = new Trigger ( ()-> stickDriver.getRawAxis(3)>0.5);
         configureBindings();        
@@ -106,34 +98,6 @@ public class RobotContainer {
         );
         
 
-
-        //  allow driver to switch between fast and slow mode 
-        // changes stick scale factor on joystock
-
-
-        
-//        stickDriver.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        
-/* 
-        stickDriver.button(2).onTrue(new InstantCommand(() 
-        -> drivetrain.setTarget(Math.toRadians(-90))));
-        stickDriver.button(1).onTrue(new InstantCommand(() ->
-            drivetrain.setTargetHeading( Math.toRadians(54))));
-        stickDriver.button(3).onTrue(new InstantCommand(() ->
-            drivetrain.setTargetHeading(Math.toRadians(-54))));            
-        stickDriver.button(4).onTrue(new InstantCommand(() ->
-            drivetrain.setTargetHeading(Math.toRadians( 0))));   
-*/
-/*        stickDriver.pov(90).onTrue(new InstantCommand(() ->
-            drivetrain.setTargetHeading(Math.toRadians( 120))));   
-        stickDriver.pov(270).onTrue(new InstantCommand(() ->
-            drivetrain.setTargetHeading(Math.toRadians( -120))));
-            `
-        stickDriver.pov(0).onTrue(new InstantCommand(() ->
-            drivetrain.setTargetHeading(Math.toRadians( 60))));   
-        stickDriver.pov(180).onTrue(new InstantCommand(() ->
-            drivetrain.setTargetHeading(Math.toRadians( -60))));
-*/
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -153,13 +117,18 @@ public class RobotContainer {
         
         
 //        stickDriver.button(10).onTrue( new InstantCommand(()-> drivetrain.setTrueHeading()));
-//        stickDriver.button(1).whileTrue(driveToCommands.driveReef_FMR);                 
-        stickDriver.button(1).whileTrue
-          ( new DeferredCommand( () -> driveToCommands.getDriveToA1() , Set.of(drivetrain)));
 
-        stickDriver.button(2).whileTrue( driveToCommands.driveReef_FML);                 
-        stickDriver.button(3).whileTrue( driveToCommands.driveReef_FRR);                 
-        stickDriver.button(4).whileTrue(driveToCommands.driveReef_FRL);
+        (stickDriver.button(1).and(stickDriver.button(7))).whileTrue
+          ( new DeferredCommand( () -> driveToCommands.getCommandRight(18) , Set.of(drivetrain)));
+
+          stickDriver.button(2).whileTrue
+          ( new DeferredCommand( () -> driveToCommands.getCommandRight(19) , Set.of(drivetrain)));
+
+        stickDriver.button(3).whileTrue
+          ( new DeferredCommand( () -> driveToCommands.getCommandRight(17) , Set.of(drivetrain)));
+
+          stickDriver.button(4).whileTrue
+          ( new DeferredCommand( () -> driveToCommands.getCommandRight(21) , Set.of(drivetrain)));
 
 
         stickOperator.button(1).onTrue(new ElevatorToReefC1(elevator,claw));                     
