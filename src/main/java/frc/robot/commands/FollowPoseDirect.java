@@ -3,10 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
+import frc.robot.Utilities.VisionConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSystem;
-import frc.robot.Constants;
-import frc.robot.VisionConstants;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,6 +20,15 @@ public class FollowPoseDirect extends Command {
     double finalRawRotation;
     double deltaRot;
     VisionConstants vc = new VisionConstants();
+    private double followPose_Trans_kP=4;
+    private double followPose_Trans_kD=.1;
+    private double followPose_Rot_kP=4;
+    private double followPose_Rot_kD=.5;
+    private double followPose_Trans_maxV=2;
+    private double followPose_Trans_maxA=8;
+    private double followPose_Rot_maxV=1;
+    private double followPose_Rot_maxA=2;
+
 
 
     public Pose2d targetPose2d     = new Pose2d();
@@ -81,28 +89,28 @@ public class FollowPoseDirect extends Command {
 
 
       pidx = new ProfiledPIDController(
-             Constants.followPose_Trans_kP*.5,
+             followPose_Trans_kP*.5,
              0,
-             Constants.followPose_Trans_kD, 
+             followPose_Trans_kD, 
              new TrapezoidProfile.Constraints(
-            Constants.followPose_Trans_maxV,
-            Constants.followPose_Trans_maxA)  );
+            followPose_Trans_maxV,
+            followPose_Trans_maxA)  );
       
       pidy = new ProfiledPIDController(
-             Constants.followPose_Trans_kP,
+             followPose_Trans_kP,
              0,
-             Constants.followPose_Trans_kD, 
+             followPose_Trans_kD, 
              new TrapezoidProfile.Constraints(
-            Constants.followPose_Trans_maxV,
-            Constants.followPose_Trans_maxA));
+            followPose_Trans_maxV,
+            followPose_Trans_maxA));
 
       pidr = new ProfiledPIDController(
-             Constants.followPose_Rot_kP,
+             followPose_Rot_kP,
              0,
-             Constants.followPose_Rot_kD, 
+             followPose_Rot_kD, 
              new TrapezoidProfile.Constraints(
-            Constants.followPose_Rot_maxV,
-            Constants.followPose_Rot_maxA));
+            followPose_Rot_maxV,
+            followPose_Rot_maxA));
       
        pidr.enableContinuousInput(-Math.PI, Math.PI);
 

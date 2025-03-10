@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import frc.robot.VisionConstants;
+import frc.robot.Utilities.VisionConstants;
 
 public class VisionSystem extends SubsystemBase {
 
@@ -41,18 +41,14 @@ public class VisionSystem extends SubsystemBase {
     Transform3d camB_RobotToCam = 
         new Transform3d(-.2794,0,1.003,new Rotation3d(0,.2146,Math.PI));
 
-    // TODO - pick correct deviations
     public static Matrix<N3, N1> kSingleTagStdDevs;
     public static Matrix<N3, N1> kMultiTagStdDevs;
-    private boolean blue=true;
-    
 
 //    private VisionSystemSim visionSim;
 
     
 
     public VisionSystem(CommandSwerveDrivetrain m_dt) {
-
 
         SmartDashboard.putNumber("std single X", .3);    
         SmartDashboard.putNumber("std single Y", .3);    

@@ -6,33 +6,37 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import java.util.Set;
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.commands.DriveIntake;
+import frc.robot.Utilities.RobotJoystick;
+import frc.robot.Utilities.Telemetry;
+import frc.robot.Utilities.VisionConstants;
 import frc.robot.commands.DriveIntakeRight;
 import frc.robot.commands.DriveReefLeft;
 import frc.robot.commands.DriveReefRight;
-import frc.robot.commands.ElevatorToReef;
-import frc.robot.commands.ElevatorToReefC1;
-import frc.robot.commands.ElevatorToReefC2;
-import frc.robot.commands.ElevatorToReefC3;
-import frc.robot.commands.ElevatorToReefC4;
 import frc.robot.commands.FollowPoseDirect;
-import frc.robot.commands.ElevatorToReefA1;
-import frc.robot.commands.ElevatorToReefA2;
-import frc.robot.commands.ElevatorToNet;
-import frc.robot.commands.ElevatorToProcessor;
-import frc.robot.commands.IntakeAlgae1;
-import frc.robot.commands.IntakeCoral;
 import frc.robot.commands.ReleaseRamp;
-import frc.robot.commands.SpitCoral;
 import frc.robot.commands.ZeroElevator;
+import frc.robot.commands.ElevatorCommands.ElevatorToNet;
+import frc.robot.commands.ElevatorCommands.ElevatorToProcessor;
+import frc.robot.commands.ElevatorCommands.ElevatorToReef;
+import frc.robot.commands.ElevatorCommands.ElevatorToReefA1;
+import frc.robot.commands.ElevatorCommands.ElevatorToReefA2;
+import frc.robot.commands.ElevatorCommands.ElevatorToReefC1;
+import frc.robot.commands.ElevatorCommands.ElevatorToReefC2;
+import frc.robot.commands.ElevatorCommands.ElevatorToReefC3;
+import frc.robot.commands.ElevatorCommands.ElevatorToReefC4;
+import frc.robot.commands.IntakeCommands.IntakeAlgae1;
+import frc.robot.commands.IntakeCommands.IntakeCoral;
+import frc.robot.commands.SpitCommands.SpitCoral;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ActionCommands;
 import frc.robot.subsystems.AutoGenerator;
@@ -41,6 +45,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.RearIntake;
 import frc.robot.subsystems.VisionSystem;
+import frc.robot.commands.DriveToCommands;
 
 public class RobotContainer {
     private Elevator elevator = new Elevator();
@@ -49,10 +54,8 @@ public class RobotContainer {
     
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
@@ -60,8 +63,6 @@ public class RobotContainer {
     private final RobotJoystick stickOperator = new RobotJoystick(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    public final VisionSystem vision = new VisionSystem(drivetrain);
-
     public IntakeCoral intakeCoral=new IntakeCoral(elevator, claw);
     public ActionCommands actions = new ActionCommands(drivetrain,elevator,claw,rearIntake );
     public ElevatorToReef elevatorToReef;
@@ -69,13 +70,14 @@ public class RobotContainer {
     //The auto generator was originally defined just as public, but I changed that, may need to be changed back?
     private final AutoGenerator autoGenerator = new AutoGenerator(elevator, claw, actions);
     private final SendableChooser<Command> autoChooser = autoGenerator.autoChooser;
+    public final VisionConstants visionConstants = new VisionConstants();
+    public final VisionSystem vision = new VisionSystem(drivetrain);
 
-    public DriveReefLeft driveReefLeft = new DriveReefLeft(drivetrain);
-    private Utilities utils = new Utilities(drivetrain, vision);
-    public DriveReefRight driveReefRight = new DriveReefRight(drivetrain);
-    public DriveIntakeRight driveIntake = new DriveIntakeRight(drivetrain);
+//    public DriveReefLeft driveReefLeft = new DriveReefLeft(drivetrain);
+//    public DriveReefRight driveReefRight = new DriveReefRight(drivetrain);
+//    public DriveIntakeRight driveIntake = new DriveIntakeRight(drivetrain);
+    public DriveToCommands driveToCommands = new DriveToCommands();
 
-    private Trigger receivedCoral;
     private Trigger setSlow;
     //private Trigger manualClawUp;
     //private Trigger manualClawDown;
@@ -85,7 +87,6 @@ public class RobotContainer {
     
 
     public RobotContainer() {
-        receivedCoral = new Trigger ( ()-> claw.pickedUpCoral() );
      //   manualClawUp = new Trigger(() -> stickDriver.getRawAxis(3)>.1);
      //   manualClawDown = new Trigger(() -> stickDriver.getRawAxis(3)<-.1);
      //   manualElevatorUp = new Trigger(() -> stickDriver.getRawAxis(1)>.1);
@@ -152,10 +153,13 @@ public class RobotContainer {
         
         
 //        stickDriver.button(10).onTrue( new InstantCommand(()-> drivetrain.setTrueHeading()));
-//        stickDriver.button(3).whileTrue(new DriveReefLeft(drivetrain));                 
-//        stickDriver.button(2).whileTrue( new DriveReefRight(drivetrain));                 
-//        stickDriver.button(4).whileTrue( new DriveIntake(drivetrain));                 
-//        stickDriver.button(4).onTrue(new ReleaseRamp(rearIntake));
+//        stickDriver.button(1).whileTrue(driveToCommands.driveReef_FMR);                 
+        stickDriver.button(1).whileTrue
+          ( new DeferredCommand( () -> driveToCommands.getDriveToA1() , Set.of(drivetrain)));
+
+        stickDriver.button(2).whileTrue( driveToCommands.driveReef_FML);                 
+        stickDriver.button(3).whileTrue( driveToCommands.driveReef_FRR);                 
+        stickDriver.button(4).whileTrue(driveToCommands.driveReef_FRL);
 
 
         stickOperator.button(1).onTrue(new ElevatorToReefC1(elevator,claw));                     
@@ -199,7 +203,7 @@ public class RobotContainer {
     private void updateConstants(){
         claw.updateConstants();
         elevator.updateConstants();
-        vision.configure();
+//        vision.configure();
 //        drivetrain.configure();
      }
 

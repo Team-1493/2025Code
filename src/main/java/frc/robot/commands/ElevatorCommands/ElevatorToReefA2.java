@@ -2,14 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.ElevatorCommands;
 
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class ElevatorToReefA1 extends Command {
+public class ElevatorToReefA2 extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Elevator elevator;
   private final Claw claw;
@@ -18,7 +18,7 @@ public class ElevatorToReefA1 extends Command {
   /**
    * @param subsystem The subsystem used by this command.
    */
-  public ElevatorToReefA1(Elevator m_elevator,Claw m_claw) {
+  public ElevatorToReefA2(Elevator m_elevator,Claw m_claw) {
     claw=m_claw;
     elevator=m_elevator;
     elevFlag=false;
@@ -29,7 +29,7 @@ public class ElevatorToReefA1 extends Command {
   public void initialize() {
     elevFlag=false;
     claw.rollersRun(-3, 3);
-    claw.toPosition(claw.positionAlgae1);
+    claw.toPosition(claw.positionAlgae2);
 
 
     //claw.toPosition(claw.positionIntake);
@@ -40,8 +40,8 @@ public class ElevatorToReefA1 extends Command {
   @Override
   public void execute() {
     
-    if (Math.abs(claw.encPosition-claw.positionAlgae1)<0.025 && !elevFlag) {
-      elevator.toPosition(elevator.positionAlgae1);
+    if (Math.abs(claw.encPosition-claw.positionAlgae2)<0.025 && !elevFlag) {
+      elevator.toPosition(elevator.positionAlgae2);
       elevFlag=true;}
 
 

@@ -5,14 +5,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.BumpIntoWall;
 import frc.robot.commands.BumpIntoWallReverse;
 import frc.robot.commands.CheckForCoralAuto;
-import frc.robot.commands.ElevatorToReefA1;
-import frc.robot.commands.ElevatorToReefA2;
-import frc.robot.commands.ElevatorToReefC1;
-import frc.robot.commands.ElevatorToReefC2;
-import frc.robot.commands.ElevatorToReefC3;
-import frc.robot.commands.ElevatorToReefC4;
-import frc.robot.commands.IntakeCoralAuto;
 import frc.robot.commands.ReleaseRamp;
+import frc.robot.commands.ElevatorCommands.ElevatorToReefA1;
+import frc.robot.commands.ElevatorCommands.ElevatorToReefA2;
+import frc.robot.commands.ElevatorCommands.ElevatorToReefC1;
+import frc.robot.commands.ElevatorCommands.ElevatorToReefC2;
+import frc.robot.commands.ElevatorCommands.ElevatorToReefC3;
+import frc.robot.commands.ElevatorCommands.ElevatorToReefC4;
+import frc.robot.commands.IntakeCommands.IntakeCoralAuto;
 
 public class ActionCommands {
 
@@ -58,7 +58,7 @@ public  ActionCommands(CommandSwerveDrivetrain m_sd,Elevator m_elevator,Claw m_c
         elevatorToAlgae1 = new ElevatorToReefA1(elevator, claw);
         elevatorToAlgae2 = new ElevatorToReefA2(elevator, claw);
 
-        intakeCoral = new frc.robot.commands.IntakeCoral(elevator,claw);
+        intakeCoral = new frc.robot.commands.IntakeCommands.IntakeCoral(elevator,claw);
 
         spitCoral= claw.SpitCoral();
 

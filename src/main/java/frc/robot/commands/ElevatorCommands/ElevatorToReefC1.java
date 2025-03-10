@@ -2,14 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.ElevatorCommands;
 
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class ElevatorToReefC4 extends Command {
+public class ElevatorToReefC1 extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Elevator elevator;
   private final Claw claw;
@@ -18,7 +18,7 @@ public class ElevatorToReefC4 extends Command {
   /**
    * @param subsystem The subsystem used by this command.
    */
-  public ElevatorToReefC4(Elevator m_elevator,Claw m_claw) {
+  public ElevatorToReefC1(Elevator m_elevator,Claw m_claw) {
     claw=m_claw;
     elevator=m_elevator;
     elevFlag=false;
@@ -30,7 +30,7 @@ public class ElevatorToReefC4 extends Command {
 //    elevator.stopElevator();
     claw.stopRollers();
     elevFlag=false;
-    if(claw.hasCoral) claw.toPosition(claw.positionNeutral);
+    claw.toPosition(claw.positionNeutral);
 
 
 
@@ -42,8 +42,8 @@ public class ElevatorToReefC4 extends Command {
   @Override
   public void execute() {
     
-    if (Math.abs(claw.encPosition-claw.positionNeutral)<0.025 && !elevFlag &&claw.hasCoral  ) {
-      elevator.toPosition(elevator.positionCoral4);
+    if (Math.abs(claw.encPosition-claw.positionNeutral)<0.025 && !elevFlag) {
+      elevator.toPosition(elevator.positionCoral1);
       elevFlag=true;}
 
 
@@ -52,11 +52,11 @@ public class ElevatorToReefC4 extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    if(claw.hasCoral) claw.toPosition(claw.positionCoral4);
+    claw.toPosition(claw.positionCoral1);
   }
 
   @Override
   public boolean isFinished() {
-    return (Math.abs(elevator.elevatorPos-elevator.positionCoral4)<1 ); //claw.hasCoral;
+    return (Math.abs(elevator.elevatorPos-elevator.positionCoral1)<1 ); //claw.hasCoral;
   }
 }

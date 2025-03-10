@@ -2,58 +2,60 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.SpitCommands;
 
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class SpitAlgaeNet extends Command {
+public class SpitAlgaeProcessor extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  private final Elevator elevator;
   private final Claw claw;
-  private Elevator elevator;
-  boolean elevatorFlag=false;
+  boolean elevFlag=false;
 
   /**
    * @param subsystem The subsystem used by this command.
    */
-  public SpitAlgaeNet(Claw m_claw, Elevator m_elevator) {
+  public SpitAlgaeProcessor(Elevator m_elevator,Claw m_claw) {
     claw=m_claw;
     elevator=m_elevator;
+    elevFlag=false;
     addRequirements(claw,elevator);
   }
 
   @Override
   public void initialize() {
-    claw.toPosition(claw.positionNet);
+    elevFlag=false;
+    claw.rollersRun(-3, 3);
+    claw.toPosition(claw.positionAlgae2);
+
+
+    //claw.toPosition(claw.positionIntake);
     
 
   }
 
   @Override
   public void execute() {
-    if(!elevatorFlag && claw.encPosition<.215){
-        elevator.toPosition(elevator.positionNet);
-        elevatorFlag=true;
-    }
-    if (Math.abs(elevator.elevatorPos-elevator.positionNet)<.03){
-        claw.spitAlgae();
-    }
+    
+    if (Math.abs(claw.encPosition-claw.positionAlgae2)<0.03 && !elevFlag) {
+      elevator.toPosition(elevator.positionAlgae2);
+      elevFlag=true;}
 
 
-     
+
   }
 
   @Override
   public void end(boolean interrupted) {
-    if(interrupted) claw.stopRollers(); 
+    if (interrupted) claw.stopRollers();
     else claw.holdAlgae();
   }
 
   @Override
   public boolean isFinished() {
-    return claw.hasAlgae;
+    return (claw.hasAlgae);
   }
 }

@@ -2,14 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.ElevatorCommands;
 
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class SpitAlgaeProcessor extends Command {
+public class ElevatorToReefC2 extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Elevator elevator;
   private final Claw claw;
@@ -18,7 +18,7 @@ public class SpitAlgaeProcessor extends Command {
   /**
    * @param subsystem The subsystem used by this command.
    */
-  public SpitAlgaeProcessor(Elevator m_elevator,Claw m_claw) {
+  public ElevatorToReefC2(Elevator m_elevator,Claw m_claw) {
     claw=m_claw;
     elevator=m_elevator;
     elevFlag=false;
@@ -27,9 +27,11 @@ public class SpitAlgaeProcessor extends Command {
 
   @Override
   public void initialize() {
+//    elevator.stopElevator();
+    claw.stopRollers();
     elevFlag=false;
-    claw.rollersRun(-3, 3);
-    claw.toPosition(claw.positionAlgae2);
+    claw.toPosition(claw.positionNeutral);
+
 
 
     //claw.toPosition(claw.positionIntake);
@@ -40,8 +42,8 @@ public class SpitAlgaeProcessor extends Command {
   @Override
   public void execute() {
     
-    if (Math.abs(claw.encPosition-claw.positionAlgae2)<0.03 && !elevFlag) {
-      elevator.toPosition(elevator.positionAlgae2);
+    if (Math.abs(claw.encPosition-claw.positionNeutral)<0.02 && !elevFlag) {
+      elevator.toPosition(elevator.positionCoral2);
       elevFlag=true;}
 
 
@@ -50,12 +52,11 @@ public class SpitAlgaeProcessor extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    if (interrupted) claw.stopRollers();
-    else claw.holdAlgae();
+    claw.toPosition(claw.positionCoral2);
   }
 
   @Override
   public boolean isFinished() {
-    return (claw.hasAlgae);
+    return (Math.abs(elevator.elevatorPos-elevator.positionCoral2)<1 ); //claw.hasCoral;
   }
 }

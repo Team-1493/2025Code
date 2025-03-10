@@ -1,29 +1,31 @@
-package frc.robot;
-
+package frc.robot.Utilities;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class VisionConstants {
-    boolean blue=true;
+    public static boolean blue=true;
+    public static List<AprilTag> aprilTagList;
+    public static AprilTagFieldLayout FieldLayout;
     double fieldLength=16.54,fieldWidth=8.21;
-    public List<AprilTag> aprilTagList =  new ArrayList<AprilTag>(Arrays.asList(
+  
+
+    public VisionConstants(){
+
+    getAlliance();
+        blue=true;
+    if(blue)    
+    {
+    System.out.println("*************************  BLUE");
+
+    aprilTagList =  new ArrayList<AprilTag>(Arrays.asList(
 
     new AprilTag(1, new Pose3d(16.697,	0.655, 1.486, new Rotation3d(0.000, 0.000, 2.199))),
     new AprilTag(2, new Pose3d(16.697,	7.396, 1.486, new Rotation3d(0.000, 0.000, 4.084))),
@@ -48,17 +50,10 @@ public class VisionConstants {
     new AprilTag(21, new Pose3d(5.321,	4.026, 0.308, new Rotation3d(0.000, 0.000, 0.000))),
     new AprilTag(22, new Pose3d(4.905,	3.306, 0.308, new Rotation3d(0.000, 0.000, 5.236)))
     ));
+    }
 
 
-
-    public AprilTagFieldLayout FieldLayout;
-  
-
-    public VisionConstants(){
-
-        getAlliance();
-    
-    if(false){   
+    else{   
 
         System.out.println("*************************  RED");
         double pi = Math.PI;
@@ -88,12 +83,10 @@ public class VisionConstants {
     new AprilTag(22, new Pose3d(17.55-4.905,	8.051-3.306, 0.308, new Rotation3d(0.000, 0.000, 5.236-pi)))
     ));
     }
-    else System.out.println("*************************  BLUE");
   
 
 
    FieldLayout  = new AprilTagFieldLayout(aprilTagList, fieldLength, fieldWidth);
-   System.out.println("********************  "+aprilTagList.get(21).pose.toPose2d().getX());
 }
 
 
@@ -104,6 +97,7 @@ public void getAlliance(){
 
     DriverStation.getAlliance().ifPresent(allianceColor -> {
             if (allianceColor == Alliance.Red) blue=false;
+            else blue=true;
     });
 
     SmartDashboard.putBoolean("Alliance", blue);

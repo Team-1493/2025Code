@@ -4,10 +4,9 @@
 
 package frc.robot.commands;
 
-import frc.robot.VisionConstants;
+import frc.robot.Utilities.VisionConstants;
 import frc.robot.subsystems.ActionCommands;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.VisionSystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;

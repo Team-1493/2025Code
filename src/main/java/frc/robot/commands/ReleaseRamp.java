@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.RearIntake;
 
 import com.ctre.phoenix6.controls.VoltageOut;

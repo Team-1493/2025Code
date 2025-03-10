@@ -35,7 +35,7 @@ import edu.wpi.first.math.numbers.N1;
  import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
-import frc.robot.VisionConstants;
+import frc.robot.Utilities.VisionConstants;
 
 import java.util.List;
  import java.util.Optional;
@@ -66,7 +66,7 @@ import com.ctre.phoenix6.Utils;
                     labelClosestDist; 
     boolean hasVisionMeasure=false;
     public int numTargets;
-    private VisionConstants vc = new VisionConstants();
+    
 
      // *** For Simulation
      private PhotonCameraSim cameraSim;
@@ -96,7 +96,7 @@ import com.ctre.phoenix6.Utils;
         
  
         photonEstimator =
-                 new PhotonPoseEstimator(vc.FieldLayout, 
+                 new PhotonPoseEstimator(VisionConstants.FieldLayout, 
                  PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCam);
                  photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
  

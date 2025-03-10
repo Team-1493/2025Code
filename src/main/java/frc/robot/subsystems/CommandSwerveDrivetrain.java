@@ -13,7 +13,6 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentricFacingAngle;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -40,7 +39,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.RobotJoystick;
+import frc.robot.Utilities.RobotJoystick;
 import frc.robot.generated.TunerConstants;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
@@ -82,7 +81,7 @@ private SwerveRequest.RobotCentric driveRC= new SwerveRequest.RobotCentric()
 private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentric()
 .withDriveRequestType(DriveRequestType.Velocity); // Use open-loop control for drive motors
 
-    static Pose2d robotpose = new Pose2d(0,0,new Rotation2d(0));
+    public static Pose2d robotpose = new Pose2d(0,0,new Rotation2d(0));
 
 
     // Simulation stuff

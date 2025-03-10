@@ -2,25 +2,23 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.ElevatorCommands;
 
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class IntakeCoral extends Command {
+public class ElevatorToReefA1 extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Elevator elevator;
   private final Claw claw;
   boolean elevFlag=false;
-  boolean clawFlag=false;
-  int i = 0;
 
   /**
    * @param subsystem The subsystem used by this command.
    */
-  public IntakeCoral(Elevator m_elevator,Claw m_claw) {
+  public ElevatorToReefA1(Elevator m_elevator,Claw m_claw) {
     claw=m_claw;
     elevator=m_elevator;
     elevFlag=false;
@@ -29,30 +27,22 @@ public class IntakeCoral extends Command {
 
   @Override
   public void initialize() {
-    claw.StopRollers();  
     elevFlag=false;
-    clawFlag=false;
-//    if(elevator.elevatorPos>0.15 && claw.encPosition>.15) claw.toPosition(.15);
-    claw.toPosition(.15);
-claw.rearRollerRev();
-i=0;
+    claw.rollersRun(-3, 3);
+    claw.toPosition(claw.positionAlgae1);
 
 
+    //claw.toPosition(claw.positionIntake);
     
 
   }
 
   @Override
   public void execute() {
-//    if (claw.encPosition<0.22 && claw.encPosition>-0.1 &&!elevFlag) {
-  if (claw.encPosition<0.22 &&!elevFlag) {
-      elevator.toPosition(elevator.positionIntake);
-      elevFlag=true;}   
-    if (elevator.elevatorPos<0.25){
-      claw.toPosition(claw.positionIntake);
-      clawFlag=true;
-    } 
-    i++;
+    
+    if (Math.abs(claw.encPosition-claw.positionAlgae1)<0.025 && !elevFlag) {
+      elevator.toPosition(elevator.positionAlgae1);
+      elevFlag=true;}
 
 
 
@@ -60,12 +50,12 @@ i=0;
 
   @Override
   public void end(boolean interrupted) {
+    if (interrupted) claw.stopRollers();
+    else claw.holdAlgae();
   }
 
   @Override
   public boolean isFinished() {
-//    return ((clawFlag && elevFlag) || i>150 );
-    return (clawFlag && elevFlag);
-
+    return (claw.hasAlgae);
   }
 }
