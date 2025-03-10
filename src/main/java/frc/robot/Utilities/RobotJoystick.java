@@ -18,7 +18,7 @@ public class RobotJoystick extends CommandXboxController {
 
     public RobotJoystick(int port){
         super(port);
-        if(Utils.isSimulation())rotateAxis=2;
+        if(Utils.isSimulation())rotateAxis=4;
 
     }
 

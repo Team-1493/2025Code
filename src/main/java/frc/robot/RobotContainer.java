@@ -19,10 +19,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Utilities.RobotJoystick;
 import frc.robot.Utilities.Telemetry;
 import frc.robot.Utilities.VisionConstants;
-import frc.robot.commands.DriveIntakeRight;
-import frc.robot.commands.DriveReefLeft;
-import frc.robot.commands.DriveReefRight;
-import frc.robot.commands.FollowPoseDirect;
 import frc.robot.commands.ReleaseRamp;
 import frc.robot.commands.ZeroElevator;
 import frc.robot.commands.ElevatorCommands.ElevatorToNet;
@@ -72,19 +68,16 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser = autoGenerator.autoChooser;
     public final VisionConstants visionConstants = new VisionConstants();
     public final VisionSystem vision = new VisionSystem(drivetrain);
-
-//    public DriveReefLeft driveReefLeft = new DriveReefLeft(drivetrain);
-//    public DriveReefRight driveReefRight = new DriveReefRight(drivetrain);
-//    public DriveIntakeRight driveIntake = new DriveIntakeRight(drivetrain);
-    public DriveToCommands driveToCommands = new DriveToCommands();
+    public DriveToCommands driveToCommands = new DriveToCommands(drivetrain);
 
     private Trigger setSlow;
-
+    private Trigger zeroGyro;
     
 
     public RobotContainer() {
 
         setSlow = new Trigger ( ()-> stickDriver.getRawAxis(3)>0.5);
+        zeroGyro = new Trigger ( ()-> stickDriver.getRawAxis(2)>0.5);
         configureBindings();        
     }
 
@@ -108,27 +101,48 @@ public class RobotContainer {
 //       (stickDriver.button(4)).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
         
 
-        // reset the field-centric heading on left bumper press
-        stickDriver.button(5).onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyro()));
-        stickDriver.button(6).onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyroFlip()));
-
+        zeroGyro.onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyro()));
         setSlow.onTrue(new InstantCommand(() ->stickDriver.setSlowScaleFactor()  )  );
         setSlow.onFalse(new InstantCommand(() ->stickDriver.setFastScaleFactor()  )  );
         
         
 //        stickDriver.button(10).onTrue( new InstantCommand(()-> drivetrain.setTrueHeading()));
 
-        (stickDriver.button(1).and(stickDriver.button(7))).whileTrue
-          ( new DeferredCommand( () -> driveToCommands.getCommandRight(18) , Set.of(drivetrain)));
+        (stickDriver.button(1).and(stickDriver.button(5))).whileTrue
+            ( new DeferredCommand( () -> driveToCommands.getCommandLeft(18) , Set.of(drivetrain)));
+        (stickDriver.button(1).and(stickDriver.button(6))).whileTrue
+            ( new DeferredCommand( () -> driveToCommands.getCommandRight(18) , Set.of(drivetrain)));
 
-          stickDriver.button(2).whileTrue
-          ( new DeferredCommand( () -> driveToCommands.getCommandRight(19) , Set.of(drivetrain)));
+        (stickDriver.button(3).and(stickDriver.button(5))).whileTrue
+            ( new DeferredCommand( () -> driveToCommands.getCommandLeft(19) , Set.of(drivetrain)));
+        (stickDriver.button(3).and(stickDriver.button(6))).whileTrue
+            ( new DeferredCommand( () -> driveToCommands.getCommandRight(19) , Set.of(drivetrain)));
 
-        stickDriver.button(3).whileTrue
-          ( new DeferredCommand( () -> driveToCommands.getCommandRight(17) , Set.of(drivetrain)));
 
-          stickDriver.button(4).whileTrue
-          ( new DeferredCommand( () -> driveToCommands.getCommandRight(21) , Set.of(drivetrain)));
+        (stickDriver.button(2).and(stickDriver.button(5))).whileTrue
+            ( new DeferredCommand( () -> driveToCommands.getCommandLeft(17) , Set.of(drivetrain)));
+        (stickDriver.button(2).and(stickDriver.button(6))).whileTrue
+            ( new DeferredCommand( () -> driveToCommands.getCommandRight(17) , Set.of(drivetrain)));
+
+
+
+        (stickDriver.pov(0).and(stickDriver.button(5))).whileTrue
+            ( new DeferredCommand( () -> driveToCommands.getCommandLeft(21) , Set.of(drivetrain)));
+        (stickDriver.pov(0).and(stickDriver.button(6))).whileTrue
+            ( new DeferredCommand( () -> driveToCommands.getCommandRight(21) , Set.of(drivetrain)));
+
+        (stickDriver.pov(270).and(stickDriver.button(5))).whileTrue
+            ( new DeferredCommand( () -> driveToCommands.getCommandLeft(20) , Set.of(drivetrain)));
+        (stickDriver.pov(270).and(stickDriver.button(6))).whileTrue
+            ( new DeferredCommand( () -> driveToCommands.getCommandRight(20) , Set.of(drivetrain)));
+
+
+
+        (stickDriver.pov(90).and(stickDriver.button(5))).whileTrue
+            ( new DeferredCommand( () -> driveToCommands.getCommandLeft(22) , Set.of(drivetrain)));
+        (stickDriver.pov(90).and(stickDriver.button(6))).whileTrue
+            ( new DeferredCommand( () -> driveToCommands.getCommandRight(22) , Set.of(drivetrain)));
+
 
 
         stickOperator.button(1).onTrue(new ElevatorToReefC1(elevator,claw));                     
