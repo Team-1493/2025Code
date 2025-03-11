@@ -144,6 +144,13 @@ public class RobotContainer {
             ( new DeferredCommand( () -> driveToCommands.getCommandRight(22) , Set.of(drivetrain)));
 
 
+        stickDriver.button(9).whileTrue
+            ( new DeferredCommand( () -> driveToCommands.getIntakeCommand(13) , Set.of(drivetrain)));
+
+        stickDriver.button(10).whileTrue
+            ( new DeferredCommand( () -> driveToCommands.getIntakeCommand(12) , Set.of(drivetrain)));
+
+
 
         stickOperator.button(1).onTrue(new ElevatorToReefC1(elevator,claw));                     
         stickOperator.button(2).onTrue(new ElevatorToReefC2(elevator,claw));                     

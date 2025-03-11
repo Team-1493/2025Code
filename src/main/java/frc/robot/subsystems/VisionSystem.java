@@ -28,8 +28,8 @@ public class VisionSystem extends SubsystemBase {
     public static double closestReefDist=999;
     public static double reefOffsetX=0.185;
     public static double reefOffsetY=.210;
-    public static double intakeOffsetX=.6;
-    public static double intakeOffsetY=2;
+    public static double intakeOffsetX=.185;
+    public static double intakeOffsetY=0;
     public static double stdFactor=30;
 
 

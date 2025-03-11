@@ -86,42 +86,31 @@ public Command getCommandRight(int id){
 }
 
 
-private Command getIntakeCommandLeft(int id){
+public Command getIntakeCommand(int id){
   int index = id-1;
   targetPose = VisionConstants.aprilTagList.get(index).pose.toPose2d();
   double rotTarget = targetPose.getRotation().getRadians();
-  double rotRobot=rotTarget+Math.PI;
   targetPose = new Pose2d(
       targetPose.getX()+intakeOffsetX*Math.sin(rotTarget)+intakeOffsetY*Math.cos(rotTarget),
       targetPose.getY()-intakeOffsetX*Math.cos(rotTarget)+intakeOffsetY*Math.sin(rotTarget),
-      new Rotation2d(rotRobot));
+      new Rotation2d(rotTarget));
 
-
-  
-      Command drivePath= AutoBuilder.pathfindToPose(
-        targetPose,constraints, 0.0);
-
-
-  return (drivePath);
+      double dist = distanceToTarget();
+      Command drivePath;
+    
+      if(dist>0.6)
+    
+          drivePath= AutoBuilder.pathfindToPose(
+              targetPose,constraints, 0.0);
+      
+      else {drivePath=new FollowPoseDirect(sd, targetPose);
+        System.out.println("******************************   ");         
+        System.out.println("******************************   FPD");
+        System.out.println("******************************   ");            
+      }
+      return (drivePath);
 }
 
-
-private Command getIntakeCommandRight(int id){
-  int index = id-1;
-  targetPose = VisionConstants.aprilTagList.get(index).pose.toPose2d();
-  double rotTarget = targetPose.getRotation().getRadians();
-  double rotRobot=rotTarget+Math.PI;
-  targetPose = new Pose2d(
-      targetPose.getX()+intakeOffsetX*Math.sin(rotTarget)+intakeOffsetY*Math.cos(rotTarget),
-      targetPose.getY()-intakeOffsetX*Math.cos(rotTarget)+intakeOffsetY*Math.sin(rotTarget),
-      new Rotation2d(rotRobot));
-  
-      Command drivePath= AutoBuilder.pathfindToPose(
-        targetPose,constraints, 1.0);
-
-
-  return (drivePath);
-}
 
 
 
