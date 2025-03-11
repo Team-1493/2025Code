@@ -1,6 +1,11 @@
 package frc.robot.commands;
+import java.util.List;
+
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -35,10 +40,29 @@ public Command getCommandLeft(int id){
   targetPose = VisionConstants.aprilTagList.get(index).pose.toPose2d();
   double rotTarget = targetPose.getRotation().getRadians();
   double rotRobot=rotTarget+Math.PI;
+
+  
+
   targetPose = new Pose2d(
     targetPose.getX()+reefOffsetX*Math.sin(rotTarget)+reefOffsetY*Math.cos(rotTarget),
     targetPose.getY()-reefOffsetX*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
     new Rotation2d(rotRobot));
+
+  Pose2d tartgetPose2 = new Pose2d(
+    targetPose.getX()+(reefOffsetX)*Math.sin(rotTarget)+(reefOffsetY+.5)*Math.cos(rotTarget),
+    targetPose.getY()-(reefOffsetX)*Math.cos(rotTarget)+(reefOffsetY+.5)*Math.sin(rotTarget),
+    new Rotation2d(rotRobot));
+
+
+List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
+        tartgetPose2,targetPose);
+    
+PathPlannerPath path2 = new PathPlannerPath(
+        waypoints,
+        constraints,
+        null, // The ideal starting state, this is only relevant for pre-planned paths, so can be null for on-the-fly paths.
+        new GoalEndState(0.0, targetPose.getRotation()) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
+);
 
 
   double dist = distanceToTarget();
@@ -46,9 +70,11 @@ public Command getCommandLeft(int id){
 
   if(dist>0.6)
 
-      drivePath= AutoBuilder.pathfindToPose(
-          targetPose,constraints, 0.0);
+//      drivePath= AutoBuilder.pathfindToPose(
+//          targetPose,constraints, 0.0);
   
+  drivePath=AutoBuilder.pathfindThenFollowPath(path2, constraints);
+
   else {drivePath=new FollowPoseDirect(sd, targetPose);
       System.out.println("******************************   ");         
       System.out.println("******************************   FPD");
@@ -99,7 +125,7 @@ public Command getIntakeCommand(int id){
       Command drivePath;
     
       if(dist>0.6)
-    
+
           drivePath= AutoBuilder.pathfindToPose(
               targetPose,constraints, 0.0);
       

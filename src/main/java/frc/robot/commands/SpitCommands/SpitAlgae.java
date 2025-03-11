@@ -6,6 +6,9 @@ package frc.robot.commands.SpitCommands;
 
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Elevator;
+
+import com.ctre.phoenix6.controls.DutyCycleOut;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
@@ -14,45 +17,40 @@ public class SpitAlgae extends Command {
   private final Claw claw;
   private Elevator elevator;
   boolean elevatorFlag=false;
-
+  int counter = 0;
+  
   /**
    * @param subsystem The subsystem used by this command.
    */
-  public SpitAlgae(Claw m_claw, Elevator m_elevator) {
+  public SpitAlgae(Claw m_claw) {
     claw=m_claw;
-    elevator=m_elevator;
-    addRequirements(claw,elevator);
+    addRequirements(claw);
   }
 
   @Override
   public void initialize() {
-    claw.toPosition(claw.positionNet);
-    
+  counter=0;  
+  claw.rollersRun(-12, 12);
+
 
   }
 
   @Override
   public void execute() {
-    if(!elevatorFlag && claw.encPosition<.215){
-        elevator.toPosition(elevator.positionNet);
-        elevatorFlag=true;
-    }
-    if (Math.abs(elevator.elevatorPos-elevator.positionNet)<.03){
-        claw.spitAlgae();
-    }
-
+    counter ++;
+    if (counter>10) claw.spitAlgae();
 
      
   }
 
   @Override
   public void end(boolean interrupted) {
-    if(interrupted) claw.stopRollers(); 
-    else claw.holdAlgae();
+    claw.stopRollers(); 
+    
   }
 
   @Override
   public boolean isFinished() {
-    return claw.hasAlgae;
+    return false;
   }
 }

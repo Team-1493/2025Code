@@ -42,8 +42,8 @@ private VoltageOut  voltOutFrontHold= new VoltageOut(-.6);
 private VoltageOut  voltOutRearHold= new VoltageOut(.6);
 private VoltageOut  voltOutFrontSpitAlgae= new VoltageOut(13);
 private VoltageOut  voltOutRearSpitAlgae= new VoltageOut(-13);
-private DutyCycleOut dutyFrontSpitAlgae = new DutyCycleOut(1);
-private DutyCycleOut dutyRearSpitAlgae = new DutyCycleOut(-1); 
+private DutyCycleOut dutyFrontSpitAlgae = new DutyCycleOut(0.7);
+private DutyCycleOut dutyRearSpitAlgae = new DutyCycleOut(-.7); 
 private TorqueCurrentFOC torqueFrontSpitAlgae = new TorqueCurrentFOC(40);
 private TorqueCurrentFOC torqueRearSpitAlgae = new TorqueCurrentFOC(-40);
 private VoltageOut  voltOutFrontRevSpitAlgae= new VoltageOut(-12);
@@ -53,7 +53,7 @@ private VoltageOut  voltOutRearRevSpitAlgae= new VoltageOut(12);
 
 public double 
         positionAlgae1=-.125,positionAlgae2 = -0.125, 
-        positionNet=.17,positionProcessor=-0.17, 
+        positionNet=0,positionProcessor=-0.17, 
         positionCoral1=.25, positionCoral2=.25,
         positionCoral3=.25,positionCoral4=.205,
         positionIntake=0.322,positionNeutral=0.25;   
@@ -310,7 +310,7 @@ public Claw(){
         if( (Math.abs(clawRearRoller.getStatorCurrent().getValueAsDouble())>3)
         && Math.abs(clawRearRoller.getVelocity().getValueAsDouble())<0.1){
             algaeCounter ++;
-            if (algaeCounter>3) hasAlgae=true;
+            if (algaeCounter>12) hasAlgae=true;
             }
 
         else {
@@ -362,7 +362,7 @@ public Claw(){
     cfgRollers.MotorOutput.NeutralMode=NeutralModeValue.Brake;
     cfgRollers.CurrentLimits.StatorCurrentLimit=80;
     cfgRollers.CurrentLimits.StatorCurrentLimitEnable=true;
-    cfgRollers.CurrentLimits.SupplyCurrentLimit=50;
+    cfgRollers.CurrentLimits.SupplyCurrentLimit=40;
     cfgRollers.CurrentLimits.SupplyCurrentLimitEnable=true;
     clawFrontRoller.getConfigurator().apply(cfgRollers);
     clawRearRoller.getConfigurator().apply(cfgRollers);

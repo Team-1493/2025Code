@@ -32,6 +32,7 @@ import frc.robot.commands.ElevatorCommands.ElevatorToReefC3;
 import frc.robot.commands.ElevatorCommands.ElevatorToReefC4;
 import frc.robot.commands.IntakeCommands.IntakeAlgae1;
 import frc.robot.commands.IntakeCommands.IntakeCoral;
+import frc.robot.commands.SpitCommands.SpitAlgae;
 import frc.robot.commands.SpitCommands.SpitCoral;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ActionCommands;
@@ -46,7 +47,7 @@ import frc.robot.commands.DriveToCommands;
 public class RobotContainer {
     private Elevator elevator = new Elevator();
     private Claw claw = new Claw();
-    private RearIntake rearIntake = new RearIntake();
+  //  private RearIntake rearIntake = new RearIntake();
     
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -60,7 +61,7 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public IntakeCoral intakeCoral=new IntakeCoral(elevator, claw);
-    public ActionCommands actions = new ActionCommands(drivetrain,elevator,claw,rearIntake );
+    public ActionCommands actions = new ActionCommands(drivetrain,elevator,claw );
     public ElevatorToReef elevatorToReef;
 
     //The auto generator was originally defined just as public, but I changed that, may need to be changed back?
@@ -113,6 +114,7 @@ public class RobotContainer {
         (stickDriver.button(1).and(stickDriver.button(6))).whileTrue
             ( new DeferredCommand( () -> driveToCommands.getCommandRight(18) , Set.of(drivetrain)));
 
+            
         (stickDriver.button(3).and(stickDriver.button(5))).whileTrue
             ( new DeferredCommand( () -> driveToCommands.getCommandLeft(19) , Set.of(drivetrain)));
         (stickDriver.button(3).and(stickDriver.button(6))).whileTrue
@@ -125,17 +127,16 @@ public class RobotContainer {
             ( new DeferredCommand( () -> driveToCommands.getCommandRight(17) , Set.of(drivetrain)));
 
 
-
         (stickDriver.pov(0).and(stickDriver.button(5))).whileTrue
             ( new DeferredCommand( () -> driveToCommands.getCommandLeft(21) , Set.of(drivetrain)));
         (stickDriver.pov(0).and(stickDriver.button(6))).whileTrue
             ( new DeferredCommand( () -> driveToCommands.getCommandRight(21) , Set.of(drivetrain)));
 
+
         (stickDriver.pov(270).and(stickDriver.button(5))).whileTrue
             ( new DeferredCommand( () -> driveToCommands.getCommandLeft(20) , Set.of(drivetrain)));
         (stickDriver.pov(270).and(stickDriver.button(6))).whileTrue
             ( new DeferredCommand( () -> driveToCommands.getCommandRight(20) , Set.of(drivetrain)));
-
 
 
         (stickDriver.pov(90).and(stickDriver.button(5))).whileTrue
@@ -168,7 +169,8 @@ public class RobotContainer {
         stickOperator.button(10).onTrue
                 (new ElevatorToNet(elevator,claw));                
 
-        stickOperator.button(6).onTrue(claw.SpitAlgae());
+//        stickOperator.button(6).onTrue(claw.SpitAlgae());
+        stickOperator.button(6).onTrue(new SpitAlgae(claw));
         stickOperator.button(6).onFalse(claw.StopRollers());
 
         stickOperator.button(5).onTrue(new SpitCoral(claw));
@@ -206,8 +208,8 @@ public class RobotContainer {
         return (drivetrain.runOnce(() -> drivetrain.zeroGyro()));
      }
 
-     public Command releaseRamp(){
-        return (new ReleaseRamp(rearIntake));
-     }
+//     public Command releaseRamp(){
+//        return (new ReleaseRamp(rearIntake));
+//     }
 
     }
