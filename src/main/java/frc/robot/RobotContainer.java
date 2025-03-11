@@ -45,7 +45,6 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.RearIntake;
 import frc.robot.subsystems.VisionSystem;
-import frc.robot.commands.DriveToCommands;
 
 public class RobotContainer {
     private Elevator elevator = new Elevator();
@@ -73,12 +72,12 @@ public class RobotContainer {
     public final VisionConstants visionConstants = new VisionConstants();
     public final VisionSystem vision = new VisionSystem(drivetrain);
 
-//    public DriveReefLeft driveReefLeft = new DriveReefLeft(drivetrain);
-//    public DriveReefRight driveReefRight = new DriveReefRight(drivetrain);
-//    public DriveIntakeRight driveIntake = new DriveIntakeRight(drivetrain);
-    public DriveToCommands driveToCommands = new DriveToCommands();
+    public DriveReefLeft driveReefLeft = new DriveReefLeft(drivetrain);
+    public DriveReefRight driveReefRight = new DriveReefRight(drivetrain);
+    public DriveIntakeRight driveIntake = new DriveIntakeRight(drivetrain);
 
     private Trigger setSlow;
+    private Trigger zeroGyro;
     //private Trigger manualClawUp;
     //private Trigger manualClawDown;
     //private Trigger manualElevatorUp;
@@ -93,26 +92,17 @@ public class RobotContainer {
     //   manualElevatorDown = new Trigger(() -> stickDriver.getRawAxis(1)<-.1);
 
         setSlow = new Trigger ( ()-> stickDriver.getRawAxis(3)>0.5);
+        zeroGyro = new Trigger( ()-> stickDriver.getLeftTriggerAxis()>0.5);
+
         configureBindings();        
     }
 
     private void configureBindings() {
-        // Note that X is defined as forward according to WPILib convention,
-        // and Y is defined as to the left according to WPILib convention.
 
 // Default drive command        
         drivetrain.setDefaultCommand(
             drivetrain.driveFieldCentricCommand(stickDriver)
         );
-        
-
-
-        //  allow driver to switch between fast and slow mode 
-        // changes stick scale factor on joystock
-
-
-        
-//        stickDriver.a().whileTrue(drivetrain.applyRequest(() -> brake));
         
 /* 
         stickDriver.button(2).onTrue(new InstantCommand(() 
@@ -145,28 +135,27 @@ public class RobotContainer {
         
 
         // reset the field-centric heading on left bumper press
-        stickDriver.button(5).onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyro()));
-        stickDriver.button(6).onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyroFlip()));
+
 
         setSlow.onTrue(new InstantCommand(() ->stickDriver.setSlowScaleFactor()  )  );
         setSlow.onFalse(new InstantCommand(() ->stickDriver.setFastScaleFactor()  )  );
-        
-        
-//        stickDriver.button(10).onTrue( new InstantCommand(()-> drivetrain.setTrueHeading()));
-//        stickDriver.button(1).whileTrue(driveToCommands.driveReef_FMR);                 
-        stickDriver.button(1).whileTrue
-          ( new DeferredCommand( () -> driveToCommands.getDriveToA1() , Set.of(drivetrain)));
 
-        stickDriver.button(2).whileTrue( driveToCommands.driveReef_FML);                 
-        stickDriver.button(3).whileTrue( driveToCommands.driveReef_FRR);                 
-        stickDriver.button(4).whileTrue(driveToCommands.driveReef_FRL);
+        zeroGyro.onTrue(new InstantCommand( ()-> drivetrain.zeroGyro()));
+
+        stickDriver.button(5).whileTrue(driveReefLeft);
+        stickDriver.button(6).onTrue(driveReefRight);
+
+        
+
+        
+        stickDriver.button(10).onTrue( new InstantCommand(()-> drivetrain.setTrueHeading()));
 
 
         stickOperator.button(1).onTrue(new ElevatorToReefC1(elevator,claw));                     
         stickOperator.button(2).onTrue(new ElevatorToReefC2(elevator,claw));                     
         stickOperator.button(3).onTrue(new ElevatorToReefC3(elevator,claw)); 
         stickOperator.button(4).onTrue(new ElevatorToReefC4(elevator,claw)); 
-        
+
         stickOperator.button(14).onTrue(new ElevatorToReefA1(elevator,claw));                 
         stickOperator.button(13).onTrue(new ElevatorToReefA2(elevator,claw));    
         //stickOperator.button(9).onTrue(new ElevatorToNet(elevator,claw));                                                  
