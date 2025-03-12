@@ -34,7 +34,7 @@ public class FollowPoseDirect extends Command {
     public Pose2d targetPose2d     = new Pose2d();
     ProfiledPIDController pidx, pidy, pidr; 
 
-  public FollowPoseDirect(CommandSwerveDrivetrain m_sd) { 
+  public FollowPoseDirect(CommandSwerveDrivetrain m_sd, Pose2d goalPose) { 
       sd = m_sd;
       addRequirements(sd);
   }
@@ -48,11 +48,9 @@ public class FollowPoseDirect extends Command {
     pidr.reset(robotPose2d.getRotation().getRadians());
     pidx.reset(robotPose2d.getX());
     pidy.reset(robotPose2d.getY());
-    goalPose=getTagTargetPose();
 //    deltaRot=sd.getPose().getRotation().getRadians()-sd.rawGyroInitial;
 //    finalRawRotation=goalPose.getRotation().getRadians()-deltaRot;
 //    goalPose=new Pose2d(goalPose.getX(),goalPose.getY(),new Rotation2d(finalRawRotation));
-    System.out.println(goalPose.getX()+"   "+goalPose.getY()+"   "+goalPose.getRotation().getDegrees());
     pidx.setGoal(goalPose.getX());
     pidy.setGoal(goalPose.getY());
     pidr.setGoal(goalPose.getRotation().getRadians());

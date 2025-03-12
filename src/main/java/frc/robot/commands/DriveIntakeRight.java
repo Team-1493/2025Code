@@ -5,9 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.Utilities.VisionConstants;
-import frc.robot.subsystems.ActionCommands;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.VisionSystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
@@ -16,7 +14,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class DriveIntakeRight extends Command {
     private PathConstraints constraints;
@@ -56,12 +53,12 @@ public class DriveIntakeRight extends Command {
     else id = 12;
     
 
-    targetPose = vc.aprilTagList.get(id-1).pose.toPose2d();
+    targetPose = VisionConstants.aprilTagList.get(id-1).pose.toPose2d();
     rotTarget = targetPose.getRotation().getRadians();
     rotRobot=rotTarget+Math.PI;
     targetPose = new Pose2d(
-        targetPose.getX()+reefOffsetX*Math.sin(rotTarget)+reefOffsetY*Math.cos(rotTarget),
-        targetPose.getY()-reefOffsetX*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
+        targetPose.getX()-reefOffsetX*Math.sin(rotTarget)+reefOffsetY*Math.cos(rotTarget),
+        targetPose.getY()+reefOffsetX*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
         new Rotation2d(rotRobot+Math.PI));
             
 

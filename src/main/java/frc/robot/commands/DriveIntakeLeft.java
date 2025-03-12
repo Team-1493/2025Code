@@ -18,12 +18,12 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class DriveIntake extends Command {
+public class DriveIntakeLeft extends Command {
     private PathConstraints constraints;
     double rotTarget,rotRobot;
     Pose2d targetPose;
     private  double intakeOffsetX = VisionSystem.intakeOffsetX;
-    private  double intakeOffsetY = VisionSystem.intakeOffsetX;
+    private  double intakeOffsetY = VisionSystem.intakeOffsetY;
     private CommandSwerveDrivetrain sd;
     private Command drivePath;
     VisionConstants vc = new VisionConstants();
@@ -36,7 +36,7 @@ public class DriveIntake extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveIntake(CommandSwerveDrivetrain m_sd) {
+  public DriveIntakeLeft(CommandSwerveDrivetrain m_sd) {
         sd=m_sd;
 
         constraints = new PathConstraints(

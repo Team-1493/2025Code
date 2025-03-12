@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Utilities.RobotJoystick;
 import frc.robot.Utilities.Telemetry;
 import frc.robot.Utilities.VisionConstants;
+import frc.robot.commands.DriveIntakeLeft;
 import frc.robot.commands.DriveIntakeRight;
 import frc.robot.commands.DriveReefLeft;
 import frc.robot.commands.DriveReefRight;
@@ -74,7 +75,8 @@ public class RobotContainer {
 
     public DriveReefLeft driveReefLeft = new DriveReefLeft(drivetrain);
     public DriveReefRight driveReefRight = new DriveReefRight(drivetrain);
-    public DriveIntakeRight driveIntake = new DriveIntakeRight(drivetrain);
+    public DriveIntakeRight driveIntakeRight = new DriveIntakeRight(drivetrain);
+    public DriveIntakeLeft driveIntakeLeft = new DriveIntakeLeft(drivetrain);
 
     private Trigger setSlow;
     private Trigger zeroGyro;
@@ -146,9 +148,10 @@ public class RobotContainer {
         stickDriver.button(6).onTrue(driveReefRight);
 
         
+        stickDriver.button(9).onTrue( driveIntakeLeft);
+        stickDriver.button(10).onTrue( driveIntakeRight);
 
-        
-        stickDriver.button(10).onTrue( new InstantCommand(()-> drivetrain.setTrueHeading()));
+        stickDriver.button(1).onTrue( new InstantCommand(()-> drivetrain.setTrueHeading()));
 
 
         stickOperator.button(1).onTrue(new ElevatorToReefC1(elevator,claw));                     

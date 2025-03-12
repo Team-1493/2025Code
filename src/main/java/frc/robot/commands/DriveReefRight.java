@@ -45,49 +45,51 @@ public class DriveReefRight extends Command {
   @Override
   public void initialize() {
             
-            double reefOffsetX = -VisionSystem.reefOffsetX;
-            double reefOffsetY = VisionSystem.reefOffsetY;
+      double reefOffsetX = VisionSystem.reefOffsetX;
+      double reefOffsetY = VisionSystem.reefOffsetY;
 
 
-          sd.resetRotation(new Rotation2d(sd.headingTrue));
+      sd.resetRotation(new Rotation2d(sd.headingTrue));
             
-          Pose2d robotPose = sd.getPose();
-          double xr=robotPose.getX();
-          double yr=robotPose.getY();
-          int id;
+      Pose2d robotPose = sd.getPose();
+      double xr=robotPose.getX();
+      double yr=robotPose.getY();
+      int id;
 
        
-            // coord reef center 4.508,4.055
-            xr=xr - 4.058;
-            yr=yr - 4.055;  
+      // coord reef center 4.508,4.055
+      xr=xr - 4.058;
+      yr=yr - 4.055;  
 
-            id=13;
-            if (yr>xr/2 && yr<-xr/2) id=18;
-            if (xr<0 && yr<xr/2) id = 17;
-            if (xr<0 && yr>-xr/2 ) id = 19;
-            if (xr>0 && yr>xr/2) id = 20;    
-            if (yr<xr/2 && yr>-xr/2) id = 21;
-            if (xr>0 && yr<-xr/2 ) id = 22;
+      id=13;
+      if (yr>xr/2 && yr<-xr/2) id=18;
+      if (xr<0 && yr<xr/2) id = 17;
+      if (xr<0 && yr>-xr/2 ) id = 19;
+      if (xr>0 && yr>xr/2) id = 20;    
+      if (yr<xr/2 && yr>-xr/2) id = 21;
+      if (xr>0 && yr<-xr/2 ) id = 22;
 
-             SmartDashboard.putNumber("Target ID", id);
-             int index = id-1;
-            targetPose = vc.aprilTagList.get(index).pose.toPose2d();
-            rotTarget = targetPose.getRotation().getRadians();
-            rotRobot=rotTarget+Math.PI;
-            targetPose = new Pose2d(
-                targetPose.getX()+reefOffsetX*Math.sin(rotTarget)+reefOffsetY*Math.cos(rotTarget),
-                targetPose.getY()-reefOffsetX*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
-                new Rotation2d(rotRobot));
-
-
-//            sd.turnOffHeadingControl();
-            drivePath= AutoBuilder.pathfindToPose(
-                targetPose,
-                constraints,
-                0.0);
+      SmartDashboard.putNumber("Target ID", id);
+      int index = id-1;
+      targetPose = VisionConstants.aprilTagList.get(index).pose.toPose2d();
+      rotTarget = targetPose.getRotation().getRadians();
+      rotRobot=rotTarget+Math.PI;
+      
+      targetPose = new Pose2d(
+          targetPose.getX()-reefOffsetX*Math.sin(rotTarget)+reefOffsetY*Math.cos(rotTarget),
+          targetPose.getY()+reefOffsetX*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
+          new Rotation2d(rotRobot));
 
 
-            drivePath.initialize();
+
+
+      drivePath= AutoBuilder.pathfindToPose(
+          targetPose,
+          constraints,
+          0.0);
+
+
+      drivePath.initialize();
 
             
   }
