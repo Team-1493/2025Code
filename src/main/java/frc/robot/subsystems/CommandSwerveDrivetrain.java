@@ -8,9 +8,6 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
@@ -21,22 +18,15 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.jni.Pose3dJNI;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Utilities.RobotJoystick;
@@ -53,17 +43,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 //  ***Added to default code!    
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(1.5).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-    private double targetHeading=0, targetHeadingPrev=0,headingRateDeadband=1;
+    
     boolean pointInDirection=false;
     private double reverseDirection=1;
     public double yawOffset=0;
-
-
-
-    // For TorqueCurrent
-    private TrapezoidProfile.Constraints tp = new TrapezoidProfile.Constraints(4,   8);
-    private ProfiledPIDController headingController = new ProfiledPIDController(6, 0, 0,tp);
-
+    
 
 
 private SwerveRequest.RobotCentric driveRC= new SwerveRequest.RobotCentric()
@@ -342,19 +326,6 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         double x = -stickDriver.getY2()*MaxSpeed*reverseDirection;
         double y = -stickDriver.getX2()*MaxSpeed*reverseDirection;
         double z = -stickDriver.getRotate()*MaxAngularRate; 
-        double heading=this.getPose().getRotation().getRadians();
-
-
-        if( Math.abs(z)>0.01 )
-                pointInDirection=false;
-        else if(pointInDirection) {
-            double headingRate = headingController.calculate(heading);  
-            if (Math.abs(heading-targetHeading)<0.01) {
-                headingRate=0;
-                pointInDirection=false;
-            }
-            z=headingRate;
-        }
         driveFieldCentric(x, y, z);
     }
 
