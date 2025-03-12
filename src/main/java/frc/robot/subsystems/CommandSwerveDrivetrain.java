@@ -505,7 +505,6 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
             this
         );
         } catch (Exception e) {
-            DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", e.getStackTrace());
         }
     }
 
