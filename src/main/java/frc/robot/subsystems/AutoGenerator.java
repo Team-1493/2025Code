@@ -155,7 +155,6 @@ public class AutoGenerator {
         PathPlannerPath path = PathPlannerPath.fromPathFile("Example Path");
         return AutoBuilder.followPath(path);
     } catch (Exception e) {
-        DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
         return Commands.none();
     }
   }
