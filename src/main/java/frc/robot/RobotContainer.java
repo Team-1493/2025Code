@@ -23,6 +23,7 @@ import frc.robot.commands.DriveIntakeLeft;
 import frc.robot.commands.DriveIntakeRight;
 import frc.robot.commands.DriveReefLeft;
 import frc.robot.commands.DriveReefRight;
+import frc.robot.commands.DriveToCommands;
 import frc.robot.commands.FollowPoseDirect;
 import frc.robot.commands.ReleaseRamp;
 import frc.robot.commands.ZeroElevator;
@@ -73,10 +74,8 @@ public class RobotContainer {
     public final VisionConstants visionConstants = new VisionConstants();
     public final VisionSystem vision = new VisionSystem(drivetrain);
 
-    public DriveReefLeft driveReefLeft = new DriveReefLeft(drivetrain);
-    public DriveReefRight driveReefRight = new DriveReefRight(drivetrain);
-    public DriveIntakeRight driveIntakeRight = new DriveIntakeRight(drivetrain);
-    public DriveIntakeLeft driveIntakeLeft = new DriveIntakeLeft(drivetrain);
+
+    public DriveToCommands driveToCommands = new DriveToCommands(drivetrain);
 
     private Trigger setSlow;
     private Trigger zeroGyro;
@@ -144,12 +143,10 @@ public class RobotContainer {
 
         zeroGyro.onTrue(new InstantCommand( ()-> drivetrain.zeroGyro()));
 
-        stickDriver.button(5).whileTrue(driveReefLeft);
-        stickDriver.button(6).onTrue(driveReefRight);
-
-        
-        stickDriver.button(9).onTrue( driveIntakeLeft);
-        stickDriver.button(10).onTrue( driveIntakeRight);
+        stickDriver.button(5).whileTrue(driveToCommands.getCommandLeft());
+        stickDriver.button(6).onTrue(driveToCommands.getCommandRight());
+        stickDriver.button(9).onTrue( driveToCommands.getIntakeCommand());
+    
 
         stickDriver.button(1).onTrue( new InstantCommand(()-> drivetrain.setTrueHeading()));
 

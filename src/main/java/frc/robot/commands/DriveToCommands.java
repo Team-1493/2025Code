@@ -35,34 +35,17 @@ public class DriveToCommands {
       sd = m_sd;
 }
 
-public Command getCommandLeft(int id){
+public Command getCommandLeft(){
+  int id = getID();
   int index = id-1;
   targetPose = VisionConstants.aprilTagList.get(index).pose.toPose2d();
   double rotTarget = targetPose.getRotation().getRadians();
   double rotRobot=rotTarget+Math.PI;
 
-  
-
   targetPose = new Pose2d(
     targetPose.getX()+reefOffsetX*Math.sin(rotTarget)+reefOffsetY*Math.cos(rotTarget),
     targetPose.getY()-reefOffsetX*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
     new Rotation2d(rotRobot));
-
-  Pose2d tartgetPose2 = new Pose2d(
-    targetPose.getX()+(reefOffsetX)*Math.sin(rotTarget)+(reefOffsetY+.5)*Math.cos(rotTarget),
-    targetPose.getY()-(reefOffsetX)*Math.cos(rotTarget)+(reefOffsetY+.5)*Math.sin(rotTarget),
-    new Rotation2d(rotRobot));
-
-
-List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
-        tartgetPose2,targetPose);
-    
-PathPlannerPath path2 = new PathPlannerPath(
-        waypoints,
-        constraints,
-        null, // The ideal starting state, this is only relevant for pre-planned paths, so can be null for on-the-fly paths.
-        new GoalEndState(0.0, targetPose.getRotation()) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
-);
 
 
   double dist = distanceToTarget();
@@ -73,7 +56,7 @@ PathPlannerPath path2 = new PathPlannerPath(
 //      drivePath= AutoBuilder.pathfindToPose(
 //          targetPose,constraints, 0.0);
   
-  drivePath=AutoBuilder.pathfindThenFollowPath(path2, constraints);
+  drivePath=AutoBuilder.pathfindToPose(targetPose, constraints);
 
   else {drivePath=new FollowPoseDirect(sd, targetPose);
       System.out.println("******************************   ");         
@@ -85,7 +68,8 @@ PathPlannerPath path2 = new PathPlannerPath(
 }
 
 
-public Command getCommandRight(int id){
+public Command getCommandRight(){
+  int id = getID();
   int index = id-1;
   targetPose = VisionConstants.aprilTagList.get(index).pose.toPose2d();
   double rotTarget = targetPose.getRotation().getRadians();
@@ -100,9 +84,8 @@ public Command getCommandRight(int id){
   
     if(dist>0.6)
   
-        drivePath= AutoBuilder.pathfindToPose(
-            targetPose,constraints, 0.0);
-    
+    drivePath=AutoBuilder.pathfindToPose(targetPose, constraints);
+  
     else {drivePath=new FollowPoseDirect(sd, targetPose);
       System.out.println("******************************   ");         
       System.out.println("******************************   FPD");
@@ -112,7 +95,12 @@ public Command getCommandRight(int id){
 }
 
 
-public Command getIntakeCommand(int id){
+public Command getIntakeCommand(){
+  int id = 13;
+  double yr = sd.getPose().getY();
+  if (yr>4.055) id = 13;
+  else id = 12;
+  
   int index = id-1;
   targetPose = VisionConstants.aprilTagList.get(index).pose.toPose2d();
   double rotTarget = targetPose.getRotation().getRadians();
@@ -152,6 +140,29 @@ private double distanceToTarget(){
   System.out.println("******************************   "+distance);
   System.out.println("******************************   ");      
   return distance;
+}
+
+private int getID(){
+  Pose2d robotPose = sd.getPose();
+  double xr=robotPose.getX();
+  double yr=robotPose.getY();
+  int id;
+
+  // y = -1/2x  ,  y = 1/2 x  ,   x = 0
+  // coord reef center 4.508,4.055
+  xr=xr - 4.058;
+  yr=yr - 4.055;  
+
+  id=13;
+  if (yr>xr/2 && yr<-xr/2) id=18;
+  if (xr<0 && yr<xr/2) id = 17;
+  if (xr<0 && yr>-xr/2 ) id = 19;
+  if (xr>0 && yr>xr/2) id = 20;    
+  if (yr<xr/2 && yr>-xr/2) id = 21;
+  if (xr>0 && yr<-xr/2 ) id = 22;
+
+  return id;
+
 }
 
 
