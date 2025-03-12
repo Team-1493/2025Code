@@ -28,20 +28,20 @@ public class ElevatorToReefA1 extends Command {
   @Override
   public void initialize() {
     elevFlag=false;
-    claw.rollersRun(-3, 3);
-    claw.toPosition(claw.positionAlgae1);
+    claw.rollersRun(-4, 4);
+//    claw.toPosition(claw.positionAlgae1);
 
 
-    //claw.toPosition(claw.positionIntake);
     
 
   }
 
   @Override
   public void execute() {
-    
-    if (Math.abs(claw.encPosition-claw.positionAlgae1)<0.025 && !elevFlag) {
-      elevator.toPosition(elevator.positionAlgae1);
+
+//    if (Math.abs(claw.encPosition-claw.positionAlgae1)<0.025 && !elevFlag) {
+      if(true && !elevFlag){
+//      elevator.toPosition(elevator.positionAlgae1);
       elevFlag=true;}
 
 

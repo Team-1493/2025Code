@@ -56,27 +56,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private double targetHeading=0, targetHeadingPrev=0,headingRateDeadband=1;
     boolean pointInDirection=false;
     private double reverseDirection=1;
-    public double headingOffset=0;
-    public double headingTrue=0;
+    public double yawOffset=0;
+
+
 
     // For TorqueCurrent
     private TrapezoidProfile.Constraints tp = new TrapezoidProfile.Constraints(4,   8);
     private ProfiledPIDController headingController = new ProfiledPIDController(6, 0, 0,tp);
 
-// For VoltageControl/Voltage
-//    private TrapezoidProfile.Constraints tp =
-//         new TrapezoidProfile.Constraints(3, 6);
-//    private ProfiledPIDController headingController = new ProfiledPIDController(20, 0, 0,tp);
-
-//    private SwerveRequest.RobotCentric driveRC= new SwerveRequest.RobotCentric()
-//            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);;
 
 
 private SwerveRequest.RobotCentric driveRC= new SwerveRequest.RobotCentric()
             .withDriveRequestType(DriveRequestType.Velocity);
 
-//    private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentric()
-//            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
  
 private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentric()
 .withDriveRequestType(DriveRequestType.Velocity); // Use open-loop control for drive motors
@@ -89,13 +81,7 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
 
-    /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
-    private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
-    /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
-    private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
-    /* Keep track if we've ever applied the operator perspective before or not */
-    private boolean m_hasAppliedOperatorPerspective = false;
-
+ 
     /* Swerve requests to apply during SysId characterization */
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
@@ -184,8 +170,6 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         writeInitialConstants();
         initializeAutoBuilder();
         setLimits();
-        headingOffset=this.getPose().getRotation().getRadians();
-
 
     }
 
@@ -212,10 +196,10 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
             startSimThread();
         }       
 
-        headingOffset=this.getPose().getRotation().getRadians();
         writeInitialConstants();
         initializeAutoBuilder();
         setLimits();
+        yawOffset = getYaw();
     }
 
     /**
@@ -303,16 +287,13 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
             });
         }
             */
-        headingTrue=getHeadingTrue();
 
         // added static robotpose  so AprilTagCamera can get the pose for simulation
         robotpose=this.getPose();
         SmartDashboard.putNumber("Pose X",robotpose.getX());
         SmartDashboard.putNumber("Pose Y",robotpose.getY());
         SmartDashboard.putNumber("Pose Z",robotpose.getRotation().getDegrees());
-        SmartDashboard.putNumber("HeadingTrue",
-        Math.toDegrees(headingTrue));
-
+        SmartDashboard.putNumber("TrueHeading", getYaw()-yawOffset);
     }
 
     private void startSimThread() {
@@ -384,92 +365,33 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         .withVelocityY(y)
         .withRotationalRate(z));
     }
-
-
-    public void setTargetHeading(double heading){
-        resetHeadingController();
-        targetHeading=heading-headingOffset;
-        pointInDirection=true;  
-        headingController.setGoal(targetHeading); 
+    
+    public void resetToFieldZero(){
+        this.resetRotation(Rotation2d.fromRadians(getYaw()+yawOffset) );
     }
 
-    public void resetHeadingController(double angle){
-        headingController.reset(angle);
-        targetHeading=angle - headingOffset;
-        targetHeadingPrev=targetHeading;
-        headingController.setGoal(targetHeading);
-      }
-
-
-      public void resetHeadingController(){
-        resetHeadingController(this.getPose().getRotation().getRadians());
-    }
-      
-      public Command ResetHeadingController(){
-        return runOnce( () -> {  resetHeadingController
-            (this.getPose().getRotation().getRadians()); });
-      }
-
-      public Command TurnOffHeadingControl(){
-        return runOnce( ()-> turnOffHeadingControl());
-      }
-
-      public void turnOffHeadingControl(){
-        pointInDirection=false;
-      }
-
-
-
-    public void setupHeadingController(){
-        headingController.enableContinuousInput(-Math.PI, Math.PI);
-        headingController.setTolerance(0.017);  //1 degree
-        targetHeading =0;// this.getPose().getRotation().getRadians();
-        headingController.setGoal(0);      
+    public void setRotationToZero(){
+        this.resetRotation(Rotation2d.fromRadians(0));
     }
 
-
-    public void setTrueHeading(){
-            seedFieldCentric();
-            headingOffset=0;
+    public void setFieldZero(){
+        yawOffset = getYaw();
+        setRotationToZero();
     }
-
-    public void zeroGyro(){
-        reverseDirection=1;
-        turnOffHeadingControl();
-        headingOffset = headingOffset - this.getPose().getRotation().getRadians();
-        seedFieldCentric();
-        resetHeadingController(this.getPose().getRotation().getRadians());        
-    }
-
-
-
-    public void zeroGyroFlip(){
-        reverseDirection=-1;
-        turnOffHeadingControl();
-        headingOffset = headingOffset - this.getPose().getRotation().getRadians();
-        seedFieldCentric();
-        resetHeadingController(this.getPose().getRotation().getRadians());        
-
-    }
-
 
     public Pose2d getPose() {
         return this.getState().Pose;
     }
+
+    public double getYaw() {
+        return (this.getPigeon2().getYaw().getValueAsDouble()*Math.PI/180.0);
+    }    
 
     public ChassisSpeeds getChassisSpeed(){
         
         return getState().Speeds;
     }
 
-    private void resetPoseflip(Pose2d pose){
-        this.resetPose(new Pose2d(pose.getX(),pose.getY(),new Rotation2d(pose.getRotation().getRadians())));
-    }
-
-    public Pose2d getPoseFlip(Pose2d pose){
-        Pose2d tmp = this.getPose();
-        return new Pose2d(tmp.getX(),tmp.getY(),new Rotation2d(tmp.getRotation().getRadians()+Math.PI ));
-    }
 
     
 
@@ -554,10 +476,6 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         driveRobotCentricCommand(0, 0, 0);
     }
 
-    public double getRawGyro(){
-        return (this.getPigeon2().getYaw().getValueAsDouble()*Math.PI/180);
-    }
-
     private void setLimits(){
         CurrentLimitsConfigs clc = new CurrentLimitsConfigs();
         clc.StatorCurrentLimit=60;
@@ -576,11 +494,5 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
 
     }
 
-    private double getHeadingTrue(){
-        double ht=(robotpose.getRotation().getRadians()-headingOffset);
-        if(ht>Math.PI)ht=ht-2*Math.PI;
-        else if (ht<-Math.PI) ht=ht+2*Math.PI;
-        return (ht);
-    }
 
 }

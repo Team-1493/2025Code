@@ -52,11 +52,11 @@ private VoltageOut  voltOutRearRevSpitAlgae= new VoltageOut(12);
     
 
 public double 
-        positionAlgae1=-.125,positionAlgae2 = -0.125, 
-        positionNet=.17,positionProcessor=-0.17, 
-        positionCoral1=.25, positionCoral2=.25,
-        positionCoral3=.25,positionCoral4=.205,
-        positionIntake=0.322,positionNeutral=0.25;   
+        positionAlgae1=-0.428,positionAlgae2 = -0.428, 
+        positionNet = -0.153,positionProcessor=-0.428, 
+        positionCoral1= - 0.153, positionCoral2= - 0.153,
+        positionCoral3 = -0.153,positionCoral4= -0.23,
+        positionIntake = 0.0, positionNeutral = -0.153;   
 
 
 private DigitalInput limitLower = new DigitalInput(4);
@@ -307,10 +307,10 @@ public Claw(){
 
     private void checkForAlgae(){
 
-        if( (Math.abs(clawRearRoller.getStatorCurrent().getValueAsDouble())>3)
-        && Math.abs(clawRearRoller.getVelocity().getValueAsDouble())<0.1){
+        if( (Math.abs(clawRearRoller.getStatorCurrent().getValueAsDouble())>80)
+        && Math.abs(clawRearRoller.getVelocity().getValueAsDouble())<0.05){
             algaeCounter ++;
-            if (algaeCounter>3) hasAlgae=true;
+            if (algaeCounter>20) hasAlgae=true;
             }
 
         else {
@@ -350,10 +350,10 @@ public Claw(){
     cfg.CurrentLimits.SupplyCurrentLimitEnable=true;
     
     cfg.SoftwareLimitSwitch.ForwardSoftLimitEnable=true;
-    cfg.SoftwareLimitSwitch.ForwardSoftLimitThreshold=.332;
+    cfg.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0.03;
 
     cfg.SoftwareLimitSwitch.ReverseSoftLimitEnable=true;
-    cfg.SoftwareLimitSwitch.ReverseSoftLimitThreshold=-0.26;
+    cfg.SoftwareLimitSwitch.ReverseSoftLimitThreshold = -0.428;
 
     clawMotor.getConfigurator().apply(cfg);
 
@@ -369,7 +369,7 @@ public Claw(){
 
 
     // Cponfigure encoder
-    cfgEnc.MagnetSensor.AbsoluteSensorDiscontinuityPoint=0.7;
+    cfgEnc.MagnetSensor.AbsoluteSensorDiscontinuityPoint=0.2;
     cfgEnc.MagnetSensor.MagnetOffset=-0.67553;
     cfgEnc.MagnetSensor.SensorDirection=SensorDirectionValue.Clockwise_Positive;
     

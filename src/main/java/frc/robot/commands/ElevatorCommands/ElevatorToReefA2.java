@@ -28,7 +28,7 @@ public class ElevatorToReefA2 extends Command {
   @Override
   public void initialize() {
     elevFlag=false;
-    claw.rollersRun(-3, 3);
+    claw.rollersRun(-6, 6);
     claw.toPosition(claw.positionAlgae2);
 
 

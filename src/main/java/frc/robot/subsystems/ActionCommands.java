@@ -29,8 +29,7 @@ public class ActionCommands {
     
     
 
-public  ActionCommands(CommandSwerveDrivetrain m_sd,Elevator m_elevator,Claw m_claw,
-            RearIntake rearIntake){
+public  ActionCommands(CommandSwerveDrivetrain m_sd,Elevator m_elevator,Claw m_claw){
 
     sd=m_sd;
     elevator=m_elevator;
@@ -65,7 +64,7 @@ public  ActionCommands(CommandSwerveDrivetrain m_sd,Elevator m_elevator,Claw m_c
         bumpIntoWall = new BumpIntoWall(sd);
         bumpIntoWallReverse = new BumpIntoWallReverse(sd);
         checkForCoralAuto = new CheckForCoralAuto(claw);
-        releaseRamp = new ReleaseRamp(rearIntake);
+//        releaseRamp = new ReleaseRamp(rearIntake);
         
 }
 }
