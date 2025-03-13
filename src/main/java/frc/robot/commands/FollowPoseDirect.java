@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
+import frc.robot.Robot;
 import frc.robot.Utilities.VisionConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.VisionSystem;
@@ -11,6 +12,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -48,6 +50,8 @@ public class FollowPoseDirect extends Command {
   public void initialize() {
     
     robotPose2d=sd.getState().Pose;
+
+    
     updateControllers();
     pidr.reset(robotPose2d.getRotation().getRadians());
     pidx.reset(robotPose2d.getX());
@@ -55,6 +59,10 @@ public class FollowPoseDirect extends Command {
 
     pidxh.reset();
     pidyh.reset();
+    // FIXME: I don't know what the tolerance should be
+    var tolerance = new Pose2d(new Translation2d(1,1),new Rotation2d(0.1)));
+    hdc.setTolerance(goalPose);
+    
 
 //    deltaRot=sd.getPose().getRotation().getRadians()-sd.rawGyroInitial;
 //    finalRawRotation=goalPose.getRotation().getRadians()-deltaRot;
@@ -102,7 +110,12 @@ ChassisSpeeds speeds = hdc.calculate(
 
   @Override
   public boolean isFinished() {
-    return (false);
+    return hdc.atReference();
+  }
+
+  @Override 
+  public void end(boolean interrupted) {
+    Robot.instance.finishedAutoAlign();
   }
 
   public void updateControllers(){

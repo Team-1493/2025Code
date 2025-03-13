@@ -306,7 +306,8 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
     public  void driveRobotCentric(ChassisSpeeds speeds) {
         this.setControl(driveRC.withVelocityX(speeds.vxMetersPerSecond)
         .withVelocityY(speeds.vyMetersPerSecond)
-        .withRotationalRate(speeds.omegaRadiansPerSecond));
+        .withRotationalRate(speeds.omegaRadiansPerSecond)
+        );
 }
 
     public  void driveRobotCentric(double x,double y,double z) {

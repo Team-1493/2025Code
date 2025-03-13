@@ -45,7 +45,7 @@ import frc.robot.subsystems.VisionSystem;
 
 public class RobotContainer {
     private Elevator elevator = new Elevator();
-    private Claw claw = new Claw();
+    public Claw claw = new Claw();
 //    private RearIntake rearIntake = new RearIntake();
     
 
