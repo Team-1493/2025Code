@@ -60,7 +60,7 @@ public class FollowPoseDirect extends Command {
     pidxh.reset();
     pidyh.reset();
     // FIXME: I don't know what the tolerance should be
-    var tolerance = new Pose2d(new Translation2d(1,1),new Rotation2d(0.1)));
+    var tolerance = new Pose2d(new Translation2d(1,1),new Rotation2d(0.1));
     hdc.setTolerance(goalPose);
     
 
