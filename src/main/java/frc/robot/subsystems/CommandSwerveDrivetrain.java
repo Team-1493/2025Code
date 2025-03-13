@@ -277,7 +277,7 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         SmartDashboard.putNumber("Pose X",robotpose.getX());
         SmartDashboard.putNumber("Pose Y",robotpose.getY());
         SmartDashboard.putNumber("Pose Z",robotpose.getRotation().getDegrees());
-        SmartDashboard.putNumber("TrueHeading", getYaw()-yawOffset);
+        SmartDashboard.putNumber("TrueHeading", getTrueHeading()*180/Math.PI);
     }
 
     private void startSimThread() {
@@ -348,6 +348,13 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
     public void setFieldZero(){
         yawOffset = getYaw();
         setRotationToZero();
+    }
+
+    private double getTrueHeading(){
+        double th = getYaw()-yawOffset;
+        if (th > Math.PI) th=th-2*Math.PI;
+        else if (th < -Math.PI) th = th + 2*Math.PI;
+        return th;
     }
 
     public Pose2d getPose() {

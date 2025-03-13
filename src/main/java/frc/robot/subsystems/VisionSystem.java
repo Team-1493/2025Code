@@ -28,8 +28,8 @@ public class VisionSystem extends SubsystemBase {
     public static double closestReefDist=999;
     public static double reefOffsetX=0.185;
     public static double reefOffsetY=.210;
-    public static double intakeOffsetX=.6;
-    public static double intakeOffsetY=2;
+    public static double intakeOffsetX=0;
+    public static double intakeOffsetY=.5;
     public static double stdFactor=30;
 
 
@@ -99,25 +99,6 @@ public class VisionSystem extends SubsystemBase {
             camFR.getEstimatedGlobalPose();
 //            camB.getEstimatedGlobalPose();
 //            visionSim.update(dt.getPose());
-
-            if (camFL.closestTargetDist<camFR.closestTargetDist){
-                closestReefDist=camFL.closestTargetDist;
-                closestReefID=camFL.closestTargetID;
-            }
-            else {
-                closestReefDist=camFR.closestTargetDist;
-                closestReefID=camFR.closestTargetID;
-            }
-
-            if (closestReefID>=17 && closestReefID<=22) hasReefTarget=true;
-            else hasReefTarget=false;
-            SmartDashboard.putNumber("ClosestReefDist", closestReefDist);
-            SmartDashboard.putNumber("ClosestReefID", closestReefID);
-            SmartDashboard.putBoolean("hasReefTarget", hasReefTarget);
-
-
-            
-
     }
 
 

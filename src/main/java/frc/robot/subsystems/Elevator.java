@@ -75,8 +75,6 @@ public Elevator(){
         elevatorPos=elevatorRight.getPosition().getValueAsDouble();
         
         SmartDashboard.putNumber("Elevator Pos", elevatorPos);
-        SmartDashboard.putNumber("Elevator Volt",vel);
-        SmartDashboard.putNumber("Elevator Current", i);
 
 
         SmartDashboard.putBoolean("Elevator LLS",atLowerLimit);
@@ -87,8 +85,6 @@ public Elevator(){
 //        if (i>currentLimit) stopElevator();
         
         SmartDashboard.putNumber("Elevator set", elevatorRight.getClosedLoopReference().getValueAsDouble());
-        SmartDashboard.putNumber("Elevator CLE",elevatorRight.getClosedLoopError().getValueAsDouble()); 
-        SmartDashboard.putNumber("Elevator MMrun",elevatorRight.getMotionMagicIsRunning().getValueAsDouble());
     }
 
 

@@ -48,15 +48,7 @@ public class AutoGenerator {
     private void autoChooserInit(){
         autoChooser = AutoBuilder.buildAutoChooser("Auto1");
 
-        SmartDashboard.putBoolean("autocommand0Successful", false);
         SmartDashboard.putData("Auto Chooser", autoChooser);
-        
-        //Variables for simulating Autos
-        SmartDashboard.putString("autoSim elevatorGoal", "start");
-        SmartDashboard.putBoolean("autoSim holdingCoral", true);
-        SmartDashboard.putNumber("autoSim coralScored", 0);
-        SmartDashboard.putBoolean("autoSim autoComplete", false);
-
     }
 
 

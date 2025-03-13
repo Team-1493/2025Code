@@ -1,4 +1,8 @@
 package frc.robot.subsystems;
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Volts;
+
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -13,11 +17,13 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Claw extends SubsystemBase {
 
@@ -48,6 +54,8 @@ private TorqueCurrentFOC torqueFrontSpitAlgae = new TorqueCurrentFOC(40);
 private TorqueCurrentFOC torqueRearSpitAlgae = new TorqueCurrentFOC(-40);
 private VoltageOut  voltOutFrontRevSpitAlgae= new VoltageOut(-12);
 private VoltageOut  voltOutRearRevSpitAlgae= new VoltageOut(12);
+private VoltageOut m_rotationCharacterization = new VoltageOut(0);
+
 
     
 
@@ -67,8 +75,33 @@ private boolean atLowerLimit=false,atUpperLimit=false;
 public boolean hasCoral = false, prevHasCoral=false;
 public boolean hasAlgae=false;
 int coralCounter=0,algaeCounter=0;
-private double voltage,current;
+private double voltage;
 public double encPosition,rearRollerCurrent;
+
+
+   private final SysIdRoutine m_sysIdRoutineRotation = new SysIdRoutine(
+        new SysIdRoutine.Config(
+            /* This is in radians per second², but SysId only supports "volts per second" */
+            Volts.of(0.1).per(Second),
+            /* This is in radians per second, but SysId only supports "volts" */
+            Volts.of(1),
+            null, // Use default timeout (10 s)
+            // Log state with SignalLogger class
+            state -> SignalLogger.writeString("SysIdRotation_State", state.toString())
+        ),
+        new SysIdRoutine.Mechanism(
+            output -> {
+                /* output is actually radians per second, but SysId only supports "volts" */
+                clawMotor.setControl(m_rotationCharacterization.withOutput(output.in(Volts)));
+                /* also log the requested output for SysId */
+                SignalLogger.writeDouble("Rotational_Rate", output.in(Volts));
+            },
+            null,
+            this
+        )
+    );
+
+
 
 public Claw(){
     SmartDashboard.putNumber("Claw Pos Algae1", positionAlgae1);
@@ -83,12 +116,16 @@ public Claw(){
     SmartDashboard.putNumber("Claw Pos Neutral", positionNeutral);
 
     configure();
+
+
+
+
+    
 }
 
     public void periodic(){
         voltage=clawMotor.getMotorVoltage().getValueAsDouble();
 
-        current=clawMotor.getStatorCurrent().getValueAsDouble();
         double velocity=clawEncoder.getVelocity().getValueAsDouble();
         encPosition=clawEncoder.getAbsolutePosition().getValueAsDouble();
 
@@ -390,5 +427,30 @@ public Claw(){
         positionNeutral = SmartDashboard.getNumber("Claw Pos Neutral", positionNeutral);
         SmartDashboard.putNumber("Claw pN", positionNeutral);    
     }
+
+
+
+    /**
+     * Runs the SysId Quasistatic test in the given direction for the routine
+     * specified by {@link #m_sysIdRoutineToApply}.
+     *
+     * @param direction Direction of the SysId Quasistatic test
+     * @return Command to run
+     */
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutineRotation.quasistatic(direction);
+    }
+
+    /**
+     * Runs the SysId Dynamic test in the given direction for the routine
+     * specified by {@link #m_sysIdRoutineToApply}.
+     *
+     * @param direction Direction of the SysId Dynamic test
+     * @return Command to run
+     */
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutineRotation.dynamic(direction);
+    }
+
 
 }

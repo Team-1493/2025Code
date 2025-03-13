@@ -132,7 +132,8 @@ public class RobotContainer {
         
 
         stickDriver.button(1).onTrue( new InstantCommand(()-> drivetrain.resetToFieldZero()));
-        zeroRotation.onTrue( new InstantCommand(()-> drivetrain.setRotationToZero()));
+//        zeroRotation.onTrue( new InstantCommand(()-> drivetrain.setRotationToZero()));
+        stickDriver.button(3).onTrue( new InstantCommand(()-> drivetrain.setRotationToZero()));
         stickDriver.button(2).onTrue( new InstantCommand(()-> drivetrain.setFieldZero()));
 
         setSlow.onTrue(new InstantCommand(() ->stickDriver.setSlowScaleFactor()  )  );
