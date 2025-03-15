@@ -31,13 +31,11 @@ public class FollowPoseDirect extends Command {
     private double followPose_Rot_kP=4;
     private double followPose_Rot_kD=.5;
     private double followPose_Trans_maxV=2;
-    private double followPose_Trans_maxA=8;
+    private double followPose_Trans_maxA=4;
     private double followPose_Rot_maxV=10;
     private double followPose_Rot_maxA=20;
 
     ProfiledPIDController pidx, pidy, pidr;
-    PIDController pidxh,pidyh; 
-    HolonomicDriveController hdc;
 
   public FollowPoseDirect(CommandSwerveDrivetrain m_sd, Pose2d m_goalPose) { 
       sd = m_sd;
@@ -57,25 +55,15 @@ public class FollowPoseDirect extends Command {
     pidx.reset(robotPose2d.getX());
     pidy.reset(robotPose2d.getY());
 
-    pidxh.reset();
-    pidyh.reset();
     // FIXME: I don't know what the tolerance should be
     var tolerance = new Pose2d(new Translation2d(1,1),new Rotation2d(0.1));
-    hdc.setTolerance(goalPose);
-    
-
-//    deltaRot=sd.getPose().getRotation().getRadians()-sd.rawGyroInitial;
-//    finalRawRotation=goalPose.getRotation().getRadians()-deltaRot;
-//    goalPose=new Pose2d(goalPose.getX(),goalPose.getY(),new Rotation2d(finalRawRotation));
-    
+    pidr.setTolerance(0.017);   // 1 degree
+    pidx.setTolerance(0.0254);  // 1 inch
+    pidy.setTolerance(0.0254);  // 1 inch
 
     pidx.setGoal(goalPose.getX());
     pidy.setGoal(goalPose.getY());
-//    pidr.setGoal(goalPose.getRotation().getRadians());
-
-
-
-
+    pidr.setGoal(goalPose.getRotation().getRadians());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -86,43 +74,35 @@ public class FollowPoseDirect extends Command {
       robotPose2d=sd.getPose();
       double dx = pidx.calculate(robotPose2d.getX());
       double dy = pidy.calculate(robotPose2d.getY());
-//      double dr = pidr.calculate(robotPose2d.getRotation().getRadians());
+      double dr = pidr.calculate(robotPose2d.getRotation().getRadians());
 
 
       
-      if (Math.abs(pidx.getPositionError())<.03) dx=0;    
-      if (Math.abs(pidy.getPositionError())<.03) dy=0;    
-//      if (Math.abs(pidr.getPositionError())<.01) dr=0;    
+      if (Math.abs(pidx.getPositionError()) < 0.0254) dx=0;    
+      if (Math.abs(pidy.getPositionError()) < 0.0254) dy=0;    
+      if (Math.abs(pidr.getPositionError()) < 0.0254) dr=0;    
 
 
-ChassisSpeeds speeds = hdc.calculate(
-  sd.getPose(),goalPose ,0, goalPose.getRotation());
-
-  
-
-  sd.driveRobotCentric(Math.min(2,speeds.vxMetersPerSecond),
-  Math.min(2,speeds.vyMetersPerSecond)
-  ,speeds.omegaRadiansPerSecond);
-
-  //    sd.driveFieldCentric(dx, dy, dr);
+      sd.driveFieldCentric(dx, dy, dr);
 
   }
 
   @Override
   public boolean isFinished() {
-    return hdc.atReference();
+//    return (pidx.atSetpoint() && pidy.atSetpoint() && pidr.atSetpoint());
+      return false;
   }
 
   @Override 
   public void end(boolean interrupted) {
-    Robot.instance.finishedAutoAlign();
+    sd.Stop();
   }
 
   public void updateControllers(){
 
 
       pidx = new ProfiledPIDController(
-             followPose_Trans_kP*.5,
+             followPose_Trans_kP*.8,
              0,
              followPose_Trans_kD, 
              new TrapezoidProfile.Constraints(
@@ -148,17 +128,6 @@ ChassisSpeeds speeds = hdc.calculate(
        pidr.enableContinuousInput(-Math.PI, Math.PI);
 
 
-       pidxh = new PIDController(
-        followPose_Trans_kP,
-        0,
-        followPose_Trans_kD);
- 
-        pidyh = new PIDController(
-        followPose_Trans_kP,
-        0,
-        followPose_Trans_kD);
-
-      hdc=new HolonomicDriveController(pidxh, pidyh, pidr);
   }
 
 }

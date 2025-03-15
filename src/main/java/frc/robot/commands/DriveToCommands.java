@@ -23,8 +23,8 @@ public class DriveToCommands {
   double intakeOffsetY = VisionSystem.intakeOffsetY;
 
   PathConstraints constraints = new PathConstraints(
-      2.5, 
-      4,
+      2, 
+      2,
       Units.degreesToRadians(360),
       Units.degreesToRadians(450));
 
@@ -51,7 +51,7 @@ public Command getCommandLeft(){
   double dist = distanceToTarget();
   Command drivePath;
 
-  if(dist>0.6)
+  if(dist<0)
 
 //      drivePath= AutoBuilder.pathfindToPose(
 //          targetPose,constraints, 0.0);
@@ -82,7 +82,7 @@ public Command getCommandRight(){
     double dist = distanceToTarget();
     Command drivePath;
   
-    if(dist>0.6)
+    if(dist<0)
   
     drivePath=AutoBuilder.pathfindToPose(targetPose, constraints);
   
@@ -112,7 +112,7 @@ public Command getIntakeCommand(){
       double dist = distanceToTarget();
       Command drivePath;
     
-      if(dist>0.6)
+      if(dist<0)
 
           drivePath= AutoBuilder.pathfindToPose(
               targetPose,constraints, 0.0);

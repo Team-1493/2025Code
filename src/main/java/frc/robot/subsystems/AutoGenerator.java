@@ -96,7 +96,6 @@ public class AutoGenerator {
         //SequentialCommandGroup toReef4 = m_actions.elevatorToReef4;
         //autoSim version
         SequentialCommandGroup toReef4 = new SequentialCommandGroup(
-            new InstantCommand(() -> SmartDashboard.putString("autoSim elevatorGoal", "beginTo4")),
             m_actions.elevatorToReef4,
             new InstantCommand(() -> SmartDashboard.putString("autoSim elevatorGoal", "endTo4"))
         );

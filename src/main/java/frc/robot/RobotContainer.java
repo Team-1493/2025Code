@@ -122,18 +122,17 @@ public class RobotContainer {
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
          
-//        (stickDriver.button(1)).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-//        (stickDriver.button(2)).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-//        (stickDriver.button(3)).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-//        (stickDriver.button(4)).
-//       whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse).
-//       andThen(new InstantCommand( ()-> new WaitCommand(1) )) .
-//       andThen(new InstantCommand( ()->SignalLogger.stop() )));
+//        (stickDriver.button(3)).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+//        (stickDriver.button(4)).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+//        (stickDriver.button(1)).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+//        (stickDriver.button(2)).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+//        stickDriver.button(4).onFalse((new InstantCommand( ()-> new WaitCommand(3) )).
+//                   andThen(new InstantCommand( ()->SignalLogger.stop() )));
         
 
         stickDriver.button(1).onTrue( new InstantCommand(()-> drivetrain.resetToFieldZero()));
-//        zeroRotation.onTrue( new InstantCommand(()-> drivetrain.setRotationToZero()));
-        stickDriver.button(3).onTrue( new InstantCommand(()-> drivetrain.setRotationToZero()));
+        zeroRotation.onTrue( new InstantCommand(()-> drivetrain.setRotationToZero()));
+//        stickDriver.button(3).onTrue( new InstantCommand(()-> drivetrain.setRotationToZero()));
         stickDriver.button(2).onTrue( new InstantCommand(()-> drivetrain.setFieldZero()));
 
         setSlow.onTrue(new InstantCommand(() ->stickDriver.setSlowScaleFactor()  )  );
@@ -149,6 +148,7 @@ public class RobotContainer {
         stickDriver.button(9).whileTrue( new DeferredCommand( 
                 () -> driveToCommands.getIntakeCommand() , Set.of(drivetrain)));
     
+
 
 
         stickOperator.button(1).onTrue(new ElevatorToReefC1(elevator,claw));                     
@@ -176,11 +176,11 @@ public class RobotContainer {
 //        receivedCoral.onTrue(claw.StopRollers());
 
         stickOperator.button(12).onTrue(new InstantCommand(() -> elevator.elevatorRight.setPosition(0)));
-        stickOperator.button(11).whileTrue(elevator.ManualDown());
-        stickOperator.button(11).onFalse(elevator.StopElevator());
+//        stickOperator.button(11).whileTrue(elevator.ManualDown());
+//        stickOperator.button(11).onFalse(elevator.StopElevator());
 
 
-//        stickOperator.button(11).onTrue(new InstantCommand( () -> {updateConstants();}));
+        stickOperator.button(11).onTrue(new InstantCommand( () -> {updateConstants();}));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
@@ -190,10 +190,10 @@ public class RobotContainer {
     }
 
     private void updateConstants(){
-        claw.updateConstants();
-        elevator.updateConstants();
+//        claw.updateConstants();
+//        elevator.updateConstants();
 //        vision.configure();
-//        drivetrain.configure();
+        drivetrain.configure();
      }
 
      public Command zeroElevator(){

@@ -13,9 +13,12 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
+import com.ctre.phoenix6.signals.ForwardLimitTypeValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.ReverseLimitTypeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -60,11 +63,11 @@ private VoltageOut m_rotationCharacterization = new VoltageOut(0);
     
 
 public double 
-        positionAlgae1=-0.428,positionAlgae2 = -0.428, 
-        positionNet = -0.153,positionProcessor=-0.428, 
-        positionCoral1= - 0.153, positionCoral2= - 0.153,
-        positionCoral3 = -0.153,positionCoral4= -0.23,
-        positionIntake = 0.0, positionNeutral = -0.153;   
+        positionAlgae1=-0.035,positionAlgae2 = -0.035, 
+        positionNet = -0.012,positionProcessor=-0.012, 
+        positionCoral1= 0.314, positionCoral2= 0.314,
+        positionCoral3 = 0.314,positionCoral4= 0.270,
+        positionIntake = 0.372, positionNeutral = 0.306;   
 
 
 private DigitalInput limitLower = new DigitalInput(4);
@@ -130,14 +133,9 @@ public Claw(){
         encPosition=clawEncoder.getAbsolutePosition().getValueAsDouble();
 
         atUpperLimit=false;
-        // check mag limit switch
-        if (atUpperLimit && velocity>0 ) stopClaw();
-        if (atLowerLimit && voltage<0 ) stopClaw();
-//        if (current>currentLimit) stopClaw();
-
         checkForCoral();
         checkForAlgae();
-      
+        
 
         if (prevHasCoral &&  !hasCoral) stopRollers();
         if(!prevHasCoral && hasCoral) stopRollers();
@@ -161,7 +159,7 @@ public Claw(){
     }
 
     public void clawUp(){
-        if (!atUpperLimit)  clawMotor.setControl(voltOutUp);
+        if (!atUpperLimit)  clawMotor.setControl(voltOutUp.withLimitForwardMotion(limitUpper.get()));
         else stopClaw();
     }
 
@@ -185,7 +183,6 @@ public Claw(){
 
     public void toPosition(double pos){
         clawMotor.setControl(magicToPos.withPosition(pos));
-//        clawMotor.setControl(positionVolt.withPosition(pos));
     }
 
 
@@ -377,20 +374,26 @@ public Claw(){
 //    cfg.MotorOutput.PeakForwardDutyCycle=.5;
 //    cfg.MotorOutput.PeakForwardDutyCycle=-.5;
 
-    cfg.MotionMagic.MotionMagicCruiseVelocity = 0.6;
-    cfg.MotionMagic.MotionMagicAcceleration = 1.5;
-    cfg.MotionMagic.MotionMagicJerk=30;   
+    cfg.MotionMagic.MotionMagicCruiseVelocity = 0.6 ; // 0.6;
+    cfg.MotionMagic.MotionMagicAcceleration = 1.5;  //1.5
+    cfg.MotionMagic.MotionMagicJerk=15; //30  
 
-    cfg.CurrentLimits.StatorCurrentLimit = 120;
+    cfg.CurrentLimits.StatorCurrentLimit = 80;
     cfg.CurrentLimits.StatorCurrentLimitEnable = true;
-    cfg.CurrentLimits.SupplyCurrentLimit = 120;
+    cfg.CurrentLimits.SupplyCurrentLimit = 40;
     cfg.CurrentLimits.SupplyCurrentLimitEnable=true;
     
     cfg.SoftwareLimitSwitch.ForwardSoftLimitEnable=true;
-    cfg.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0.03;
+    cfg.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0.375;
 
     cfg.SoftwareLimitSwitch.ReverseSoftLimitEnable=true;
-    cfg.SoftwareLimitSwitch.ReverseSoftLimitThreshold = -0.428;
+    cfg.SoftwareLimitSwitch.ReverseSoftLimitThreshold = -0.050;
+
+//    cfg.HardwareLimitSwitch.ForwardLimitEnable = true;
+//    cfg.HardwareLimitSwitch.ReverseLimitEnable = true;
+//    cfg.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue.NormallyClosed;
+//    cfg.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue.NormallyClosed;
+
 
     clawMotor.getConfigurator().apply(cfg);
 
@@ -406,8 +409,8 @@ public Claw(){
 
 
     // Cponfigure encoder
-    cfgEnc.MagnetSensor.AbsoluteSensorDiscontinuityPoint=0.2;
-    cfgEnc.MagnetSensor.MagnetOffset=-0.67553;
+    cfgEnc.MagnetSensor.AbsoluteSensorDiscontinuityPoint=0.8;
+    cfgEnc.MagnetSensor.MagnetOffset = -0.473;
     cfgEnc.MagnetSensor.SensorDirection=SensorDirectionValue.Clockwise_Positive;
     
     clawEncoder.getConfigurator().apply(cfgEnc);

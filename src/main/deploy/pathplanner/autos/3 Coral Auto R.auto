@@ -103,12 +103,6 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "driveToReefWall"
-                }
-              },
-              {
                 "type": "wait",
                 "data": {
                   "waitTime": 0.125
@@ -190,12 +184,6 @@
           "type": "race",
           "data": {
             "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "driveToReefWall"
-                }
-              },
               {
                 "type": "wait",
                 "data": {

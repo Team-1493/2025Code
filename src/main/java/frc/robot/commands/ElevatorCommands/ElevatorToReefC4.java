@@ -45,9 +45,6 @@ public class ElevatorToReefC4 extends Command {
     if (Math.abs(claw.encPosition-claw.positionNeutral)<0.025 && !elevFlag &&claw.hasCoral  ) {
       elevator.toPosition(elevator.positionCoral4);
       elevFlag=true;}
-
-
-
   }
 
   @Override

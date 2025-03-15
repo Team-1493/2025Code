@@ -8,6 +8,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
@@ -47,8 +48,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     boolean pointInDirection=false;
     private double reverseDirection=1;
     public double yawOffset=0;
-    
-
+    private double accX=0,accY=0,accR=0;
+    private double kA_drive=0;
+    private ChassisSpeeds speeds_target = new ChassisSpeeds();
 
 private SwerveRequest.RobotCentric driveRC= new SwerveRequest.RobotCentric()
             .withDriveRequestType(DriveRequestType.Velocity);
@@ -75,7 +77,7 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
         new SysIdRoutine.Config(
             null,        // Use default ramp rate (1 V/s)
-            Volts.of(4), // Reduce dynamic step voltage to 4 V to prevent brownout
+            Volts.of(7), // Reduce dynamic step voltage to 4 V to prevent brownout
             null,        // Use default timeout (10 s)
             // Log state with SignalLogger class
             state -> SignalLogger.writeString("SysIdTranslation_State", state.toString())
@@ -278,6 +280,9 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         SmartDashboard.putNumber("Pose Y",robotpose.getY());
         SmartDashboard.putNumber("Pose Z",robotpose.getRotation().getDegrees());
         SmartDashboard.putNumber("TrueHeading", getTrueHeading()*180/Math.PI);
+        SmartDashboard.putNumber("vX_target", speeds_target.vxMetersPerSecond);
+        SmartDashboard.putNumber("vY_target", speeds_target.vyMetersPerSecond);
+        SmartDashboard.putNumber("vZ_target", speeds_target.omegaRadiansPerSecond);
     }
 
     private void startSimThread() {
@@ -304,16 +309,25 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
     }
 
     public  void driveRobotCentric(ChassisSpeeds speeds) {
-        this.setControl(driveRC.withVelocityX(speeds.vxMetersPerSecond)
-        .withVelocityY(speeds.vyMetersPerSecond)
+        calculateAcceleration(speeds);
+
+        this.setControl(driveRC.
+        withVelocityX(speeds.vxMetersPerSecond+accX*kA_drive)
+        .withVelocityY(speeds.vyMetersPerSecond+accY*kA_drive)
         .withRotationalRate(speeds.omegaRadiansPerSecond)
         );
+
+
 }
 
     public  void driveRobotCentric(double x,double y,double z) {
-            this.setControl(driveRC.withVelocityX(x)
-            .withVelocityY(y)
-            .withRotationalRate(z));
+            calculateAcceleration(x,y,z);
+            speeds_target= new ChassisSpeeds(x+accX*kA_drive,y+accY*kA_drive,z);
+            this.setControl(driveRC.
+            withVelocityX(x+accX*kA_drive)
+            .withVelocityY(y+accY*kA_drive)
+            .withRotationalRate(z)
+            );
     }
 
 // DriveFieldCentric  is used for teleop with joystick control
@@ -328,18 +342,29 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         double y = -stickDriver.getX2()*MaxSpeed*reverseDirection;
         double z = -stickDriver.getRotate()*MaxAngularRate; 
         driveFieldCentric(x, y, z);
+   
+
     }
 
 
     public  void driveFieldCentric(double x,double y, double z) {
+        calculateAcceleration(x,y,z);
+
+//        System.out.println("******   "+
+//        this.getModule(0).getDriveMotor().getTorqueCurrent().getValueAsDouble()
+//        +"     "+ x + "    "+accX*20
+ //       );
+
+        speeds_target= new ChassisSpeeds(x+accX*kA_drive,y+accY*kA_drive,z);
+
         this.setControl(driveFC
-        .withVelocityX(x)
-        .withVelocityY(y)
+        .withVelocityX(x+accX*kA_drive)
+        .withVelocityY(y+accY*kA_drive)
         .withRotationalRate(z));
     }
     
     public void resetToFieldZero(){
-        this.resetRotation(Rotation2d.fromRadians(getYaw()+yawOffset) );
+        this.resetRotation(Rotation2d.fromRadians(getYaw()-yawOffset) );
     }
 
     public void setRotationToZero(){
@@ -372,7 +397,23 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
     }
 
 
-    
+    private void calculateAcceleration(double vx,double vy, double vr){
+        accX = (vx-this.getState().Speeds.vxMetersPerSecond)/0.02;
+        accY = (vy - this.getState().Speeds.vyMetersPerSecond)/0.02;
+        accR = (vr - this.getState().Speeds.omegaRadiansPerSecond)/0.02;
+    }
+
+    private void calculateAcceleration(ChassisSpeeds speeds){
+        double vx = speeds.vxMetersPerSecond;
+        double vy = speeds.vyMetersPerSecond;
+        double vr = speeds.omegaRadiansPerSecond;
+        // ****** had error wiht (), fixed
+        accX = (vx-this.getState().Speeds.vxMetersPerSecond)/0.02;
+        accY = (vy - this.getState().Speeds.vyMetersPerSecond)/0.02;
+        accR = (vr - this.getState().Speeds.omegaRadiansPerSecond)/0.02;
+    }
+
+
 
     public void initializeAutoBuilder(){
         RobotConfig config;
@@ -412,15 +453,15 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
     public void writeInitialConstants(){
 
         // Default constants for open loop voltage control
-        SmartDashboard.putNumber("Drive kP",3);  // 3 for TC,0.1 Voltage
-        SmartDashboard.putNumber("Drive kV",0);  // 0 for TC,0.124 Voltage
-        SmartDashboard.putNumber("Drive kA",0.0);  // 0 for TC
-        SmartDashboard.putNumber("Drive kS",0.0);  // 0 for TC
+        SmartDashboard.putNumber("Drive kP",0.11967);  // 6.5 for TC,0.1 Voltage
+        SmartDashboard.putNumber("Drive kV",0.1226);  // 0 for TC,0.124 Voltage
+        SmartDashboard.putNumber("Drive kA",0);  // 0.08826 for TC
+        SmartDashboard.putNumber("Drive kS",0.16936);  // 0 for TC
 
 
-        SmartDashboard.putNumber("Drive Auto kP",10); 
+        SmartDashboard.putNumber("Drive Auto kP",4); 
         SmartDashboard.putNumber("Drive Auto kD",0);         
-        SmartDashboard.putNumber("Drive Auto rot kP", 5);
+        SmartDashboard.putNumber("Drive Auto rot kP", 4);
         SmartDashboard.putNumber("Drive Auto rot kD", 0);
 
 
@@ -432,7 +473,8 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         Slot0Configs slot0config = new Slot0Configs();
         slot0config.kP=SmartDashboard.getNumber("Drive kP", 0);
         slot0config.kV=SmartDashboard.getNumber("Drive kV", 0);
-        slot0config.kA=SmartDashboard.getNumber("Drive kA", 0);
+        kA_drive=SmartDashboard.getNumber("Drive kA", 0);
+        slot0config.kA=kA_drive;
         slot0config.kS=SmartDashboard.getNumber("Drive kS", 0);
 
 

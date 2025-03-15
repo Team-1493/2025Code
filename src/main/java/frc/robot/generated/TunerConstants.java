@@ -30,13 +30,13 @@ public class TunerConstants {
     // When using closed-loop control, the drive motor uses the control
     // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
 
-//    private static final Slot0Configs driveGains = new Slot0Configs()
-//        .withKP(0.1).withKI(0).withKD(0)
-//        .withKS(0).withKV(0.124);
+    private static final Slot0Configs driveGains = new Slot0Configs()
+        .withKP(0.11967).withKI(0).withKD(0)
+        .withKS(0.1694).withKV(0.1226).withKA(0.08826);
 
-private static final Slot0Configs driveGains = new Slot0Configs()
-        .withKP(3).withKI(0).withKD(0)
-        .withKS(0).withKV(0);
+//private static final Slot0Configs driveGains = new Slot0Configs()
+//        .withKP(3).withKI(0).withKD(0)
+//        .withKS(0).withKV(0).withKA(300);
 
     // The closed-loop output type to use for the steer motors;
     // This affects the PID/FF gains for the steer motors
@@ -45,8 +45,8 @@ private static final Slot0Configs driveGains = new Slot0Configs()
     // This affects the PID/FF gains for the drive motors
 
 
-    private static final ClosedLoopOutputType kDriveClosedLoopOutput = ClosedLoopOutputType.TorqueCurrentFOC;
-//private static final ClosedLoopOutputType kDriveClosedLoopOutput = ClosedLoopOutputType.Voltage;
+//    private static final ClosedLoopOutputType kDriveClosedLoopOutput = ClosedLoopOutputType.TorqueCurrentFOC;
+private static final ClosedLoopOutputType kDriveClosedLoopOutput = ClosedLoopOutputType.Voltage;
 
     // The type of motor used for the drive motor
     private static final DriveMotorArrangement kDriveMotorType = DriveMotorArrangement.TalonFX_Integrated;
