@@ -384,6 +384,7 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
     }
 
     public Pose2d getPose() {
+        
         return this.getState().Pose;
     }
 
@@ -413,6 +414,21 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         accX = (vx-this.getState().Speeds.vxMetersPerSecond)/0.02;
         accY = (vy - this.getState().Speeds.vyMetersPerSecond)/0.02;
         accR = (vr - this.getState().Speeds.omegaRadiansPerSecond)/0.02;
+    }
+
+
+    public ChassisSpeeds getFieldVelocity() {
+        // ChassisSpeeds has a method to convert from field-relative to robot-relative speeds,
+        // but not the reverse.  However, because this transform is a simple rotation, negating the
+        // angle given as the robot angle reverses the direction of rotation, and the conversion is
+        // reversed.
+        ChassisSpeeds robotRelativeSpeeds = this.getKinematics().toChassisSpeeds(this.getState().ModuleStates);
+        return ChassisSpeeds.fromRobotRelativeSpeeds(robotRelativeSpeeds, robotpose.getRotation());
+    }
+
+     public double getSpeed() {
+        ChassisSpeeds fieldVelocity = getFieldVelocity();
+        return Math.sqrt(fieldVelocity.vxMetersPerSecond * fieldVelocity.vxMetersPerSecond + fieldVelocity.vyMetersPerSecond * fieldVelocity.vyMetersPerSecond);
     }
 
 

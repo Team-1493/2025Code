@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Utilities.RobotJoystick;
 import frc.robot.Utilities.Telemetry;
 import frc.robot.Utilities.VisionConstants;
-import frc.robot.commands.DriveToCommands;
+import frc.robot.commands.DriveToCommands2;
 import frc.robot.commands.ReleaseRamp;
 import frc.robot.commands.ZeroElevator;
 import frc.robot.commands.ElevatorCommands.ElevatorToNet;
@@ -68,7 +68,7 @@ public class RobotContainer {
     public final VisionSystem vision = new VisionSystem(drivetrain);
 
 
-    public DriveToCommands driveToCommands = new DriveToCommands(drivetrain);
+    public DriveToCommands2 driveToCommands = new DriveToCommands2(drivetrain);
 
     private Trigger setSlow;
     private Trigger zeroRotation;
