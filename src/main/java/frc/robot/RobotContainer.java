@@ -144,7 +144,10 @@ public class RobotContainer {
 
         stickDriver.button(6).whileTrue( new DeferredCommand( 
             () -> driveToCommands.getCommandRight() , Set.of(drivetrain)));
-    
+
+        stickDriver.button(8).whileTrue( new DeferredCommand( 
+                () -> driveToCommands.getCommandCenter() , Set.of(drivetrain)));
+
         stickDriver.button(9).whileTrue( new DeferredCommand( 
                 () -> driveToCommands.getIntakeCommand() , Set.of(drivetrain)));
     
