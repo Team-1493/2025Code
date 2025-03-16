@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.162114726027397,
-        "y": 3.093407534246575
+        "x": 4.177140410958904,
+        "y": 3.0783818493150683
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.2776492799438013,
-        "y": 2.6312739726027394
+        "x": 3.292674964875308,
+        "y": 2.6162482876712327
       },
       "isLocked": false,
       "linkedName": "Coral_Score_D"
     },
     {
       "anchor": {
-        "x": 0.7813356164383563,
-        "y": 1.049914383561644
+        "x": 1.096875,
+        "y": 1.0048373287671233
       },
       "prevControl": {
-        "x": 1.771701352300668,
-        "y": 1.1238030821917822
+        "x": 2.087240735862312,
+        "y": 1.0787260273972614
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,8 +48,8 @@
   "eventMarkers": [
     {
       "name": "toIntake",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": 1.0,
+      "waypointRelativePos": 0.05,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {

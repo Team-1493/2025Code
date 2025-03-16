@@ -20,7 +20,6 @@ public class VisionConstants {
     public VisionConstants(){
 
     getAlliance();
-        blue=true;
     if(blue)    
     {
     System.out.println("*************************  BLUE");
@@ -93,14 +92,23 @@ public class VisionConstants {
 
 public void getAlliance(){
   
-
-
+    
+    while(DriverStation.getAlliance().isEmpty()){
+        SmartDashboard.putString("Alliance", "Not Yet!");
+        System.out.println("waiting");
+    }
     DriverStation.getAlliance().ifPresent(allianceColor -> {
-            if (allianceColor == Alliance.Red) blue=false;
-            else blue=true;
+            if (allianceColor == Alliance.Red) {
+                blue=false;
+                SmartDashboard.putString("Alliance", "red");
+            }
+            else {
+                blue=true;
+                SmartDashboard.putString("Alliance", "blue");
+            }
     });
 
-    SmartDashboard.putBoolean("Alliance", blue);
+
 }
 
 

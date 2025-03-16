@@ -33,7 +33,7 @@ public class IntakeCoralAuto extends Command {
     elevFlag=false;
     clawFlag=false;
 //    if(elevator.elevatorPos>0.15 && claw.encPosition>.15) claw.toPosition(.15);
-    claw.toPosition(.15);
+    claw.toPosition(claw.positionNeutral);
 claw.rearRollerRev();
 
 
@@ -44,8 +44,7 @@ claw.rearRollerRev();
 
   @Override
   public void execute() {
-//    if (claw.encPosition<0.22 && claw.encPosition>-0.1 &&!elevFlag) {
-  if (claw.encPosition<0.22 &&!elevFlag) {
+  if (Math.abs(claw.encPosition-claw.positionNeutral)<0.025 &&!elevFlag) {
       elevator.toPosition(elevator.positionIntake);
       elevFlag=true;}   
     if (elevator.elevatorPos<0.25){

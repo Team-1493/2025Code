@@ -45,7 +45,8 @@ i=0;
   @Override
   public void execute() {
 //    if (claw.encPosition<0.22 && claw.encPosition>-0.1 &&!elevFlag) {
-  if (claw.encPosition<0.22 &&!elevFlag) {
+
+  if (Math.abs(claw.encPosition-claw.positionNeutral)<0.025) {
       elevator.toPosition(elevator.positionIntake);
       elevFlag=true;}   
     if (elevator.elevatorPos<0.25){

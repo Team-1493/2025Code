@@ -77,7 +77,7 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
         new SysIdRoutine.Config(
             null,        // Use default ramp rate (1 V/s)
-            Volts.of(7), // Reduce dynamic step voltage to 4 V to prevent brownout
+            Volts.of(9), // Reduce dynamic step voltage to 4 V to prevent brownout
             null,        // Use default timeout (10 s)
             // Log state with SignalLogger class
             state -> SignalLogger.writeString("SysIdTranslation_State", state.toString())
@@ -401,6 +401,8 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         accX = (vx-this.getState().Speeds.vxMetersPerSecond)/0.02;
         accY = (vy - this.getState().Speeds.vyMetersPerSecond)/0.02;
         accR = (vr - this.getState().Speeds.omegaRadiansPerSecond)/0.02;
+
+        
     }
 
     private void calculateAcceleration(ChassisSpeeds speeds){

@@ -3,36 +3,36 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.162114726027397,
-        "y": 4.941566780821918
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 3.4421205451775974,
-        "y": 5.635546881071504
-      },
-      "isLocked": false,
-      "linkedName": "Coral_Score_K"
-    },
-    {
-      "anchor": {
         "x": 0.9766695205479452,
         "y": 6.955008561643836
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.7452256944444433,
+        "y": 4.863541666666666
+      },
+      "isLocked": false,
+      "linkedName": "Coral_Intake_1"
+    },
+    {
+      "anchor": {
+        "x": 3.645920138888888,
+        "y": 4.192708333333333
+      },
       "prevControl": {
-        "x": 1.9401692613872226,
-        "y": 6.687299298818197
+        "x": 2.5138888888888884,
+        "y": 4.080902777777777
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Coral_Intake_1"
+      "linkedName": "Coral_Score_A"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.75,
+      "minWaypointRelativePos": 0.74,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 1.5,
@@ -47,13 +47,13 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "toIntake",
-      "waypointRelativePos": 0.05,
+      "name": "toReef4",
+      "waypointRelativePos": 0.22,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "toIntake"
+          "name": "toReef4"
         }
       }
     }
@@ -68,13 +68,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -52.50130060603152
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "2 Coral Auto L Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -58.642999999999994
+    "rotation": -52.50130060603152
   },
   "useDefaultConstraints": true
 }

@@ -83,8 +83,8 @@ public class VisionSystem extends SubsystemBase {
         camFR = new AprilTagCam("Spinel_R", camFR_RobotToCam,
             dt);
 
-//        camB = new AprilTagCam("OV9281_1", camB_RobotToCam,
-//               dt);           
+        camB = new AprilTagCam("OV9281_2", camB_RobotToCam,
+               dt);           
             
 
 
@@ -97,7 +97,7 @@ public class VisionSystem extends SubsystemBase {
   public void periodic(){ 
             camFL.getEstimatedGlobalPose();
             camFR.getEstimatedGlobalPose();
-//            camB.getEstimatedGlobalPose();
+            //camB.getEstimatedGlobalPose();
 //            visionSim.update(dt.getPose());
     }
 

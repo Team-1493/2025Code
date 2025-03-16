@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of 1. Start to J"
+            "pathName": "1. Start to J"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of 2. J to Human"
+            "pathName": "2. J to Human"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of 3. Human to K"
+            "pathName": "3. Human to K"
           }
         },
         {
@@ -43,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of 4. K to Human"
+            "pathName": "4. K to Human"
           }
         },
         {
@@ -55,7 +55,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of 5. Human to L"
+            "pathName": "5. Human to L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "spitCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "6. L to Human"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.4
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "7. Human to L"
           }
         },
         {

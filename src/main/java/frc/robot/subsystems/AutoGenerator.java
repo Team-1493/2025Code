@@ -104,7 +104,6 @@ public class AutoGenerator {
         //SequentialCommandGroup toIntake = m_actions.elevatorToIntake;
         //autoSim version
         SequentialCommandGroup toIntake = new SequentialCommandGroup(
-            new InstantCommand(() -> SmartDashboard.putString("autoSim elevatorGoal", "beginToIntake")),
             m_actions.elevatorToIntake,
             new InstantCommand(() -> SmartDashboard.putString("autoSim elevatorGoal", "endToIntake"))
         );

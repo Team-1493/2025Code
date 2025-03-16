@@ -11,41 +11,9 @@
           }
         },
         {
-          "type": "race",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "driveToReefWall"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.125
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "spitCoral"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.125
-                }
-              }
-            ]
+            "name": "spitCoral"
           }
         },
         {
@@ -55,41 +23,9 @@
           }
         },
         {
-          "type": "race",
+          "type": "wait",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "driveToIntakeWall"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.125
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "intakeCoral"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.125
-                }
-              }
-            ]
+            "waitTime": 0.4
           }
         },
         {
@@ -99,41 +35,9 @@
           }
         },
         {
-          "type": "race",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "driveToReefWall"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.125
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "spitCoral"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.125
-                }
-              }
-            ]
+            "name": "spitCoral"
           }
         },
         {
@@ -143,41 +47,9 @@
           }
         },
         {
-          "type": "race",
+          "type": "wait",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "driveToIntakeWall"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.125
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "intakeCoral"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.125
-                }
-              }
-            ]
+            "waitTime": 0.4
           }
         },
         {
@@ -187,41 +59,15 @@
           }
         },
         {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.125
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "race",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "spitCoral"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.125
-                }
-              }
-            ]
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "autoComplete"
+            "name": "spitCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "6. L to Human"
           }
         }
       ]

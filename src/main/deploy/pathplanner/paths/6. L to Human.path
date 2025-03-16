@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.162114726027397,
-        "y": 4.941566780821918
+        "x": 3.9114583333333326,
+        "y": 4.667881944444444
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.4421205451775974,
-        "y": 5.635546881071504
+        "x": 3.290482305936071,
+        "y": 5.539878234398782
       },
       "isLocked": false,
-      "linkedName": "Coral_Score_K"
+      "linkedName": "Coral_Score_L"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 6.955008561643836
       },
       "prevControl": {
-        "x": 1.9401692613872226,
-        "y": 6.687299298818197
+        "x": 1.9129340277777767,
+        "y": 6.638454861111111
       },
       "nextControl": null,
       "isLocked": false,
@@ -67,7 +67,7 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 0.0,
     "rotation": -52.50130060603152
   },
   "reversed": false,

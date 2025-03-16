@@ -26,7 +26,7 @@ public class FollowPoseDirect extends Command {
     double finalRawRotation;
     double deltaRot;
     VisionConstants vc = new VisionConstants();
-    private double followPose_Trans_kP=2;
+    private double followPose_Trans_kP=3;
     private double followPose_Trans_kD=.1;
     private double followPose_Rot_kP=4;
     private double followPose_Rot_kD=.5;
@@ -78,9 +78,9 @@ public class FollowPoseDirect extends Command {
 
 
       
-      if (Math.abs(pidx.getPositionError()) < 0.0254) dx=0;    
-      if (Math.abs(pidy.getPositionError()) < 0.0254) dy=0;    
-      if (Math.abs(pidr.getPositionError()) < 0.0254) dr=0;    
+//      if (Math.abs(pidx.getPositionError()) < 0.0254) dx=0;    
+//      if (Math.abs(pidy.getPositionError()) < 0.0254) dy=0;    
+//      if (Math.abs(pidr.getPositionError()) < 0.0254) dr=0;    
 
 
       sd.driveFieldCentric(dx, dy, dr);

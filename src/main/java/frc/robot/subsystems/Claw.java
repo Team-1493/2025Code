@@ -69,7 +69,6 @@ public double
         positionCoral3 = 0.314,positionCoral4= 0.270,
         positionIntake = 0.372, positionNeutral = 0.306;   
 
-
 private DigitalInput limitLower = new DigitalInput(4);
 private DigitalInput limitUpper = new DigitalInput(1);
 public DigitalInput coralSensor = new DigitalInput(7);
@@ -129,6 +128,9 @@ public Claw(){
     public void periodic(){
         voltage=clawMotor.getMotorVoltage().getValueAsDouble();
 
+        double currentRear = clawRearRoller.getStatorCurrent().getValueAsDouble();
+        double currentFront = clawFrontRoller.getStatorCurrent().getValueAsDouble();
+
         double velocity=clawEncoder.getVelocity().getValueAsDouble();
         encPosition=clawEncoder.getAbsolutePosition().getValueAsDouble();
 
@@ -144,7 +146,9 @@ public Claw(){
         SmartDashboard.putNumber("Claw Enc SetPosition", clawMotor.getClosedLoopReference().getValueAsDouble());    
 
 //        SmartDashboard.putNumber("Claw Voltqqq",voltage);
-//        SmartDashboard.putNumber("Claw Current", current);
+        SmartDashboard.putNumber("Front RollerCurrent", currentFront);
+        SmartDashboard.putNumber("Rear RollerCurrent", currentRear);
+
 
 //        SmartDashboard.putBoolean("Claw LLS",atLowerLimit);
 //        SmartDashboard.putBoolean("Claw ULS",atUpperLimit);
@@ -329,6 +333,10 @@ public Claw(){
             prevHasCoral=hasCoral;
             if (!coralSensor.get()) hasCoral=true;
             else hasCoral=false;
+
+       
+
+
     }
 
     public boolean pickedUpCoral(){

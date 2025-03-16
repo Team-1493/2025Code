@@ -126,13 +126,13 @@ public class RobotContainer {
 //        (stickDriver.button(4)).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
 //        (stickDriver.button(1)).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
 //        (stickDriver.button(2)).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-//        stickDriver.button(4).onFalse((new InstantCommand( ()-> new WaitCommand(3) )).
-//                   andThen(new InstantCommand( ()->SignalLogger.stop() )));
+//       stickDriver.button(4).onFalse((new InstantCommand( ()-> new WaitCommand(3) )).
+//                  andThen(new InstantCommand( ()->SignalLogger.stop() )));
         
 
         stickDriver.button(1).onTrue( new InstantCommand(()-> drivetrain.resetToFieldZero()));
         zeroRotation.onTrue( new InstantCommand(()-> drivetrain.setRotationToZero()));
-//        stickDriver.button(3).onTrue( new InstantCommand(()-> drivetrain.setRotationToZero()));
+        stickDriver.button(3).onTrue( new InstantCommand(()-> drivetrain.setRotationToZero()));
         stickDriver.button(2).onTrue( new InstantCommand(()-> drivetrain.setFieldZero()));
 
         setSlow.onTrue(new InstantCommand(() ->stickDriver.setSlowScaleFactor()  )  );
