@@ -33,6 +33,8 @@ public class Claw extends SubsystemBase {
 private TalonFX clawMotor = new TalonFX(23);
 private TalonFX clawFrontRoller = new TalonFX(24);
 private TalonFX clawRearRoller = new TalonFX(25);
+private TalonFX chuteRoller = new TalonFX(28);
+
 private TalonFXConfiguration cfgRollers = new TalonFXConfiguration();
 private TalonFXConfiguration cfg = new TalonFXConfiguration();
 private CANcoderConfiguration cfgEnc = new CANcoderConfiguration();
@@ -41,12 +43,15 @@ private CANcoder clawEncoder = new CANcoder(27);
 private MotionMagicVoltage magicToPos= new MotionMagicVoltage(0);
 private PositionVoltage positionVolt = new PositionVoltage(0);
 private VoltageOut voltOutUp = new VoltageOut(1);
+private VoltageOut voltOutChuteRoller = new VoltageOut(-3.8);
+
 private VoltageOut voltOutDown = new VoltageOut(-.5);
 private VoltageOut  voltOutRearForward= new VoltageOut(4);
 private VoltageOut  voltOutRearReverse= new VoltageOut(-3);
 private VoltageOut  voltOutFrontForward= new VoltageOut(4);
 private VoltageOut  voltOutFrontReverse= new VoltageOut(-4);
 private VoltageOut  voltOutSpitCoral = new VoltageOut(-8);
+private VoltageOut  voltOutSpitCoralL1 = new VoltageOut(-4);
 private VoltageOut  voltOutFrontHold= new VoltageOut(-.6);
 private VoltageOut  voltOutRearHold= new VoltageOut(.6);
 private VoltageOut  voltOutFrontSpitAlgae= new VoltageOut(13);
@@ -64,13 +69,13 @@ private VoltageOut m_rotationCharacterization = new VoltageOut(0);
 
 public double 
         positionAlgae1=-0.035,positionAlgae2 = -0.035, 
-        positionNet = -0.012,positionProcessor=-0.012, 
+        positionNet = -0.012,positionProcessor=-0.1, 
         positionCoral1= 0.314, positionCoral2= 0.314,
-        positionCoral3 = 0.314,positionCoral4= 0.270,
+        positionCoral3 = 0.314,positionCoral4= 0.235,
         positionIntake = 0.372, positionNeutral = 0.306;   
 
-private DigitalInput limitLower = new DigitalInput(4);
-private DigitalInput limitUpper = new DigitalInput(1);
+private DigitalInput limitLower = new DigitalInput(1);
+private DigitalInput limitUpper = new DigitalInput(4);
 public DigitalInput coralSensor = new DigitalInput(7);
 
 private boolean atLowerLimit=false,atUpperLimit=false;
@@ -134,7 +139,8 @@ public Claw(){
         double velocity=clawEncoder.getVelocity().getValueAsDouble();
         encPosition=clawEncoder.getAbsolutePosition().getValueAsDouble();
 
-        atUpperLimit=false;
+        atUpperLimit=!limitUpper.get();
+//        if (atUpperLimit && clawEncoder.getVelocity().getValueAsDouble()>0) stopClaw(); 
         checkForCoral();
         checkForAlgae();
         
@@ -150,8 +156,7 @@ public Claw(){
         SmartDashboard.putNumber("Rear RollerCurrent", currentRear);
 
 
-//        SmartDashboard.putBoolean("Claw LLS",atLowerLimit);
-//        SmartDashboard.putBoolean("Claw ULS",atUpperLimit);
+        SmartDashboard.putBoolean("Claw ULS",atUpperLimit);
 
         SmartDashboard.putBoolean("Coral Sensor", hasCoral);
 //        SmartDashboard.putBoolean("Algae Sensor", hasAlgae);
@@ -163,7 +168,7 @@ public Claw(){
     }
 
     public void clawUp(){
-        if (!atUpperLimit)  clawMotor.setControl(voltOutUp.withLimitForwardMotion(limitUpper.get()));
+        if (!atUpperLimit)  clawMotor.setControl(voltOutUp);
         else stopClaw();
     }
 
@@ -253,6 +258,14 @@ public Claw(){
         clawRearRoller.setControl(voltOutSpitCoral);
     }
 
+    public Command SpitCoralL1() {
+        return runOnce( () -> {spitCoral();});
+    }
+
+    public void spitCoralL1(){
+        clawRearRoller.setControl(voltOutSpitCoralL1);
+    }
+
 
     public void stopRollerRear(){
         clawRearRoller.stopMotor();
@@ -305,10 +318,20 @@ public Claw(){
     public void frontRollerStop(){
         clawFrontRoller.stopMotor();
     }
+
+    public void chuteRollerStop(){
+        chuteRoller.stopMotor();
+    }
+
+    public void chuteRollerRun(){
+        chuteRoller.setControl(voltOutChuteRoller);
+    }
     
+
     public void stopRollers(){
         clawFrontRoller.stopMotor();
         clawRearRoller.stopMotor();
+        chuteRoller.stopMotor();
     }
 
 
@@ -382,9 +405,9 @@ public Claw(){
 //    cfg.MotorOutput.PeakForwardDutyCycle=.5;
 //    cfg.MotorOutput.PeakForwardDutyCycle=-.5;
 
-    cfg.MotionMagic.MotionMagicCruiseVelocity = 0.6 ; // 0.6;
-    cfg.MotionMagic.MotionMagicAcceleration = 1.5;  //1.5
-    cfg.MotionMagic.MotionMagicJerk=15; //30  
+    cfg.MotionMagic.MotionMagicCruiseVelocity = 1.2 ; // 0.6;
+    cfg.MotionMagic.MotionMagicAcceleration = 2.4;  //1.5
+    cfg.MotionMagic.MotionMagicJerk=20; //30  
 
     cfg.CurrentLimits.StatorCurrentLimit = 80;
     cfg.CurrentLimits.StatorCurrentLimitEnable = true;
@@ -395,7 +418,7 @@ public Claw(){
     cfg.SoftwareLimitSwitch.ForwardSoftLimitThreshold = 0.375;
 
     cfg.SoftwareLimitSwitch.ReverseSoftLimitEnable=true;
-    cfg.SoftwareLimitSwitch.ReverseSoftLimitThreshold = -0.050;
+    cfg.SoftwareLimitSwitch.ReverseSoftLimitThreshold = -0.11;
 
 //    cfg.HardwareLimitSwitch.ForwardLimitEnable = true;
 //    cfg.HardwareLimitSwitch.ReverseLimitEnable = true;

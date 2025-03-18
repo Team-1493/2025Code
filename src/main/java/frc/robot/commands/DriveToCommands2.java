@@ -27,13 +27,14 @@ import frc.robot.subsystems.VisionSystem;
 
 public class DriveToCommands2 {
   Pose2d targetPose,endPose;
-  double reefOffsetX = VisionSystem.reefOffsetX;
+  double reefOffsetXLeft = VisionSystem.reefOffsetXLeft+.075;
+  double reefOffsetXRight = VisionSystem.reefOffsetXRight+.075;
   double reefOffsetY = VisionSystem.reefOffsetY;
   double intakeOffsetX = VisionSystem.intakeOffsetX;
   double intakeOffsetY = VisionSystem.intakeOffsetY;
 
   PathConstraints constraints = new PathConstraints(
-      2, 
+      1.75, 
       2,
       Units.degreesToRadians(360),
       Units.degreesToRadians(450));
@@ -56,14 +57,14 @@ public Command getCommandLeft(){
   double rotRobot=rotTarget+Math.PI;
 
   endPose = new Pose2d(
-    targetPose.getX()+ reefOffsetX*Math.sin(rotTarget)+(reefOffsetY)*Math.cos(rotTarget),
-    targetPose.getY() - reefOffsetX*Math.cos(rotTarget)+(reefOffsetY)*Math.sin(rotTarget),
+    targetPose.getX()+ reefOffsetXLeft*Math.sin(rotTarget)+(reefOffsetY - 0.15)*Math.cos(rotTarget),
+    targetPose.getY() - reefOffsetXLeft*Math.cos(rotTarget)+(reefOffsetY - 0.15)*Math.sin(rotTarget),
     new Rotation2d(rotRobot));
 
 
   targetPose = new Pose2d(
-    targetPose.getX()+reefOffsetX*Math.sin(rotTarget)+(reefOffsetY+.8)*Math.cos(rotTarget),
-    targetPose.getY()-reefOffsetX*Math.cos(rotTarget)+(reefOffsetY+.8)*Math.sin(rotTarget),
+    targetPose.getX()+reefOffsetXLeft*Math.sin(rotTarget)+(reefOffsetY+ 0.5)*Math.cos(rotTarget),
+    targetPose.getY()-reefOffsetXLeft*Math.cos(rotTarget)+(reefOffsetY+ 0.5)*Math.sin(rotTarget),
     new Rotation2d(rotRobot));
   
     double dist = distanceToTarget();
@@ -84,6 +85,7 @@ public Command getCommandLeft(){
         );
 
         path.preventFlipping = true;
+
 
         return (AutoBuilder.followPath(path).andThen(
             Commands.print("start position PID loop"),
@@ -112,14 +114,14 @@ public Command getCommandRight(){
   double rotRobot=rotTarget+Math.PI;
 
   endPose = new Pose2d(
-    targetPose.getX()-reefOffsetX*Math.sin(rotTarget)+(reefOffsetY)*Math.cos(rotTarget),
-    targetPose.getY()+reefOffsetX*Math.cos(rotTarget)+(reefOffsetY)*Math.sin(rotTarget),
+    targetPose.getX()-reefOffsetXRight*Math.sin(rotTarget)+(reefOffsetY - 0.15)*Math.cos(rotTarget),
+    targetPose.getY()+reefOffsetXRight*Math.cos(rotTarget)+(reefOffsetY - 0.15)*Math.sin(rotTarget),
     new Rotation2d(rotRobot));
 
 
   targetPose = new Pose2d(
-    targetPose.getX()-reefOffsetX*Math.sin(rotTarget)+(reefOffsetY+.8)*Math.cos(rotTarget),
-    targetPose.getY()+reefOffsetX*Math.cos(rotTarget)+(reefOffsetY+.8)*Math.sin(rotTarget),
+    targetPose.getX()-reefOffsetXRight*Math.sin(rotTarget)+(reefOffsetY+ .5)*Math.cos(rotTarget),
+    targetPose.getY()+reefOffsetXRight*Math.cos(rotTarget)+(reefOffsetY+ 0.5)*Math.sin(rotTarget),
     new Rotation2d(rotRobot));
 
     double dist = distanceToTarget();    
@@ -170,8 +172,129 @@ public Command getCommandCenter(){
 
 
   targetPose = new Pose2d(
-    targetPose.getX()+(reefOffsetY+.8)*Math.cos(rotTarget),
-    targetPose.getY()+(reefOffsetY+.8)*Math.sin(rotTarget),
+    targetPose.getX()+(reefOffsetY+ 0.5)*Math.cos(rotTarget),
+    targetPose.getY()+(reefOffsetY+ 0.5)*Math.sin(rotTarget),
+    new Rotation2d(rotRobot));
+
+    double dist = distanceToTarget();    
+
+    List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
+      new Pose2d(sd.getPose().getTranslation(), getPathVelocityHeading(sd.getFieldVelocity(), targetPose)),
+      targetPose
+  );
+
+    IdealStartingState iss = new IdealStartingState(
+          getVelocityMagnitude(sd.getFieldVelocity()), sd.getPose().getRotation());
+
+          PathPlannerPath path = new PathPlannerPath(
+            waypoints, 
+            constraints,iss, 
+            new GoalEndState(1, targetPose.getRotation())
+        );
+
+        path.preventFlipping = true;
+
+        return (AutoBuilder.followPath(path).andThen(
+            Commands.print("start position PID loop"),
+            PositionPIDCommand.generateCommand(sd, endPose, (
+                DriverStation.isAutonomous() ? kAutoAlignAdjustTimeout : kTeleopAlignAdjustTimeout
+            ))
+         )).finallyDo((interupt) -> {
+            if (interupt) { //if this is false then the position pid would've X braked & called the same method
+                sd.stop();
+            }
+        });
+
+}
+
+
+
+public Command getIntakeCommand(){
+
+  boolean blue = VisionConstants.blue;
+  int id = 13;
+  double yr = sd.getPose().getY();
+  if (yr>4.055) id = blue ? 13 : 1;
+  else id = blue ? 12 : 2;
+
+  int index = id-1;
+
+  targetPose = VisionConstants.aprilTagList.get(index).pose.toPose2d();
+  double rotTarget = targetPose.getRotation().getRadians();
+  double rotRobot=rotTarget;
+
+  endPose = new Pose2d(
+    targetPose.getX()+(reefOffsetY)*Math.cos(rotTarget),
+    targetPose.getY()+(reefOffsetY)*Math.sin(rotTarget),
+    new Rotation2d(rotRobot));
+
+
+  targetPose = new Pose2d(
+    targetPose.getX()+(reefOffsetY+ 0.5)*Math.cos(rotTarget),
+    targetPose.getY()+(reefOffsetY+ 0.5)*Math.sin(rotTarget),
+    new Rotation2d(rotRobot));
+
+    double dist = distanceToTarget();    
+
+    List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
+      new Pose2d(sd.getPose().getTranslation(), getPathVelocityHeading(sd.getFieldVelocity(), targetPose)),
+      targetPose
+  );
+
+    IdealStartingState iss = new IdealStartingState(
+          getVelocityMagnitude(sd.getFieldVelocity()), sd.getPose().getRotation());
+
+          PathPlannerPath path = new PathPlannerPath(
+            waypoints, 
+            constraints,iss, 
+            new GoalEndState(1, targetPose.getRotation())
+        );
+
+        path.preventFlipping = true;
+
+/*         return (AutoBuilder.followPath(path).andThen(
+            Commands.print("start position PID loop"),
+            PositionPIDCommand.generateCommand(sd, endPose, (
+                DriverStation.isAutonomous() ? kAutoAlignAdjustTimeout : kTeleopAlignAdjustTimeout
+            ))
+         )).finallyDo((interupt) -> {
+            if (interupt) { //if this is false then the position pid would've X braked & called the same method
+                sd.stop();
+            }
+        });
+*/
+
+
+        
+        return (AutoBuilder.followPath(path).
+        andThen(sd.Stop()));
+
+}
+
+
+public Command getProcessorCommand(){
+
+  boolean blue = VisionConstants.blue;
+  int id = 16;
+  double yr = sd.getPose().getY();
+  if (blue) id=16;
+  else id = 3;
+
+  int index = id-1;
+
+  targetPose = VisionConstants.aprilTagList.get(index).pose.toPose2d();
+  double rotTarget = targetPose.getRotation().getRadians();
+  double rotRobot=rotTarget+Math.PI;
+
+  endPose = new Pose2d(
+    targetPose.getX()+(reefOffsetY)*Math.cos(rotTarget),
+    targetPose.getY()+(reefOffsetY)*Math.sin(rotTarget),
+    new Rotation2d(rotRobot));
+
+
+  targetPose = new Pose2d(
+    targetPose.getX()+(reefOffsetY+ 0.45)*Math.cos(rotTarget),
+    targetPose.getY()+(reefOffsetY+ 0.45)*Math.sin(rotTarget),
     new Rotation2d(rotRobot));
 
     double dist = distanceToTarget();    
@@ -208,6 +331,7 @@ public Command getCommandCenter(){
 
 
 
+/* 
 
 public Command getIntakeCommand(){
   boolean blue = VisionConstants.blue;
@@ -240,7 +364,7 @@ public Command getIntakeCommand(){
       return (drivePath);
 }
 
-
+*/
 
 
 private double distanceToTarget(){

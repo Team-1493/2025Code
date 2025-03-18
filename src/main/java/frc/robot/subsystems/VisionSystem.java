@@ -12,6 +12,8 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.Utilities.VisionConstants;
@@ -26,7 +28,8 @@ public class VisionSystem extends SubsystemBase {
     public static boolean hasReefTarget;
     public static int closestReefID=0;
     public static double closestReefDist=999;
-    public static double reefOffsetX=.11;//0.185
+    public static double reefOffsetXLeft=.0846;//0.185
+    public static double reefOffsetXRight=.13;//0.11
     public static double reefOffsetY=.29;//.210
     public static double intakeOffsetX=0;
     public static double intakeOffsetY=.5;
@@ -59,7 +62,7 @@ public class VisionSystem extends SubsystemBase {
         SmartDashboard.putNumber("std multi Rot", 2);
         SmartDashboard.putNumber("std factor", stdFactor);
 
-        SmartDashboard.putNumber("ReefOffsetX", reefOffsetX);
+//        SmartDashboard.putNumber("ReefOffsetX", reefOffsetX);
         SmartDashboard.putNumber("ReefOffsetY", reefOffsetY);
         SmartDashboard.putNumber("IntakeOffsetX", intakeOffsetX);
         SmartDashboard.putNumber("IntakeOffsetY", intakeOffsetY);
@@ -115,7 +118,7 @@ public class VisionSystem extends SubsystemBase {
 
         stdFactor = SmartDashboard.getNumber("std factor", stdFactor);
 
-        reefOffsetX = SmartDashboard.getNumber("ReefOffsetX", reefOffsetX);
+//        reefOffsetX = SmartDashboard.getNumber("ReefOffsetX", reefOffsetX);
         reefOffsetY = SmartDashboard.getNumber("ReefOffsetY", reefOffsetY);
         intakeOffsetX = SmartDashboard.getNumber("IntakeOffsetX", intakeOffsetX);
         intakeOffsetY = SmartDashboard.getNumber("IntakeOffsetY", intakeOffsetY);                    

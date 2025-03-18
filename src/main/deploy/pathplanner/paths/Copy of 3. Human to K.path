@@ -35,7 +35,7 @@
       "minWaypointRelativePos": 0.7627118644067783,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.5,
+        "maxVelocity": 1.25,
         "maxAcceleration": 2.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -48,7 +48,7 @@
   "eventMarkers": [
     {
       "name": "toReef4",
-      "waypointRelativePos": 0.22,
+      "waypointRelativePos": 0.20338983050847456,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.838270547945205,
-        "y": 3.0633561643835616
+        "x": 4.808,
+        "y": 3.109
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.337053038285916,
-        "y": 2.2665804794520557
+        "x": 4.30678249034071,
+        "y": 2.312224315068494
       },
       "isLocked": false,
       "linkedName": "Coral_Score_E"
@@ -35,7 +35,7 @@
       "minWaypointRelativePos": 0.7491525423728821,
       "maxWaypointRelativePos": 0.28135593220338984,
       "constraints": {
-        "maxVelocity": 2.0,
+        "maxVelocity": 1.25,
         "maxAcceleration": 2.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -48,7 +48,7 @@
   "eventMarkers": [
     {
       "name": "toIntake",
-      "waypointRelativePos": 0.05,
+      "waypointRelativePos": 0.14915254237288142,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

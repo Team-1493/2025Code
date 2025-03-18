@@ -28,10 +28,10 @@ public class Elevator extends SubsystemBase{
     private VoltageOut voltOutDown = new VoltageOut(-.6);
     
     public double 
-            positionAlgae1=15,positionAlgae2 = 30, 
-            positionNet=43, positionProcessor=5, 
+            positionAlgae1=13,positionAlgae2 = 24, 
+            positionNet=43, positionProcessor=0, 
             positionCoral1=5.5, positionCoral2=7.5,
-            positionCoral3=19.5,positionCoral4=42,
+            positionCoral3=19.5,positionCoral4=42.25,
             positionIntake=0;
     public double elevatorPos=0;
     boolean zeroed=false,atLowerLimit=false,atUpperLimit=false;
@@ -210,9 +210,9 @@ public Elevator(){
     cfg.MotorOutput.Inverted=InvertedValue.Clockwise_Positive;
     cfg.MotorOutput.NeutralMode=NeutralModeValue.Brake;
 
-    cfg.MotionMagic.MotionMagicCruiseVelocity=50;
-    cfg.MotionMagic.MotionMagicAcceleration=70;
-    cfg.MotionMagic.MotionMagicJerk=160;   
+    cfg.MotionMagic.MotionMagicCruiseVelocity=60;
+    cfg.MotionMagic.MotionMagicAcceleration=80;
+    cfg.MotionMagic.MotionMagicJerk=170;   
 
     cfg.Slot0.GravityType=GravityTypeValue.Elevator_Static;
 

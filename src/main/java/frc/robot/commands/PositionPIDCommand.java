@@ -31,8 +31,8 @@ public class PositionPIDCommand extends Command{
     
     public CommandSwerveDrivetrain sd;
     public final Pose2d goalPose;
-    public static final PIDConstants kTranslationPID = new PIDConstants(1.0,0,0);
-    public static final PIDConstants kRotationPID = new PIDConstants(1.0,0,0);
+    public static final PIDConstants kTranslationPID = new PIDConstants(5.0,0,0);
+    public static final PIDConstants kRotationPID = new PIDConstants(5.0,0,0);
     public static final Rotation2d kRotationTolerance = Rotation2d.fromDegrees(2.0);
     public static final Distance kPositionTolerance = Centimeter.of(2.0);
     public static final LinearVelocity kSpeedTolerance = InchesPerSecond.of(1);    
@@ -93,12 +93,14 @@ public class PositionPIDCommand extends Command{
         PathPlannerTrajectoryState goalState = new PathPlannerTrajectoryState();
         goalState.pose = goalPose;
 
+        ChassisSpeeds speeds =mDriveController.calculateRobotRelativeSpeeds(
+            sd.getPose(), goalState);
 
-        sd.driveRobotCentric(
-            mDriveController.calculateRobotRelativeSpeeds(
-                sd.getPose(), goalState
-            )
-        );
+        speeds = new ChassisSpeeds(Math.min(speeds.vxMetersPerSecond, 1.0),
+                Math.min(speeds.vyMetersPerSecond, 1.0),
+                speeds.omegaRadiansPerSecond);
+
+        sd.driveRobotCentric(speeds);
 
     }
 

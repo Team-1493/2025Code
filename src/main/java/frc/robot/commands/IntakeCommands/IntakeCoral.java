@@ -33,8 +33,9 @@ public class IntakeCoral extends Command {
     elevFlag=false;
     clawFlag=false;
 //    if(elevator.elevatorPos>0.15 && claw.encPosition>.15) claw.toPosition(.15);
-    claw.toPosition(.15);
+    claw.toPosition(claw.positionNeutral);
 claw.rearRollerRev();
+claw.chuteRollerRun();
 i=0;
 
 

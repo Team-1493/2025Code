@@ -40,13 +40,13 @@ import frc.robot.subsystems.AutoGenerator;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
-// import frc.robot.subsystems.RearIntake;
+ import frc.robot.subsystems.RearIntake;
 import frc.robot.subsystems.VisionSystem;
 
 public class RobotContainer {
     private Elevator elevator = new Elevator();
     public Claw claw = new Claw();
-//    private RearIntake rearIntake = new RearIntake();
+    private RearIntake rearIntake = new RearIntake();
     
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -71,22 +71,12 @@ public class RobotContainer {
     public DriveToCommands2 driveToCommands = new DriveToCommands2(drivetrain);
 
     private Trigger setSlow;
-    private Trigger zeroRotation;
-    //private Trigger manualClawUp;
-    //private Trigger manualClawDown;
-    //private Trigger manualElevatorUp;
-    //private Trigger manualElevatorDown;
 
     
 
     public RobotContainer() {
-     //   manualClawUp = new Trigger(() -> stickDriver.getRawAxis(3)>.1);
-     //   manualClawDown = new Trigger(() -> stickDriver.getRawAxis(3)<-.1);
-     //   manualElevatorUp = new Trigger(() -> stickDriver.getRawAxis(1)>.1);
-    //   manualElevatorDown = new Trigger(() -> stickDriver.getRawAxis(1)<-.1);
 
         setSlow = new Trigger ( ()-> stickDriver.getRawAxis(3)>0.5);
-        zeroRotation = new Trigger( ()-> stickDriver.getLeftTriggerAxis()>0.5);
 
         configureBindings();        
     }
@@ -122,35 +112,53 @@ public class RobotContainer {
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
          
-//        (stickDriver.button(3)).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-//        (stickDriver.button(4)).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-//        (stickDriver.button(1)).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-//        (stickDriver.button(2)).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-//       stickDriver.button(4).onFalse((new InstantCommand( ()-> new WaitCommand(3) )).
+//        (stickDriver.button(3)).whileTrue(claw.sysIdDynamic(Direction.kForward));
+//        (stickDriver.button(4)).whileTrue(claw.sysIdDynamic(Direction.kReverse));
+//        (stickDriver.button(1)).whileTrue(claw.sysIdQuasistatic(Direction.kForward));
+//        (stickDriver.button(2)).whileTrue(claw.sysIdQuasistatic(Direction.kReverse));
+//       stickDriver.button(4).onFalse((new InstantCommand( ()-> new WaitCommand(5) )).
 //                  andThen(new InstantCommand( ()->SignalLogger.stop() )));
         
 
-        stickDriver.button(1).onTrue( new InstantCommand(()-> drivetrain.resetToFieldZero()));
-        zeroRotation.onTrue( new InstantCommand(()-> drivetrain.setRotationToZero()));
-        stickDriver.button(3).onTrue( new InstantCommand(()-> drivetrain.setRotationToZero()));
-        stickDriver.button(2).onTrue( new InstantCommand(()-> drivetrain.setFieldZero()));
+
+//        stickDriver.button(1).onTrue(claw.ToPosition(-0.05));
+//        stickDriver.button(2).onTrue(claw.ToPosition(0.32));
+//        stickDriver.button(4).onTrue(claw.StopClaw());
+
+
+
+//        stickDriver.button(5).whileTrue( claw.ClawUp());
+//        stickDriver.button(5).onFalse( claw.StopClaw());
+//        stickDriver.button(6).whileTrue( claw.ClawDown());
+//        stickDriver.button(6).onFalse( claw.StopClaw());
+
+    
+        stickDriver.button(5).onTrue( new InstantCommand(()-> drivetrain.setRotationToZero()));
+        stickDriver.button(6).onTrue( new InstantCommand(()-> drivetrain.resetToFieldZero()));
+        stickDriver.button(7).onTrue( new InstantCommand(()-> drivetrain.setFieldZero()));
 
         setSlow.onTrue(new InstantCommand(() ->stickDriver.setSlowScaleFactor()  )  );
         setSlow.onFalse(new InstantCommand(() ->stickDriver.setFastScaleFactor()  )  );
 
-
-        stickDriver.button(5).whileTrue( new DeferredCommand( 
+  
+        stickDriver.button(3).whileTrue( new DeferredCommand( 
             () -> driveToCommands.getCommandLeft() , Set.of(drivetrain)));
 
-        stickDriver.button(6).whileTrue( new DeferredCommand( 
+        stickDriver.button(2).whileTrue( new DeferredCommand( 
             () -> driveToCommands.getCommandRight() , Set.of(drivetrain)));
 
-        stickDriver.button(8).whileTrue( new DeferredCommand( 
-                () -> driveToCommands.getCommandCenter() , Set.of(drivetrain)));
+        stickDriver.button(4).whileTrue( new DeferredCommand( 
+            () -> driveToCommands.getCommandCenter() , Set.of(drivetrain)));
 
-        stickDriver.button(9).whileTrue( new DeferredCommand( 
-                () -> driveToCommands.getIntakeCommand() , Set.of(drivetrain)));
-    
+
+
+
+//        stickDriver.button(1).whileTrue( new DeferredCommand( 
+//            () -> driveToCommands.getIntakeCommand() , Set.of(drivetrain)));
+   
+//        stickDriver.pov(180).whileTrue( new DeferredCommand( 
+//            () -> driveToCommands.getProcessorCommand() , Set.of(drivetrain)));
+        
 
 
 
@@ -205,8 +213,8 @@ public class RobotContainer {
 
 
 
-//     public Command releaseRamp(){
-//        return (new ReleaseRamp(rearIntake));
-//     }
+     public Command releaseRamp(){
+        return (new ReleaseRamp(rearIntake));
+     }
 
     }

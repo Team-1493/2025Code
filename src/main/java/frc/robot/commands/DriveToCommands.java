@@ -17,7 +17,8 @@ import frc.robot.subsystems.VisionSystem;
 
 public class DriveToCommands {
   Pose2d targetPose;
-  double reefOffsetX = VisionSystem.reefOffsetX;
+  double reefOffsetXLeft = VisionSystem.reefOffsetXLeft;
+  double reefOffsetXRight = VisionSystem.reefOffsetXRight;
   double reefOffsetY = VisionSystem.reefOffsetY;
   double intakeOffsetX = VisionSystem.intakeOffsetX;
   double intakeOffsetY = VisionSystem.intakeOffsetY;
@@ -43,8 +44,8 @@ public Command getCommandLeft(){
   double rotRobot=rotTarget+Math.PI;
 
   targetPose = new Pose2d(
-    targetPose.getX()+reefOffsetX*Math.sin(rotTarget)+reefOffsetY*Math.cos(rotTarget),
-    targetPose.getY()-reefOffsetX*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
+    targetPose.getX()+reefOffsetXLeft*Math.sin(rotTarget)+reefOffsetY*Math.cos(rotTarget),
+    targetPose.getY()-reefOffsetXLeft*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
     new Rotation2d(rotRobot));
 
 
@@ -75,8 +76,8 @@ public Command getCommandRight(){
   double rotTarget = targetPose.getRotation().getRadians();
   double rotRobot=rotTarget+Math.PI;
   targetPose = new Pose2d(
-    targetPose.getX()-reefOffsetX*Math.sin(rotTarget)+reefOffsetY*Math.cos(rotTarget),
-    targetPose.getY()+reefOffsetX*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
+    targetPose.getX()-reefOffsetXRight*Math.sin(rotTarget)+reefOffsetY*Math.cos(rotTarget),
+    targetPose.getY()+reefOffsetXRight*Math.cos(rotTarget)+reefOffsetY*Math.sin(rotTarget),
     new Rotation2d(rotRobot));
 
     double dist = distanceToTarget();
