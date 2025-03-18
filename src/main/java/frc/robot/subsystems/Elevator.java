@@ -9,12 +9,9 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
-import frc.robot.commands.ElevatorCommands.ElevatorToReef;
 
 public class Elevator extends SubsystemBase{
     public final TalonFX elevatorRight = new TalonFX(22); 
@@ -39,6 +36,7 @@ public class Elevator extends SubsystemBase{
 public Elevator(){
 
     elevatorFollower.setControl(new Follower(22,true));
+/* 
     SmartDashboard.putNumber("Elevator positionAlgae1", positionAlgae1);
     SmartDashboard.putNumber("Elevator positionAlgae2", positionAlgae2);
     SmartDashboard.putNumber("Elevator positionNet", positionNet);
@@ -48,7 +46,7 @@ public Elevator(){
     SmartDashboard.putNumber("Elevator positionCoral2", positionCoral2);
     SmartDashboard.putNumber("Elevator positionCoral3", positionCoral3);
     SmartDashboard.putNumber("Elevator positionCoral4", positionCoral4);
-
+*/
     
     configure();
     stopElevator();
@@ -65,13 +63,10 @@ public Elevator(){
 
     //atLowerLimit=!limitLower.get()&& elevatorRight.getVelocity().getValueAsDouble()<0.01 && 
     //                elevatorRight.getStatorCurrent().getValueAsDouble()>1;
-        atLowerLimit=!limitLower.get();
-        atUpperLimit=!limitUpper.get();
+//        atLowerLimit=!limitLower.get();
+//        atUpperLimit=!limitUpper.get();
 
-        double v,i;
-        v=elevatorRight.getMotorVoltage().getValueAsDouble();
-        i=elevatorRight.getStatorCurrent().getValueAsDouble();
-        double vel=elevatorRight.getVelocity().getValueAsDouble();
+  //      double vel=elevatorRight.getVelocity().getValueAsDouble();
         elevatorPos=elevatorRight.getPosition().getValueAsDouble();
         
         SmartDashboard.putNumber("Elevator Pos", elevatorPos);
@@ -80,9 +75,8 @@ public Elevator(){
         SmartDashboard.putBoolean("Elevator LLS",atLowerLimit);
         SmartDashboard.putBoolean("Elevator ULS",atUpperLimit);
         // check mag limit switches
-        if (atUpperLimit && v>0 ) stopElevator();
-//        if (atLowerLimit && v<0 ) stopElevator();
-//        if (i>currentLimit) stopElevator();
+//        if (atUpperLimit && vel>0 ) stopElevator();
+//        if (atLowerLimit && vel<0 ) stopElevator();
         
         SmartDashboard.putNumber("Elevator set", elevatorRight.getClosedLoopReference().getValueAsDouble());
     }
@@ -241,6 +235,7 @@ public Elevator(){
   }
 
   public void updateConstants(){
+    /* 
     positionAlgae1= SmartDashboard.getNumber("Elevator positionAlgae1", positionAlgae1);
     positionAlgae2= SmartDashboard.getNumber("Elevator positionAlgae2", positionAlgae2);
     positionNet= SmartDashboard.getNumber("Elevator positionNet", positionNet);
@@ -250,8 +245,7 @@ public Elevator(){
     positionCoral2= SmartDashboard.getNumber("Elevator positionCoral2", positionCoral2);
     positionCoral3= SmartDashboard.getNumber("Elevator positionCoral3", positionCoral3);
     positionCoral4= SmartDashboard.getNumber("Elevator positionCoral4", positionCoral4);
-    SmartDashboard.putNumber("Elevator p1", positionCoral1);
-    SmartDashboard.putNumber("Elevator p4", positionCoral4);
+*/
   }
 
 }

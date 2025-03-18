@@ -7,20 +7,14 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
-import com.ctre.phoenix6.signals.ForwardLimitTypeValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.ReverseLimitTypeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -41,7 +35,6 @@ private CANcoderConfiguration cfgEnc = new CANcoderConfiguration();
 private CANcoder clawEncoder = new CANcoder(27);
 
 private MotionMagicVoltage magicToPos= new MotionMagicVoltage(0);
-private PositionVoltage positionVolt = new PositionVoltage(0);
 private VoltageOut voltOutUp = new VoltageOut(1);
 private VoltageOut voltOutChuteRoller = new VoltageOut(-3.8);
 
@@ -52,14 +45,8 @@ private VoltageOut  voltOutFrontForward= new VoltageOut(4);
 private VoltageOut  voltOutFrontReverse= new VoltageOut(-4);
 private VoltageOut  voltOutSpitCoral = new VoltageOut(-8);
 private VoltageOut  voltOutSpitCoralL1 = new VoltageOut(-4);
-private VoltageOut  voltOutFrontHold= new VoltageOut(-.6);
-private VoltageOut  voltOutRearHold= new VoltageOut(.6);
-private VoltageOut  voltOutFrontSpitAlgae= new VoltageOut(13);
-private VoltageOut  voltOutRearSpitAlgae= new VoltageOut(-13);
 private DutyCycleOut dutyFrontSpitAlgae = new DutyCycleOut(1);
 private DutyCycleOut dutyRearSpitAlgae = new DutyCycleOut(-1); 
-private TorqueCurrentFOC torqueFrontSpitAlgae = new TorqueCurrentFOC(40);
-private TorqueCurrentFOC torqueRearSpitAlgae = new TorqueCurrentFOC(-40);
 private VoltageOut  voltOutFrontRevSpitAlgae= new VoltageOut(-12);
 private VoltageOut  voltOutRearRevSpitAlgae= new VoltageOut(12);
 private VoltageOut m_rotationCharacterization = new VoltageOut(0);
@@ -74,7 +61,7 @@ public double
         positionCoral3 = 0.314,positionCoral4= 0.235,
         positionIntake = 0.372, positionNeutral = 0.306;   
 
-private DigitalInput limitLower = new DigitalInput(1);
+//private DigitalInput limitLower = new DigitalInput(1);
 private DigitalInput limitUpper = new DigitalInput(4);
 public DigitalInput coralSensor = new DigitalInput(7);
 
@@ -82,7 +69,6 @@ private boolean atLowerLimit=false,atUpperLimit=false;
 public boolean hasCoral = false, prevHasCoral=false;
 public boolean hasAlgae=false;
 int coralCounter=0,algaeCounter=0;
-private double voltage;
 public double encPosition,rearRollerCurrent;
 
 
@@ -111,7 +97,7 @@ public double encPosition,rearRollerCurrent;
 
 
 public Claw(){
-    SmartDashboard.putNumber("Claw Pos Algae1", positionAlgae1);
+/*     SmartDashboard.putNumber("Claw Pos Algae1", positionAlgae1);
     SmartDashboard.putNumber("Claw Pos Algae2", positionAlgae2);
     SmartDashboard.putNumber("Claw Pos Net", positionNet);
     SmartDashboard.putNumber("Claw Pos Processor", positionProcessor);
@@ -121,7 +107,7 @@ public Claw(){
     SmartDashboard.putNumber("Claw Pos Coral4", positionCoral4);
     SmartDashboard.putNumber("Claw Pos Intake", positionIntake);
     SmartDashboard.putNumber("Claw Pos Neutral", positionNeutral);
-
+*/
     configure();
 
 
@@ -131,12 +117,6 @@ public Claw(){
 }
 
     public void periodic(){
-        voltage=clawMotor.getMotorVoltage().getValueAsDouble();
-
-        double currentRear = clawRearRoller.getStatorCurrent().getValueAsDouble();
-        double currentFront = clawFrontRoller.getStatorCurrent().getValueAsDouble();
-
-        double velocity=clawEncoder.getVelocity().getValueAsDouble();
         encPosition=clawEncoder.getAbsolutePosition().getValueAsDouble();
 
         atUpperLimit=!limitUpper.get();
@@ -151,14 +131,9 @@ public Claw(){
         SmartDashboard.putNumber("Claw Enc AbsPos", encPosition);    
         SmartDashboard.putNumber("Claw Enc SetPosition", clawMotor.getClosedLoopReference().getValueAsDouble());    
 
-//        SmartDashboard.putNumber("Claw Voltqqq",voltage);
-        SmartDashboard.putNumber("Front RollerCurrent", currentFront);
-        SmartDashboard.putNumber("Rear RollerCurrent", currentRear);
+//        SmartDashboard.putBoolean("Claw ULS",atUpperLimit);
 
-
-        SmartDashboard.putBoolean("Claw ULS",atUpperLimit);
-
-        SmartDashboard.putBoolean("Coral Sensor", hasCoral);
+//        SmartDashboard.putBoolean("Coral Sensor", hasCoral);
 //        SmartDashboard.putBoolean("Algae Sensor", hasAlgae);
     }
 
@@ -402,9 +377,6 @@ public Claw(){
     cfg.Slot0.kV = 5.25;
     cfg.Slot0.kA = 0.02;
  
-//    cfg.MotorOutput.PeakForwardDutyCycle=.5;
-//    cfg.MotorOutput.PeakForwardDutyCycle=-.5;
-
     cfg.MotionMagic.MotionMagicCruiseVelocity = 1.2 ; // 0.6;
     cfg.MotionMagic.MotionMagicAcceleration = 2.4;  //1.5
     cfg.MotionMagic.MotionMagicJerk=20; //30  
@@ -449,6 +421,7 @@ public Claw(){
 
 
     public void updateConstants(){
+        /* 
         positionAlgae1 = SmartDashboard.getNumber("Claw Pos Algae1", positionAlgae1);
         positionAlgae2 = SmartDashboard.getNumber("Claw Pos Algae2", positionAlgae2);
         positionNet = SmartDashboard.getNumber("Claw Pos Net", positionNet);
@@ -459,7 +432,7 @@ public Claw(){
         positionCoral4 = SmartDashboard.getNumber("Claw Pos Coral4", positionCoral4);
         positionIntake = SmartDashboard.getNumber("Claw Pos Intake", positionIntake);
         positionNeutral = SmartDashboard.getNumber("Claw Pos Neutral", positionNeutral);
-        SmartDashboard.putNumber("Claw pN", positionNeutral);    
+*/
     }
 
 

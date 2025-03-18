@@ -1,11 +1,8 @@
 package frc.robot.subsystems;
-import com.pathplanner.lib.path.PathConstraints;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.BumpIntoWall;
 import frc.robot.commands.BumpIntoWallReverse;
 import frc.robot.commands.CheckForCoralAuto;
-import frc.robot.commands.ReleaseRamp;
 import frc.robot.commands.ElevatorCommands.ElevatorToReefA1;
 import frc.robot.commands.ElevatorCommands.ElevatorToReefA2;
 import frc.robot.commands.ElevatorCommands.ElevatorToReefC1;
@@ -15,8 +12,6 @@ import frc.robot.commands.ElevatorCommands.ElevatorToReefC4;
 import frc.robot.commands.IntakeCommands.IntakeCoralAuto;
 
 public class ActionCommands {
-
-    static private PathConstraints constraints;
     private CommandSwerveDrivetrain sd;
     private Elevator elevator;
     private Claw claw;
@@ -33,14 +28,7 @@ public  ActionCommands(CommandSwerveDrivetrain m_sd,Elevator m_elevator,Claw m_c
 
     sd=m_sd;
     elevator=m_elevator;
-    claw=m_claw;
-
-    constraints = new PathConstraints(
-        1.5, 
-        1.5,
-        Units.degreesToRadians(360),
-        Units.degreesToRadians(450));
-                
+    claw=m_claw;                
         
         elevatorToIntake = new IntakeCoralAuto(m_elevator, m_claw);
 

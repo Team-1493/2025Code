@@ -1,22 +1,13 @@
 package frc.robot.subsystems;
-
-import org.photonvision.simulation.VisionSystemSim;
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import frc.robot.Utilities.VisionConstants;
 
 public class VisionSystem extends SubsystemBase {
 
@@ -52,21 +43,6 @@ public class VisionSystem extends SubsystemBase {
     
 
     public VisionSystem(CommandSwerveDrivetrain m_dt) {
-
-        SmartDashboard.putNumber("std single X", .3);    
-        SmartDashboard.putNumber("std single Y", .3);    
-        SmartDashboard.putNumber("std single Rot", 9999);    
-
-        SmartDashboard.putNumber("std multi X", .25);    
-        SmartDashboard.putNumber("std multi Y", .25);    
-        SmartDashboard.putNumber("std multi Rot", 2);
-        SmartDashboard.putNumber("std factor", stdFactor);
-
-//        SmartDashboard.putNumber("ReefOffsetX", reefOffsetX);
-        SmartDashboard.putNumber("ReefOffsetY", reefOffsetY);
-        SmartDashboard.putNumber("IntakeOffsetX", intakeOffsetX);
-        SmartDashboard.putNumber("IntakeOffsetY", intakeOffsetY);
-
         configure();
 
 
@@ -106,23 +82,11 @@ public class VisionSystem extends SubsystemBase {
 
 
     public void configure(){
-        kSingleTagStdDevs = VecBuilder.fill(
-                SmartDashboard.getNumber("std single X", 0), 
-                SmartDashboard.getNumber("std single Y", 0),  
-                SmartDashboard.getNumber("std single Rot", 0));
+        kSingleTagStdDevs = VecBuilder.fill(0.3,0.3,9999);
 
-        kMultiTagStdDevs = VecBuilder.fill(
-                    SmartDashboard.getNumber("std multi X", 0), 
-                    SmartDashboard.getNumber("std multi Y", 0),  
-                    SmartDashboard.getNumber("std multi Rot", 0));
+        kMultiTagStdDevs = VecBuilder.fill(0.25,0.25,2);
 
-        stdFactor = SmartDashboard.getNumber("std factor", stdFactor);
-
-//        reefOffsetX = SmartDashboard.getNumber("ReefOffsetX", reefOffsetX);
-        reefOffsetY = SmartDashboard.getNumber("ReefOffsetY", reefOffsetY);
-        intakeOffsetX = SmartDashboard.getNumber("IntakeOffsetX", intakeOffsetX);
-        intakeOffsetY = SmartDashboard.getNumber("IntakeOffsetY", intakeOffsetY);                    
-                    
+        stdFactor = SmartDashboard.getNumber("std factor", stdFactor);                    
     }
 
 }
