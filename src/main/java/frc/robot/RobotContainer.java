@@ -91,65 +91,44 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             drivetrain.driveFieldCentricCommand(stickDriver)
         );
-        
-/* 
-        stickDriver.button(2).onTrue(new InstantCommand(() 
-        -> drivetrain.setTarget(Math.toRadians(-90))));
-        stickDriver.button(1).onTrue(new InstantCommand(() ->
-            drivetrain.setTargetHeading( Math.toRadians(54))));
-        stickDriver.button(3).onTrue(new InstantCommand(() ->
-            drivetrain.setTargetHeading(Math.toRadians(-54))));            
-        stickDriver.button(4).onTrue(new InstantCommand(() ->
-            drivetrain.setTargetHeading(Math.toRadians( 0))));   
-*/
-/*        stickDriver.pov(90).onTrue(new InstantCommand(() ->
-             drivetrain.setTargetHeading(Math.toRadians( 120))));   
-        stickDriver.pov(270).onTrue(new InstantCommand(() ->
-            drivetrain.setTargetHeading(Math.toRadians( -120))));
-            `
-        stickDriver.pov(0).onTrue(new InstantCommand(() ->
-            drivetrain.setTargetHeading(Math.toRadians( 60))));   
-        stickDriver.pov(180).onTrue(new InstantCommand(() ->
-            drivetrain.setTargetHeading(Math.toRadians( -60))));
-*/
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
          
-        (stickDriver.button(3)).whileTrue(elevator.sysIdDynamic(Direction.kForward));
-        (stickDriver.button(4)).whileTrue(elevator.sysIdDynamic(Direction.kReverse));
-        (stickDriver.button(1)).whileTrue(elevator.sysIdQuasistatic(Direction.kForward));
-        (stickDriver.button(2)).whileTrue(elevator.sysIdQuasistatic(Direction.kReverse));
-       stickDriver.button(4).onFalse((new InstantCommand( ()-> new WaitCommand(5) )).
-                  andThen(new InstantCommand( ()->SignalLogger.stop() )));
+ //       (stickDriver.button(3)).whileTrue(elevator.sysIdDynamic(Direction.kForward));
+ //       (stickDriver.button(4)).whileTrue(elevator.sysIdDynamic(Direction.kReverse));
+ //       (stickDriver.button(1)).whileTrue(elevator.sysIdQuasistatic(Direction.kForward));
+ //       (stickDriver.button(2)).whileTrue(elevator.sysIdQuasistatic(Direction.kReverse));
+ //      stickDriver.button(4).onFalse((new InstantCommand( ()-> new WaitCommand(5) )).
+ //                 andThen(new InstantCommand( ()->SignalLogger.stop() )));
         
 
 
 
 
-        stickDriver.button(5).whileTrue( elevator.ManualUp());
-        stickDriver.button(5).onFalse( elevator.StopElevator());
-        stickDriver.button(6).whileTrue( elevator.ManualDown());
-        stickDriver.button(6).onFalse( elevator.StopElevator());
+   //     stickDriver.button(5).whileTrue( elevator.ManualUp());
+   //     stickDriver.button(5).onFalse( elevator.StopElevator());
+   //     stickDriver.button(6).whileTrue( elevator.ManualDown());
+   //     stickDriver.button(6).onFalse( elevator.StopElevator());
 
     
-//        stickDriver.button(5).onTrue( new InstantCommand(()-> drivetrain.setRotationToZero()));
-//        stickDriver.button(6).onTrue( new InstantCommand(()-> drivetrain.resetToFieldZero()));
-//        stickDriver.button(7).onTrue( new InstantCommand(()-> drivetrain.setFieldZero()));
+        stickDriver.button(5).onTrue( new InstantCommand(()-> drivetrain.setRotationToZero()));
+        stickDriver.button(6).onTrue( new InstantCommand(()-> drivetrain.resetToFieldZero()));
+        stickDriver.button(7).onTrue( new InstantCommand(()-> drivetrain.setFieldZero()));
 
         setSlow.onTrue(new InstantCommand(() ->stickDriver.setSlowScaleFactor()  )  );
         setSlow.onFalse(new InstantCommand(() ->stickDriver.setFastScaleFactor()  )  );
 
   
-//        stickDriver.button(3).whileTrue( new DeferredCommand( 
-//            () -> driveToCommands.getCommandLeft() , Set.of(drivetrain))) ;
+        stickDriver.button(3).whileTrue( new DeferredCommand( 
+            () -> driveToCommands.getCommandLeft() , Set.of(drivetrain))) ;
 
 
-//        stickDriver.button(2).whileTrue( new DeferredCommand( 
-//            () -> driveToCommands.getCommandRight() , Set.of(drivetrain)));
+        stickDriver.button(2).whileTrue( new DeferredCommand( 
+           () -> driveToCommands.getCommandRight() , Set.of(drivetrain)));
 
-//        stickDriver.button(4).whileTrue( new DeferredCommand( 
-//            () -> driveToCommands.getCommandCenter() , Set.of(drivetrain)));
+        stickDriver.button(4).whileTrue( new DeferredCommand( 
+            () -> driveToCommands.getCommandCenter() , Set.of(drivetrain)));
 
 
 
