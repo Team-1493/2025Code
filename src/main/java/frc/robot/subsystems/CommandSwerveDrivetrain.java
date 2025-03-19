@@ -8,7 +8,6 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
@@ -254,14 +253,7 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
 
     @Override
     public void periodic() {
-        /*
-         * Periodically try to apply the operator perspective.
-         * If we haven't applied the operator perspective before, then we should apply it regardless of DS state.
-         * This allows us to correct the perspective in case the robot code restarts mid-match.
-         * Otherwise, only check and apply the operator perspective if the DS is disabled.
-         * This ensures driving behavior doesn't change until an explicit disable event occurs during testing.
-         */
-
+  
 /*          if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent(allianceColor -> {
                 setOperatorPerspectiveForward(
@@ -280,9 +272,9 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         SmartDashboard.putNumber("Pose Y",robotpose.getY());
         SmartDashboard.putNumber("Pose Z",robotpose.getRotation().getDegrees());
         SmartDashboard.putNumber("TrueHeading", getTrueHeading()*180/Math.PI);
-        SmartDashboard.putNumber("vX_target", speeds_target.vxMetersPerSecond);
-        SmartDashboard.putNumber("vY_target", speeds_target.vyMetersPerSecond);
-        SmartDashboard.putNumber("vZ_target", speeds_target.omegaRadiansPerSecond);
+//        SmartDashboard.putNumber("vX_target", speeds_target.vxMetersPerSecond);
+//        SmartDashboard.putNumber("vY_target", speeds_target.vyMetersPerSecond);
+//        SmartDashboard.putNumber("vZ_target", speeds_target.omegaRadiansPerSecond);
     }
 
     private void startSimThread() {
@@ -309,11 +301,11 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
     }
 
     public  void driveRobotCentric(ChassisSpeeds speeds) {
-        calculateAcceleration(speeds);
+//        calculateAcceleration(speeds);
 
         this.setControl(driveRC.
-        withVelocityX(speeds.vxMetersPerSecond+accX*kA_drive)
-        .withVelocityY(speeds.vyMetersPerSecond+accY*kA_drive)
+        withVelocityX(speeds.vxMetersPerSecond)
+        .withVelocityY(speeds.vyMetersPerSecond)
         .withRotationalRate(speeds.omegaRadiansPerSecond)
         );
 
@@ -321,11 +313,11 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
 }
 
     public  void driveRobotCentric(double x,double y,double z) {
-            calculateAcceleration(x,y,z);
-            speeds_target= new ChassisSpeeds(x+accX*kA_drive,y+accY*kA_drive,z);
+//            calculateAcceleration(x,y,z);
+            speeds_target= new ChassisSpeeds(x,y,z);
             this.setControl(driveRC.
-            withVelocityX(x+accX*kA_drive)
-            .withVelocityY(y+accY*kA_drive)
+            withVelocityX(x)
+            .withVelocityY(y)
             .withRotationalRate(z)
             );
     }
@@ -348,18 +340,14 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
 
 
     public  void driveFieldCentric(double x,double y, double z) {
-        calculateAcceleration(x,y,z);
+//        calculateAcceleration(x,y,z);
 
-//        System.out.println("******   "+
-//        this.getModule(0).getDriveMotor().getTorqueCurrent().getValueAsDouble()
-//        +"     "+ x + "    "+accX*20
- //       );
 
-        speeds_target= new ChassisSpeeds(x+accX*kA_drive,y+accY*kA_drive,z);
+        speeds_target= new ChassisSpeeds(x,y,z);
 
         this.setControl(driveFC
-        .withVelocityX(x+accX*kA_drive)
-        .withVelocityY(y+accY*kA_drive)
+        .withVelocityX(x)
+        .withVelocityY(y)
         .withRotationalRate(z));
     }
     

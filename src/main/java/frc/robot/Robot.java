@@ -16,82 +16,44 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.ZeroElevator;
+import frc.robot.subsystems.LED;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  public static boolean enabled;
   public static Robot instance;
 
   private final RobotContainer m_robotContainer;
-  private final AddressableLED m_led; 
-  private final AddressableLEDBuffer m_ledBuffer;
-
-  private LEDPattern currentPattern = null;
-  private final LEDPattern m_blue = LEDPattern.solid(Color.kBlue);
-  private final LEDPattern m_red = LEDPattern.solid(Color.kRed);
-  private final LEDPattern m_green = LEDPattern.solid(Color.kGreen);
-  private final LEDPattern m_yellow = LEDPattern.solid(Color.kYellow);
-  private final LEDPattern m_violetred = LEDPattern.solid(Color.kPaleVioletRed);
 
 
-  private double finishedAutoAlignAt = -1;
 
   public Robot() {
     instance = this;
 
     m_robotContainer = new RobotContainer();
-    PathfindingCommand.warmupCommand().schedule();
-
-
-    m_led = new AddressableLED(8);
-    // CHANGE LENGTH IF NEEDED
-    m_ledBuffer = new AddressableLEDBuffer(160);
-    m_led.setLength(m_ledBuffer.getLength());
   }
 
 
 
-  public void finishedAutoAlign() {
-    finishedAutoAlignAt = Timer.getFPGATimestamp();
-  }
-
-  private void setPattern(LEDPattern pattern) {
-    if (currentPattern == pattern) return;
-    currentPattern = pattern;
-    currentPattern.applyTo(m_ledBuffer);
-
-    m_led.setData(m_ledBuffer);
-    m_led.start();
-  }
 
   @Override
   public void robotPeriodic() {
-    double timeAfterAutoAlign = 4;
-    if (Timer.getFPGATimestamp() < finishedAutoAlignAt + timeAfterAutoAlign) {
-      setPattern(m_violetred);
-    } else if (Timer.getMatchTime() < 10) { // less than ten seconds left
-      setPattern(m_yellow);
-    } else if (m_robotContainer.claw.hasCoral) {
-      setPattern(m_green);
-    } else {
-      setPattern(m_blue);
-    }
     
     CommandScheduler.getInstance().run(); 
   }
 
   @Override
-  public void disabledInit() {enabled=false;}
+  public void disabledInit() {LED.enabled=false;}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    LED.enabled=false;}
 
   @Override
   public void disabledExit() {}
 
   @Override
   public void autonomousInit() {
-    enabled=true;
+    LED.enabled=true;
     m_robotContainer.releaseRamp().schedule();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
@@ -108,7 +70,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    enabled=true;
+    LED.enabled=true;
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

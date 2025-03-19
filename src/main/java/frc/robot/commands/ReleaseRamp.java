@@ -16,8 +16,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class ReleaseRamp extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final RearIntake intake;
-  private VoltageOut  voltOut= new VoltageOut(1);
+  private VoltageOut  voltOut= new VoltageOut(0.5);
+
+ private VoltageOut  voltZero= new VoltageOut(0.0);
   
+ int i;
 
   /**
    * @param subsystem The subsystem used by this command.
@@ -25,16 +28,19 @@ public class ReleaseRamp extends Command {
   public ReleaseRamp(RearIntake m_intake) {
     intake=m_intake;
     addRequirements(intake);
+    
   }
 
   @Override
   public void initialize() {
-    intake.motor.setControl(voltOut);
-    RearIntake.releasedRamp=true;
+    if(intake.getLimit()) intake.motor.setControl(voltOut);
+    i=0;
   }
 
   @Override
   public void execute() {
+        i++;
+        if(i>42) intake.motor.stopMotor();
     }
 
 
@@ -43,11 +49,10 @@ public class ReleaseRamp extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    intake.motor.stopMotor();
   }
 
   @Override
   public boolean isFinished() {
-    return (!intake.limitSwitch.get());
+    return (i>45);
   }
 }

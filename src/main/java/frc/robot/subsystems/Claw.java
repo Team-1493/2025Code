@@ -63,7 +63,7 @@ public double
 
 //private DigitalInput limitLower = new DigitalInput(1);
 private DigitalInput limitUpper = new DigitalInput(4);
-public DigitalInput coralSensor = new DigitalInput(7);
+public DigitalInput coralSensor = new DigitalInput(6);
 
 private boolean atLowerLimit=false,atUpperLimit=false;
 public boolean hasCoral = false, prevHasCoral=false;
@@ -133,7 +133,7 @@ public Claw(){
 
 //        SmartDashboard.putBoolean("Claw ULS",atUpperLimit);
 
-//        SmartDashboard.putBoolean("Coral Sensor", hasCoral);
+        SmartDashboard.putBoolean("Coral Sensor", hasCoral);
 //        SmartDashboard.putBoolean("Algae Sensor", hasAlgae);
     }
 
@@ -329,8 +329,14 @@ public Claw(){
     // Check if we have Coral
     private void checkForCoral(){
             prevHasCoral=hasCoral;
-            if (!coralSensor.get()) hasCoral=true;
-            else hasCoral=false;
+            if (!coralSensor.get()) {
+                hasCoral=true;
+                LED.hasCoral=true;
+            }
+            else {
+                hasCoral=false;
+                LED.hasCoral=false;
+            }
 
        
 

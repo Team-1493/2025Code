@@ -95,7 +95,6 @@ public void getAlliance(){
     
     while(DriverStation.getAlliance().isEmpty()){
         SmartDashboard.putString("Alliance", "Not Yet!");
-        System.out.println("waiting");
     }
     DriverStation.getAlliance().ifPresent(allianceColor -> {
             if (allianceColor == Alliance.Red) {

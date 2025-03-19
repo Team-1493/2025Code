@@ -13,7 +13,6 @@ import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.LinearVelocity;
@@ -21,8 +20,10 @@ import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Utilities.VisionConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.LED;
 import frc.robot.subsystems.VisionSystem;
 
 public class DriveToCommands2 {
@@ -32,6 +33,7 @@ public class DriveToCommands2 {
   double reefOffsetY = VisionSystem.reefOffsetY;
   double intakeOffsetX = VisionSystem.intakeOffsetX;
   double intakeOffsetY = VisionSystem.intakeOffsetY;
+  double distThreshold=0.51;
 
   PathConstraints constraints = new PathConstraints(
       1.75, 
@@ -67,7 +69,6 @@ public Command getCommandLeft(){
     targetPose.getY()-reefOffsetXLeft*Math.cos(rotTarget)+(reefOffsetY+ 0.5)*Math.sin(rotTarget),
     new Rotation2d(rotRobot));
   
-    double dist = distanceToTarget();
 
 
     List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
@@ -86,19 +87,24 @@ public Command getCommandLeft(){
 
         path.preventFlipping = true;
 
+        double dist = distanceToTarget();
+        if(dist>distThreshold)
 
-        return (AutoBuilder.followPath(path).andThen(
-            Commands.print("start position PID loop"),
+
+        return (
+          AutoBuilder.followPath(path)).andThen(
+            new InstantCommand(() -> LED.nearTarget=true),
             PositionPIDCommand.generateCommand(sd, endPose, (
                 DriverStation.isAutonomous() ? kAutoAlignAdjustTimeout : kTeleopAlignAdjustTimeout
-            ))
-         )).finallyDo((interupt) -> {
-            if (interupt) { //if this is false then the position pid would've X braked & called the same method
+            )
+         )
+         .finallyDo(() -> {
                 sd.stop();
-            }
-        });
+        }));
 
-
+        else return( PositionPIDCommand.generateCommand(sd, endPose, (
+          DriverStation.isAutonomous() ? kAutoAlignAdjustTimeout : kTeleopAlignAdjustTimeout
+           ))); 
 
 
 }
@@ -195,7 +201,6 @@ public Command getCommandCenter(){
         path.preventFlipping = true;
 
         return (AutoBuilder.followPath(path).andThen(
-            Commands.print("start position PID loop"),
             PositionPIDCommand.generateCommand(sd, endPose, (
                 DriverStation.isAutonomous() ? kAutoAlignAdjustTimeout : kTeleopAlignAdjustTimeout
             ))
@@ -276,7 +281,6 @@ public Command getProcessorCommand(){
 
   boolean blue = VisionConstants.blue;
   int id = 16;
-  double yr = sd.getPose().getY();
   if (blue) id=16;
   else id = 3;
 
@@ -315,15 +319,15 @@ public Command getProcessorCommand(){
 
         path.preventFlipping = true;
 
-        return (AutoBuilder.followPath(path).andThen(
-            Commands.print("start position PID loop"),
+        return (
+          new InstantCommand(() -> LED.enabled=true).andThen(
+        AutoBuilder.followPath(path)).andThen(
             PositionPIDCommand.generateCommand(sd, endPose, (
                 DriverStation.isAutonomous() ? kAutoAlignAdjustTimeout : kTeleopAlignAdjustTimeout
             ))
          )).finallyDo((interupt) -> {
-            if (interupt) { //if this is false then the position pid would've X braked & called the same method
                 sd.stop();
-            }
+            
         });
 
 }

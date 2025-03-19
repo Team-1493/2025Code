@@ -1,5 +1,9 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Volts;
+
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -12,6 +16,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Elevator extends SubsystemBase{
     public final TalonFX elevatorRight = new TalonFX(22); 
@@ -30,8 +35,32 @@ public class Elevator extends SubsystemBase{
             positionCoral1=5.5, positionCoral2=7.5,
             positionCoral3=19.5,positionCoral4=42.25,
             positionIntake=0;
-    public double elevatorPos=0;
+    public double elevatorPos=0,setPos=0;
     boolean zeroed=false,atLowerLimit=false,atUpperLimit=false;
+
+    private VoltageOut m_translationCharacterization = new VoltageOut(0);
+    private final SysIdRoutine m_sysIdRoutineRotation = new SysIdRoutine(
+        new SysIdRoutine.Config(
+            /* This is in radians per second², but SysId only supports "volts per second" */
+            Volts.of(0.2).per(Second),
+            /* This is in radians per second, but SysId only supports "volts" */
+            Volts.of(3),
+            null, // Use default timeout (10 s)
+            // Log state with SignalLogger class
+            state -> SignalLogger.writeString("SysIDTranslation_State_Elev", state.toString())
+        ),
+        new SysIdRoutine.Mechanism(
+            output -> {
+                /* output is actually radians per second, but SysId only supports "volts" */
+                elevatorRight.setControl(m_translationCharacterization.withOutput(output.in(Volts)));
+                /* also log the requested output for SysId */
+                SignalLogger.writeDouble("Translation_Rate_Elev", output.in(Volts));
+            },
+            null,
+            this
+        )
+    );
+
 
 public Elevator(){
 
@@ -69,6 +98,9 @@ public Elevator(){
   //      double vel=elevatorRight.getVelocity().getValueAsDouble();
         elevatorPos=elevatorRight.getPosition().getValueAsDouble();
         
+        if(setPos>1 && Math.abs(elevatorPos-setPos)<.5 ) LED.elevatorAtPos=true;
+        else LED.elevatorAtPos=false;
+
         SmartDashboard.putNumber("Elevator Pos", elevatorPos);
 
 
@@ -131,7 +163,7 @@ public Elevator(){
         }
 
     public void toPosition(double pos){
-        SmartDashboard.putNumber("Auto pos", pos);
+        setPos=pos;
         elevatorRight.setControl(magicToPos.withPosition(pos));
     }
 
@@ -204,21 +236,21 @@ public Elevator(){
     cfg.MotorOutput.Inverted=InvertedValue.Clockwise_Positive;
     cfg.MotorOutput.NeutralMode=NeutralModeValue.Brake;
 
-    cfg.MotionMagic.MotionMagicCruiseVelocity=60;
-    cfg.MotionMagic.MotionMagicAcceleration=80;
-    cfg.MotionMagic.MotionMagicJerk=170;   
+    cfg.MotionMagic.MotionMagicCruiseVelocity=80;//60
+    cfg.MotionMagic.MotionMagicAcceleration=160;//80
+    cfg.MotionMagic.MotionMagicJerk=280;   
 
     cfg.Slot0.GravityType=GravityTypeValue.Elevator_Static;
 
-    cfg.Slot0.kG=0.495;
-    cfg.Slot0.kP=2.0;
+    cfg.Slot0.kG=0.41556;//0.495
+    cfg.Slot0.kP=0.12089;//2
     cfg.Slot0.kI=0;
     cfg.Slot0.kD=0;
-    cfg.Slot0.kS=0;
-    cfg.Slot0.kV=.4;
+    cfg.Slot0.kS=0.088;//0
+    cfg.Slot0.kV=.11689;//.4
     cfg.Slot0.kA=0;
 
-    cfg.CurrentLimits.StatorCurrentLimit=80;
+    cfg.CurrentLimits.StatorCurrentLimit=90;
     cfg.CurrentLimits.StatorCurrentLimitEnable=true;
     cfg.CurrentLimits.SupplyCurrentLimit=50;
     cfg.CurrentLimits.SupplyCurrentLimitEnable=true;
@@ -247,5 +279,30 @@ public Elevator(){
     positionCoral4= SmartDashboard.getNumber("Elevator positionCoral4", positionCoral4);
 */
   }
+
+
+    /**
+     * Runs the SysId Quasistatic test in the given direction for the routine
+     * specified by {@link #m_sysIdRoutineToApply}.
+     *
+     * @param direction Direction of the SysId Quasistatic test
+     * @return Command to run
+     */
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutineRotation.quasistatic(direction);
+    }
+
+    /**
+     * Runs the SysId Dynamic test in the given direction for the routine
+     * specified by {@link #m_sysIdRoutineToApply}.
+     *
+     * @param direction Direction of the SysId Dynamic test
+     * @return Command to run
+     */
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return m_sysIdRoutineRotation.dynamic(direction);
+    }
+
+
 
 }
