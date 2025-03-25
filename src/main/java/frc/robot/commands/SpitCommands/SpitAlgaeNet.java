@@ -14,32 +14,29 @@ public class SpitAlgaeNet extends Command {
   private final Claw claw;
   private Elevator elevator;
   boolean elevatorFlag=false;
-
+  int counter=0;
   /**
    * @param subsystem The subsystem used by this command.
    */
-  public SpitAlgaeNet(Claw m_claw, Elevator m_elevator) {
+  public SpitAlgaeNet(Claw m_claw) {
     claw=m_claw;
-    elevator=m_elevator;
-    addRequirements(claw,elevator);
+    addRequirements(claw);
   }
 
   @Override
   public void initialize() {
+    counter=0;
     claw.toPosition(claw.positionNet);
+    claw.rollersRun(-3, 3);
     
 
   }
 
   @Override
   public void execute() {
-    if(!elevatorFlag && claw.encPosition<.215){
-        elevator.toPosition(elevator.positionNet);
-        elevatorFlag=true;
-    }
-    if (Math.abs(elevator.elevatorPos-elevator.positionNet)<.03){
-        claw.spitAlgae();
-    }
+    counter = counter + 1;
+    if (counter==20)    claw.spitAlgae();
+  
 
 
      
@@ -47,12 +44,11 @@ public class SpitAlgaeNet extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    if(interrupted) claw.stopRollers(); 
-    else claw.holdAlgae();
+  claw.stopRollers(); 
   }
-
+  
   @Override
   public boolean isFinished() {
-    return claw.hasAlgae;
+    return false;
   }
 }

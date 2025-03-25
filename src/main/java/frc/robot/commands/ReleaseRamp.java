@@ -3,9 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
-
-import frc.robot.subsystems.Claw;
-import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.RearIntake;
 
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -16,9 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class ReleaseRamp extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final RearIntake intake;
-  private VoltageOut  voltOut= new VoltageOut(0.5);
-
- private VoltageOut  voltZero= new VoltageOut(0.0);
+  private VoltageOut  voltOut= new VoltageOut(-1);
   
  int i;
 
@@ -39,8 +34,9 @@ public class ReleaseRamp extends Command {
 
   @Override
   public void execute() {
-        i++;
-        if(i>42) intake.motor.stopMotor();
+      i++;
+      if(i>42) intake.motor.stopMotor();
+
     }
 
 
@@ -54,5 +50,6 @@ public class ReleaseRamp extends Command {
   @Override
   public boolean isFinished() {
     return (i>45);
+
   }
 }

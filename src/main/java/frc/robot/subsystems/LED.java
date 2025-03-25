@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -85,9 +86,10 @@ public LED(){
     public void periodic(){
 
         matchTime=DriverStation.getMatchTime();
-        if(matchTime<20  && matchTime>-0.1 &&  
-                    DriverStation.isTeleop()) 
-                endgame=true;
+        if(matchTime>-0.1) SmartDashboard.putNumber("MatchTime",(int)matchTime);
+
+        if(matchTime<20  && matchTime>-0.1 &&  DriverStation.isTeleop()) 
+            endgame=true;
 
         if(prevEnabled && !enabled) setBaseColor(disabledColor);
         else if(!prevEnabled && enabled) setBaseColor(enabledColor);
@@ -110,16 +112,10 @@ public LED(){
          }
 
         prevElevatAtPos=elevatorAtPos;
-/* 
-        if(!prevNearTarget && nearTarget) setNearTargetBlink();
-        else if(prevNearTarget && !prevNearTarget) setBaseColor(baseColor);
-        prevNearTarget=nearTarget;
-*/
+
 
         if(!prevEndGame && endgame) setBaseColor(endGameColor);
          prevEndGame=endgame;
-
-
 
     }
 

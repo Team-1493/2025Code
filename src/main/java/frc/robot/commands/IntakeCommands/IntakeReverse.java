@@ -2,49 +2,39 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.ElevatorCommands;
+package frc.robot.commands.IntakeCommands;
 
 import frc.robot.subsystems.Claw;
-import frc.robot.subsystems.Elevator;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class ElevatorToNet extends Command {
+public class IntakeReverse extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Elevator elevator;
   private final Claw claw;
-  boolean elevFlag=false;
 
   /**
    * @param subsystem The subsystem used by this command.
    */
-  public ElevatorToNet(Elevator m_elevator,Claw m_claw) {
+  public IntakeReverse(Claw m_claw) {
     claw=m_claw;
-    elevator=m_elevator;
-    elevFlag=false;
-    addRequirements(claw,elevator);
+    addRequirements(claw);
   }
 
   @Override
   public void initialize() {
-//    elevator.stopElevator();
-    elevFlag=false;
-
-    claw.toPosition(claw.positionNeutral);
-
+    claw.StopRollers();  
+    claw.rearRollerFor();
+    claw.chuteRollerRunReverse();
 
 
-    //claw.toPosition(claw.positionIntake);
     
 
   }
 
   @Override
   public void execute() {
-    
-    if (Math.abs(claw.encPosition-claw.positionNeutral)<0.025 && !elevFlag) {
-      elevator.toPosition(elevator.positionNet);
-      elevFlag=true;}
+//    if (claw.encPosition<0.22 && claw.encPosition>-0.1 &&!elevFlag) {
 
 
 
@@ -53,11 +43,10 @@ public class ElevatorToNet extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    claw.toPosition(claw.positionNet);
   }
 
   @Override
   public boolean isFinished() {
-    return (Math.abs(elevator.elevatorPos-elevator.positionNet)<1 ); 
+    return false;
   }
 }

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9187244447903704,
-        "y": 6.674433459662484
+        "x": 1.8631849315068494,
+        "y": 6.263827054794521
       },
       "isLocked": false,
       "linkedName": "Coral_Intake_1"
@@ -20,8 +20,8 @@
         "y": 4.761258561643835
       },
       "prevControl": {
-        "x": 3.5774789850560396,
-        "y": 5.229923334371108
+        "x": 2.990111301369863,
+        "y": 5.93326198630137
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,7 +32,7 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.74,
+      "minWaypointRelativePos": 0.8,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 1.5,
@@ -59,7 +59,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
+    "maxVelocity": 2.25,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,

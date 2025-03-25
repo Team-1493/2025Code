@@ -3,6 +3,7 @@ package frc.robot.Utilities;
 import com.ctre.phoenix6.Utils;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotJoystick extends CommandXboxController {
@@ -54,6 +55,10 @@ public class RobotJoystick extends CommandXboxController {
     public void setFastScaleFactor(){
         scaleFactor=scaleFactorFast;
         scaleFactorRotate=scaleFactorRotateFast;
+    }
+
+    public void rumble(){
+        this.setRumble(RumbleType.kBothRumble, 1);
     }
 
 }

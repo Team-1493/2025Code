@@ -32,10 +32,11 @@ public class Elevator extends SubsystemBase{
     public double 
             positionAlgae1=13,positionAlgae2 = 24, 
             positionNet=43, positionProcessor=0, 
-            positionCoral1=5.5, positionCoral2=7.5,
+            positionCoral1=10.5, positionCoral2=7.0,
             positionCoral3=19.5,positionCoral4=42.25,
             positionIntake=0;
-    public double elevatorPos=0,setPos=0;
+    public double elevatorPos=0;
+    public static double setPos=0;
     boolean zeroed=false,atLowerLimit=false,atUpperLimit=false;
 
     private VoltageOut m_translationCharacterization = new VoltageOut(0);
@@ -104,13 +105,13 @@ public Elevator(){
         SmartDashboard.putNumber("Elevator Pos", elevatorPos);
 
 
-        SmartDashboard.putBoolean("Elevator LLS",atLowerLimit);
-        SmartDashboard.putBoolean("Elevator ULS",atUpperLimit);
+//        SmartDashboard.putBoolean("Elevator LLS",atLowerLimit);
+//        SmartDashboard.putBoolean("Elevator ULS",atUpperLimit);
         // check mag limit switches
 //        if (atUpperLimit && vel>0 ) stopElevator();
 //        if (atLowerLimit && vel<0 ) stopElevator();
         
-        SmartDashboard.putNumber("Elevator set", elevatorRight.getClosedLoopReference().getValueAsDouble());
+//        SmartDashboard.putNumber("Elevator set", elevatorRight.getClosedLoopReference().getValueAsDouble());
     }
 
 
@@ -236,21 +237,21 @@ public Elevator(){
     cfg.MotorOutput.Inverted=InvertedValue.Clockwise_Positive;
     cfg.MotorOutput.NeutralMode=NeutralModeValue.Brake;
 
-    cfg.MotionMagic.MotionMagicCruiseVelocity=80;//60
-    cfg.MotionMagic.MotionMagicAcceleration=160;//80
-    cfg.MotionMagic.MotionMagicJerk=280;   
+    cfg.MotionMagic.MotionMagicCruiseVelocity=60;//60
+    cfg.MotionMagic.MotionMagicAcceleration=80;//80
+    cfg.MotionMagic.MotionMagicJerk=160;   //120
 
     cfg.Slot0.GravityType=GravityTypeValue.Elevator_Static;
 
-    cfg.Slot0.kG=0.41556;//0.495
-    cfg.Slot0.kP=0.12089;//2
+    cfg.Slot0.kG=0.495;//0.495
+    cfg.Slot0.kP=2;//  .120898
     cfg.Slot0.kI=0;
     cfg.Slot0.kD=0;
-    cfg.Slot0.kS=0.088;//0
-    cfg.Slot0.kV=.11689;//.4
+    cfg.Slot0.kS=0.0;//0
+    cfg.Slot0.kV=.4;//.1239
     cfg.Slot0.kA=0;
 
-    cfg.CurrentLimits.StatorCurrentLimit=90;
+    cfg.CurrentLimits.StatorCurrentLimit=80;
     cfg.CurrentLimits.StatorCurrentLimitEnable=true;
     cfg.CurrentLimits.SupplyCurrentLimit=50;
     cfg.CurrentLimits.SupplyCurrentLimitEnable=true;

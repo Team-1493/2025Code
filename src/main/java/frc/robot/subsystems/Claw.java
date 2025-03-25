@@ -36,30 +36,31 @@ private CANcoder clawEncoder = new CANcoder(27);
 
 private MotionMagicVoltage magicToPos= new MotionMagicVoltage(0);
 private VoltageOut voltOutUp = new VoltageOut(1);
-private VoltageOut voltOutChuteRoller = new VoltageOut(-3.8);
+private VoltageOut voltOutChuteRoller = new VoltageOut(-5); // -3.8
+private VoltageOut voltOutChuteRolleReverse = new VoltageOut(5); // -3.8
 
 private VoltageOut voltOutDown = new VoltageOut(-.5);
 private VoltageOut  voltOutRearForward= new VoltageOut(4);
-private VoltageOut  voltOutRearReverse= new VoltageOut(-3);
+private VoltageOut  voltOutRearReverse= new VoltageOut(-3.25);
 private VoltageOut  voltOutFrontForward= new VoltageOut(4);
 private VoltageOut  voltOutFrontReverse= new VoltageOut(-4);
 private VoltageOut  voltOutSpitCoral = new VoltageOut(-8);
-private VoltageOut  voltOutSpitCoralL1 = new VoltageOut(-4);
-private DutyCycleOut dutyFrontSpitAlgae = new DutyCycleOut(1);
-private DutyCycleOut dutyRearSpitAlgae = new DutyCycleOut(-1); 
+private VoltageOut  voltOutSpitCoralL1 = new VoltageOut(-1.5);
+private DutyCycleOut dutyFrontSpitAlgae = new DutyCycleOut(3);
+private DutyCycleOut dutyRearSpitAlgae = new DutyCycleOut(-3); 
 private VoltageOut  voltOutFrontRevSpitAlgae= new VoltageOut(-12);
 private VoltageOut  voltOutRearRevSpitAlgae= new VoltageOut(12);
 private VoltageOut m_rotationCharacterization = new VoltageOut(0);
-
+public static boolean spittingNet =  false;
 
     
-
+// net 0.1
 public double 
         positionAlgae1=-0.035,positionAlgae2 = -0.035, 
-        positionNet = -0.012,positionProcessor=-0.1, 
-        positionCoral1= 0.314, positionCoral2= 0.314,
+        positionNet = 0.05,positionProcessor=-0.1, 
+        positionCoral1= 0.12, positionCoral2= 0.314,
         positionCoral3 = 0.314,positionCoral4= 0.235,
-        positionIntake = 0.372, positionNeutral = 0.306;   
+        positionIntake = 0.372, positionNeutral = 0.306;//0.306; (.15)   
 
 //private DigitalInput limitLower = new DigitalInput(1);
 private DigitalInput limitUpper = new DigitalInput(4);
@@ -108,6 +109,8 @@ public Claw(){
     SmartDashboard.putNumber("Claw Pos Intake", positionIntake);
     SmartDashboard.putNumber("Claw Pos Neutral", positionNeutral);
 */
+    SmartDashboard.putNumber("Claw Pos Net", positionNet);
+
     configure();
 
 
@@ -129,11 +132,11 @@ public Claw(){
         if(!prevHasCoral && hasCoral) stopRollers();
 
         SmartDashboard.putNumber("Claw Enc AbsPos", encPosition);    
-        SmartDashboard.putNumber("Claw Enc SetPosition", clawMotor.getClosedLoopReference().getValueAsDouble());    
+//        SmartDashboard.putNumber("Claw Enc SetPosition", clawMotor.getClosedLoopReference().getValueAsDouble());    
 
 //        SmartDashboard.putBoolean("Claw ULS",atUpperLimit);
 
-        SmartDashboard.putBoolean("Coral Sensor", hasCoral);
+//        SmartDashboard.putBoolean("Coral Sensor", hasCoral);
 //        SmartDashboard.putBoolean("Algae Sensor", hasAlgae);
     }
 
@@ -234,7 +237,7 @@ public Claw(){
     }
 
     public Command SpitCoralL1() {
-        return runOnce( () -> {spitCoral();});
+        return runOnce( () -> {spitCoralL1();});
     }
 
     public void spitCoralL1(){
@@ -263,7 +266,7 @@ public Claw(){
     }
 
     public void holdAlgae(){
-        rollersRun(-1,1);
+        rollersRun(-1.25,1.25);
     }
 
 
@@ -300,6 +303,10 @@ public Claw(){
 
     public void chuteRollerRun(){
         chuteRoller.setControl(voltOutChuteRoller);
+    }
+
+    public void chuteRollerRunReverse(){
+        chuteRoller.setControl(voltOutChuteRolleReverse);
     }
     
 
@@ -383,8 +390,8 @@ public Claw(){
     cfg.Slot0.kV = 5.25;
     cfg.Slot0.kA = 0.02;
  
-    cfg.MotionMagic.MotionMagicCruiseVelocity = 1.2 ; // 0.6;
-    cfg.MotionMagic.MotionMagicAcceleration = 2.4;  //1.5
+    cfg.MotionMagic.MotionMagicCruiseVelocity = 3 ; // 2;
+    cfg.MotionMagic.MotionMagicAcceleration = 6;  //4
     cfg.MotionMagic.MotionMagicJerk=20; //30  
 
     cfg.CurrentLimits.StatorCurrentLimit = 80;
@@ -428,6 +435,7 @@ public Claw(){
 
     public void updateConstants(){
         /* 
+
         positionAlgae1 = SmartDashboard.getNumber("Claw Pos Algae1", positionAlgae1);
         positionAlgae2 = SmartDashboard.getNumber("Claw Pos Algae2", positionAlgae2);
         positionNet = SmartDashboard.getNumber("Claw Pos Net", positionNet);

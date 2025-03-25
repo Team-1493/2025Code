@@ -15,6 +15,7 @@ public class IntakeCoralAuto extends Command {
   private final Claw claw;
   boolean elevFlag=false;
   boolean clawFlag=false;
+  boolean rollerFlag=false;
   int i = 0;
 
   /**
@@ -32,9 +33,8 @@ public class IntakeCoralAuto extends Command {
     claw.StopRollers();  
     elevFlag=false;
     clawFlag=false;
-//    if(elevator.elevatorPos>0.15 && claw.encPosition>.15) claw.toPosition(.15);
-    claw.toPosition(claw.positionNeutral);
-claw.rearRollerRev();
+    rollerFlag=false;
+
 
 
 
@@ -44,9 +44,19 @@ claw.rearRollerRev();
 
   @Override
   public void execute() {
+
+    if(!claw.hasCoral && !rollerFlag ){
+      claw.toPosition(claw.positionNeutral);
+      claw.rearRollerRev();
+      claw.chuteRollerRun();
+      rollerFlag=true;
+    }
+
   if (Math.abs(claw.encPosition-claw.positionNeutral)<0.025 &&!elevFlag) {
       elevator.toPosition(elevator.positionIntake);
-      elevFlag=true;}   
+      elevFlag=true;
+    }
+       
     if (elevator.elevatorPos<0.25){
       claw.toPosition(claw.positionIntake);
       clawFlag=true;

@@ -271,10 +271,14 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         SmartDashboard.putNumber("Pose X",robotpose.getX());
         SmartDashboard.putNumber("Pose Y",robotpose.getY());
         SmartDashboard.putNumber("Pose Z",robotpose.getRotation().getDegrees());
-        SmartDashboard.putNumber("TrueHeading", getTrueHeading()*180/Math.PI);
-//        SmartDashboard.putNumber("vX_target", speeds_target.vxMetersPerSecond);
-//        SmartDashboard.putNumber("vY_target", speeds_target.vyMetersPerSecond);
-//        SmartDashboard.putNumber("vZ_target", speeds_target.omegaRadiansPerSecond);
+//        SmartDashboard.putNumber("TrueHeading", getTrueHeading()*180/Math.PI);
+        SmartDashboard.putNumber("vX_target", speeds_target.vxMetersPerSecond);
+        SmartDashboard.putNumber("vY_target", speeds_target.vyMetersPerSecond);
+        SmartDashboard.putNumber("vZ_target", speeds_target.omegaRadiansPerSecond);
+
+        SmartDashboard.putNumber("vX", this.getChassisSpeed().vxMetersPerSecond);
+        SmartDashboard.putNumber("vY",this.getChassisSpeed().vyMetersPerSecond);
+        SmartDashboard.putNumber("vZ", this.getChassisSpeed().omegaRadiansPerSecond);
     }
 
     private void startSimThread() {
@@ -348,7 +352,9 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         this.setControl(driveFC
         .withVelocityX(x)
         .withVelocityY(y)
-        .withRotationalRate(z));
+        .withRotationalRate(z)
+        );
+
     }
     
     public void resetToFieldZero(){
@@ -387,10 +393,12 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
 
 
     private void calculateAcceleration(double vx,double vy, double vr){
-        accX = (vx-this.getState().Speeds.vxMetersPerSecond)/0.02;
+        if (vx<1) accX=0;
+        else
+            accX = (vx-this.getState().Speeds.vxMetersPerSecond)/0.02;
         accY = (vy - this.getState().Speeds.vyMetersPerSecond)/0.02;
         accR = (vr - this.getState().Speeds.omegaRadiansPerSecond)/0.02;
-
+        SmartDashboard.putNumber("Acc X",accX);
         
     }
 
@@ -398,10 +406,10 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         double vx = speeds.vxMetersPerSecond;
         double vy = speeds.vyMetersPerSecond;
         double vr = speeds.omegaRadiansPerSecond;
-        // ****** had error wiht (), fixed
         accX = (vx-this.getState().Speeds.vxMetersPerSecond)/0.02;
         accY = (vy - this.getState().Speeds.vyMetersPerSecond)/0.02;
         accR = (vr - this.getState().Speeds.omegaRadiansPerSecond)/0.02;
+        SmartDashboard.putNumber("Acc X",accX);
     }
 
 

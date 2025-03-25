@@ -23,7 +23,8 @@ public class SpitCoral extends Command {
 
   @Override
   public void initialize() {
-    claw.spitCoral();
+    if (Elevator.setPos == 9.5) claw.spitCoralL1();
+    else claw.spitCoral();
     i=0;
 
   }

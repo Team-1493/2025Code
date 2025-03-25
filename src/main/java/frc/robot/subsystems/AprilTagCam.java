@@ -64,7 +64,6 @@ import com.ctre.phoenix6.Utils;
                     labelClosestDist; 
     boolean hasVisionMeasure=false;
     public int numTargets;
-    
 
      // *** For Simulation
      private PhotonCameraSim cameraSim;
@@ -179,7 +178,6 @@ import com.ctre.phoenix6.Utils;
          }
          
  
-        SmartDashboard.putBoolean("VisionEstPresent", visionEst.isPresent());
         
         return visionEst;
 

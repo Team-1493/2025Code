@@ -18,6 +18,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -48,6 +49,10 @@ public class DriveToCommands2 {
 
   public DriveToCommands2(CommandSwerveDrivetrain m_sd){
       sd = m_sd;
+      SmartDashboard.putNumber("Net X", 0);
+      SmartDashboard.putNumber("Net Y", 0);
+      SmartDashboard.putNumber("Net Lead X", 5);
+
 }
 
 public Command getCommandLeft(){
@@ -172,8 +177,8 @@ public Command getCommandCenter(){
   double rotRobot=rotTarget+Math.PI;
 
   endPose = new Pose2d(
-    targetPose.getX()+(reefOffsetY)*Math.cos(rotTarget),
-    targetPose.getY()+(reefOffsetY)*Math.sin(rotTarget),
+    targetPose.getX()+(reefOffsetY-0.15)*Math.cos(rotTarget),
+    targetPose.getY()+(reefOffsetY-0.15)*Math.sin(rotTarget),
     new Rotation2d(rotRobot));
 
 
@@ -223,28 +228,39 @@ public Command getIntakeCommand(){
   else id = blue ? 12 : 2;
 
   int index = id-1;
+  double intakeOffsetLead = 0;
+
+  intakeOffsetX=0;
+  intakeOffsetY=0.35;
+  intakeOffsetLead =0.43;
+
 
   targetPose = VisionConstants.aprilTagList.get(index).pose.toPose2d();
   double rotTarget = targetPose.getRotation().getRadians();
   double rotRobot=rotTarget;
 
   endPose = new Pose2d(
-    targetPose.getX()+(reefOffsetY)*Math.cos(rotTarget),
-    targetPose.getY()+(reefOffsetY)*Math.sin(rotTarget),
+    targetPose.getX()+(intakeOffsetY)*Math.cos(rotTarget),
+    targetPose.getY()+(intakeOffsetY)*Math.sin(rotTarget),
     new Rotation2d(rotRobot));
 
 
   targetPose = new Pose2d(
-    targetPose.getX()+(reefOffsetY+ 0.5)*Math.cos(rotTarget),
-    targetPose.getY()+(reefOffsetY+ 0.5)*Math.sin(rotTarget),
+    targetPose.getX()+(intakeOffsetY+ intakeOffsetLead)*Math.cos(rotTarget),
+    targetPose.getY()+(intakeOffsetY+ intakeOffsetLead)*Math.sin(rotTarget),
     new Rotation2d(rotRobot));
 
     double dist = distanceToTarget();    
 
+    Waypoint wp = new Waypoint(targetPose.getTranslation(),endPose.getTranslation(),null);
+
     List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
       new Pose2d(sd.getPose().getTranslation(), getPathVelocityHeading(sd.getFieldVelocity(), targetPose)),
-      targetPose
+      endPose
   );
+
+  waypoints.remove(1);
+  waypoints.add(wp);
 
     IdealStartingState iss = new IdealStartingState(
           getVelocityMagnitude(sd.getFieldVelocity()), sd.getPose().getRotation());
@@ -252,12 +268,12 @@ public Command getIntakeCommand(){
           PathPlannerPath path = new PathPlannerPath(
             waypoints, 
             constraints,iss, 
-            new GoalEndState(1, targetPose.getRotation())
+            new GoalEndState(0, targetPose.getRotation())
         );
 
         path.preventFlipping = true;
-
-/*         return (AutoBuilder.followPath(path).andThen(
+/* 
+         return (AutoBuilder.followPath(path).andThen(
             Commands.print("start position PID loop"),
             PositionPIDCommand.generateCommand(sd, endPose, (
                 DriverStation.isAutonomous() ? kAutoAlignAdjustTimeout : kTeleopAlignAdjustTimeout
@@ -267,14 +283,86 @@ public Command getIntakeCommand(){
                 sd.stop();
             }
         });
-*/
 
+*/
 
         
         return (AutoBuilder.followPath(path).
         andThen(sd.Stop()));
 
 }
+
+
+
+public Command getNetCommand(){
+
+  boolean blue = VisionConstants.blue;
+  double yr = sd.getPose().getY();
+  double ytarget,xtarget,netLeadX;
+
+  ytarget=SmartDashboard.getNumber("Net Y", 5);
+  xtarget=SmartDashboard.getNumber("Net X", 5);
+  netLeadX = SmartDashboard.getNumber("Net Lead X", 5);
+
+
+
+  targetPose = new Pose2d(xtarget,ytarget,new Rotation2d(0));
+  double rotTarget = targetPose.getRotation().getRadians();
+  double rotRobot=rotTarget;
+
+  endPose = targetPose;
+
+
+  targetPose = new Pose2d(
+    targetPose.getX()- netLeadX,
+    targetPose.getY(),
+    new Rotation2d(rotRobot));
+
+    double dist = distanceToTarget();    
+
+    Waypoint wp = new Waypoint(targetPose.getTranslation(),endPose.getTranslation(),null);
+
+    List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
+      new Pose2d(sd.getPose().getTranslation(), getPathVelocityHeading(sd.getFieldVelocity(), targetPose)),
+      endPose
+  );
+
+  waypoints.remove(1);
+  waypoints.add(wp);
+
+    IdealStartingState iss = new IdealStartingState(
+          getVelocityMagnitude(sd.getFieldVelocity()), sd.getPose().getRotation());
+
+          PathPlannerPath path = new PathPlannerPath(
+            waypoints, 
+            constraints,iss, 
+            new GoalEndState(0, targetPose.getRotation())
+        );
+
+        path.preventFlipping = true;
+/* 
+         return (AutoBuilder.followPath(path).andThen(
+            Commands.print("start position PID loop"),
+            PositionPIDCommand.generateCommand(sd, endPose, (
+                DriverStation.isAutonomous() ? kAutoAlignAdjustTimeout : kTeleopAlignAdjustTimeout
+            ))
+         )).finallyDo((interupt) -> {
+            if (interupt) { //if this is false then the position pid would've X braked & called the same method
+                sd.stop();
+            }
+        });
+
+*/
+
+        
+        return (AutoBuilder.followPath(path).
+        andThen(sd.Stop()));
+
+}
+
+
+
+
 
 
 public Command getProcessorCommand(){
@@ -335,40 +423,6 @@ public Command getProcessorCommand(){
 
 
 
-/* 
-
-public Command getIntakeCommand(){
-  boolean blue = VisionConstants.blue;
-  int id = 13;
-  double yr = sd.getPose().getY();
-  if (yr>4.055) id = blue ? 13 : 1;
-  else id = blue ? 12 : 2;
-  
-  int index = id-1;
-  targetPose = VisionConstants.aprilTagList.get(index).pose.toPose2d();
-  double rotTarget = targetPose.getRotation().getRadians();
-  targetPose = new Pose2d(
-      targetPose.getX()+intakeOffsetX*Math.sin(rotTarget)+intakeOffsetY*Math.cos(rotTarget),
-      targetPose.getY()-intakeOffsetX*Math.cos(rotTarget)+intakeOffsetY*Math.sin(rotTarget),
-      new Rotation2d(rotTarget));
-
-      double dist = distanceToTarget();
-      Command drivePath;
-    
-      if(dist<0)
-
-          drivePath= AutoBuilder.pathfindToPose(
-              targetPose,constraints, 0.0);
-      
-      else {drivePath=new FollowPoseDirect(sd, targetPose);
-        System.out.println("******************************   ");         
-        System.out.println("******************************   FPD");
-        System.out.println("******************************   ");            
-      }
-      return (drivePath);
-}
-
-*/
 
 
 private double distanceToTarget(){

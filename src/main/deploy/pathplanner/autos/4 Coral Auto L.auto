@@ -71,15 +71,15 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.4
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "7. Human to L"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.4
           }
         },
         {

@@ -33,6 +33,8 @@ import frc.robot.commands.ElevatorCommands.ElevatorToReefC2;
 import frc.robot.commands.ElevatorCommands.ElevatorToReefC3;
 import frc.robot.commands.ElevatorCommands.ElevatorToReefC4;
 import frc.robot.commands.IntakeCommands.IntakeCoral;
+import frc.robot.commands.IntakeCommands.IntakeReverse;
+import frc.robot.commands.SpitCommands.SpitAlgaeNet;
 import frc.robot.commands.SpitCommands.SpitCoral;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ActionCommands;
@@ -103,14 +105,6 @@ public class RobotContainer {
  //                 andThen(new InstantCommand( ()->SignalLogger.stop() )));
         
 
-
-
-
-   //     stickDriver.button(5).whileTrue( elevator.ManualUp());
-   //     stickDriver.button(5).onFalse( elevator.StopElevator());
-   //     stickDriver.button(6).whileTrue( elevator.ManualDown());
-   //     stickDriver.button(6).onFalse( elevator.StopElevator());
-
     
         stickDriver.button(5).onTrue( new InstantCommand(()-> drivetrain.setRotationToZero()));
         stickDriver.button(6).onTrue( new InstantCommand(()-> drivetrain.resetToFieldZero()));
@@ -130,14 +124,19 @@ public class RobotContainer {
         stickDriver.button(4).whileTrue( new DeferredCommand( 
             () -> driveToCommands.getCommandCenter() , Set.of(drivetrain)));
 
+        stickDriver.button(1).whileTrue(
+            new InstantCommand( () -> VisionSystem.towardsIntake=true).alongWith(
+            new DeferredCommand( 
+            () -> driveToCommands.getIntakeCommand() , Set.of(drivetrain)))
+        );
+
+        stickDriver.button(1).onFalse(
+            new InstantCommand( () -> VisionSystem.towardsIntake=false)
+        );
 
 
-
-//        stickDriver.button(1).whileTrue( new DeferredCommand( 
-//            () -> driveToCommands.getIntakeCommand() , Set.of(drivetrain)));
-   
-//        stickDriver.pov(180).whileTrue( new DeferredCommand( 
-//            () -> driveToCommands.getProcessorCommand() , Set.of(drivetrain)));
+        stickDriver.pov(180).whileTrue( new DeferredCommand( 
+            () -> driveToCommands.getNetCommand() , Set.of(drivetrain)));
         
 
 
@@ -159,6 +158,7 @@ public class RobotContainer {
                 (new ElevatorToNet(elevator,claw));                
 
         stickOperator.button(6).onTrue(claw.SpitAlgae());
+//        stickOperator.button(6).onTrue(new SpitAlgaeNet(claw));
         stickOperator.button(6).onFalse(claw.StopRollers());
 
         stickOperator.button(5).onTrue(new SpitCoral(claw));
@@ -171,7 +171,7 @@ public class RobotContainer {
 //        stickOperator.button(11).onFalse(elevator.StopElevator());
 
 
-        stickOperator.button(11).onTrue(new InstantCommand( () -> {updateConstants();}));
+        stickOperator.button(11).onTrue(new IntakeReverse(claw));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
@@ -181,10 +181,10 @@ public class RobotContainer {
     }
 
     private void updateConstants(){
-//        claw.updateConstants();
+        claw.updateConstants();
 //        elevator.updateConstants();
 //        vision.configure();
-        drivetrain.configure();
+//        drivetrain.configure();
      }
 
      public Command zeroElevator(){
@@ -194,10 +194,18 @@ public class RobotContainer {
 
 
      public Command releaseRamp(){
-        return (new ReleaseRamp(rearIntake));
-     }
+        return (new ReleaseRamp(rearIntake));     }
 
 
+
+/*        
+    public Command releaseRamp(){
+        return (new DeferredCommand( 
+            () -> new ReleaseRamp(rearIntake),Set.of(rearIntake)    )  
+            );
+
+    }
+*/  
 
      
     }

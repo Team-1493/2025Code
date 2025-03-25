@@ -21,7 +21,7 @@ public class RearIntake extends SubsystemBase {
 public TalonFX motor = new TalonFX(26);
 
 public DigitalInput limitSwitch= new DigitalInput(2);
-private VoltageOut  voltOut= new VoltageOut(.7);
+private VoltageOut  voltOut= new VoltageOut(1);
 
 private VoltageOut  voltZero= new VoltageOut(0);
 static public boolean releasedRamp=false;
@@ -34,7 +34,7 @@ public RearIntake(){
 
     public void periodic(){
         
-        SmartDashboard.putBoolean("Rear Ramp", getLimit());
+//        SmartDashboard.putBoolean("Rear Ramp", getLimit());
         
         
     }
