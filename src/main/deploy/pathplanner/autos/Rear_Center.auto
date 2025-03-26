@@ -11,12 +11,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 3.0
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Center_To_H"
@@ -25,7 +19,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.3
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.301
           }
         },
         {

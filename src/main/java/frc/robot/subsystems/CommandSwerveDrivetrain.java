@@ -398,7 +398,7 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
             accX = (vx-this.getState().Speeds.vxMetersPerSecond)/0.02;
         accY = (vy - this.getState().Speeds.vyMetersPerSecond)/0.02;
         accR = (vr - this.getState().Speeds.omegaRadiansPerSecond)/0.02;
-        SmartDashboard.putNumber("Acc X",accX);
+//        SmartDashboard.putNumber("Acc X",accX);
         
     }
 
@@ -409,7 +409,7 @@ private final SwerveRequest.FieldCentric driveFC = new SwerveRequest.FieldCentri
         accX = (vx-this.getState().Speeds.vxMetersPerSecond)/0.02;
         accY = (vy - this.getState().Speeds.vyMetersPerSecond)/0.02;
         accR = (vr - this.getState().Speeds.omegaRadiansPerSecond)/0.02;
-        SmartDashboard.putNumber("Acc X",accX);
+//        SmartDashboard.putNumber("Acc X",accX);
     }
 
 

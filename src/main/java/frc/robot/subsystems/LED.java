@@ -54,7 +54,7 @@ public class LED extends SubsystemBase {
                             public int baseColor=disabledColor;   
     private Trigger endgameTrigger; 
     
-    private double matchTime=0;
+    public double matchTime=0;
 
   
 public LED(){
@@ -86,7 +86,7 @@ public LED(){
     public void periodic(){
 
         matchTime=DriverStation.getMatchTime();
-        if(matchTime>-0.1) SmartDashboard.putNumber("MatchTime",(int)matchTime);
+        SmartDashboard.putNumber("MatchTime",(int)matchTime);
 
         if(matchTime<20  && matchTime>-0.1 &&  DriverStation.isTeleop()) 
             endgame=true;

@@ -1,5 +1,8 @@
 package frc.robot.commands;
+import java.io.IOException;
 import java.util.List;
+
+import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.GoalEndState;
@@ -7,6 +10,8 @@ import com.pathplanner.lib.path.IdealStartingState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
+import com.pathplanner.lib.util.FileVersionException;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
@@ -22,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Utilities.VisionConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.LED;
@@ -45,7 +51,7 @@ public class DriveToCommands2 {
   Rotation2d rotZero=new Rotation2d(0);
   CommandSwerveDrivetrain sd;
             public static final Time kTeleopAlignAdjustTimeout = Seconds.of(2);
-            public static final Time kAutoAlignAdjustTimeout = Seconds.of(0.6);
+            public static final Time kAutoAlignAdjustTimeout = Seconds.of(0.2);
 
   public DriveToCommands2(CommandSwerveDrivetrain m_sd){
       sd = m_sd;
@@ -73,8 +79,10 @@ public Command getCommandLeft(){
     targetPose.getX()+reefOffsetXLeft*Math.sin(rotTarget)+(reefOffsetY+ 0.5)*Math.cos(rotTarget),
     targetPose.getY()-reefOffsetXLeft*Math.cos(rotTarget)+(reefOffsetY+ 0.5)*Math.sin(rotTarget),
     new Rotation2d(rotRobot));
-  
 
+System.out.println("*****************************************************  LEFT");    
+System.out.println("targetPose  "+targetPose.getX()+"  "+targetPose.getY()+"   "+targetPose.getRotation().getDegrees());    
+System.out.println("endPose  "+endPose.getX()+"  "+endPose.getY()+"   "+endPose.getRotation().getDegrees());
 
     List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
       new Pose2d(sd.getPose().getTranslation(), getPathVelocityHeading(sd.getFieldVelocity(), targetPose)),
@@ -136,6 +144,12 @@ public Command getCommandRight(){
     new Rotation2d(rotRobot));
 
     double dist = distanceToTarget();    
+
+    System.out.println("*****************************************************  Right");    
+    System.out.println("targetPose  "+targetPose.getX()+"  "+targetPose.getY()+"   "+targetPose.getRotation().getDegrees());    
+    System.out.println("endPose  "+endPose.getX()+"  "+endPose.getY()+"   "+endPose.getRotation().getDegrees());
+    
+    
 
     List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
       new Pose2d(sd.getPose().getTranslation(), getPathVelocityHeading(sd.getFieldVelocity(), targetPose)),
@@ -253,6 +267,12 @@ public Command getIntakeCommand(){
     double dist = distanceToTarget();    
 
     Waypoint wp = new Waypoint(targetPose.getTranslation(),endPose.getTranslation(),null);
+
+//    System.out.println("*****************************************************  Intake");    
+//    System.out.println("targetPose  "+targetPose.getX()+"  "+targetPose.getY()+"   "+targetPose.getRotation().getDegrees());    
+//    System.out.println("endPose  "+endPose.getX()+"  "+endPose.getY()+"   "+endPose.getRotation().getDegrees());
+    
+    
 
     List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
       new Pose2d(sd.getPose().getTranslation(), getPathVelocityHeading(sd.getFieldVelocity(), targetPose)),
@@ -433,9 +453,9 @@ private double distanceToTarget(){
       targetPose.getY()-robotPose.getY());
 
 
-  System.out.println("******************************   ");         
-  System.out.println("******************************   "+distance);
-  System.out.println("******************************   ");      
+//  System.out.println("******************************   ");         
+//  System.out.println("******************************   "+distance);
+//  System.out.println("******************************   ");      
   return distance;
 }
 

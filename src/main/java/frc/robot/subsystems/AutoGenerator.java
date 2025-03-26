@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.DriveToCommands2;
+import frc.robot.commands.PositionPIDCommand;
 import frc.robot.commands.IntakeCommands.IntakeCoral;
 import frc.robot.subsystems.ActionCommands;
 
@@ -19,6 +21,7 @@ public class AutoGenerator {
     public SendableChooser<Command> autoChooser;
     Elevator elevator;
     Claw claw;
+    
     ActionCommands actions;
     private void defineCommands(Command simIntakeCoral, Command simIntakeAlgae, 
     Command simScoreCoral, 
@@ -47,7 +50,7 @@ public class AutoGenerator {
 
     private void autoChooserInit(){
         autoChooser = AutoBuilder.buildAutoChooser("None");
-
+        
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
@@ -56,7 +59,7 @@ public class AutoGenerator {
         elevator = m_elevator;
         claw = m_claw;
         actions = m_actions;
-        
+
 
         InstantCommand simIntakeCoral = new InstantCommand(
             () -> SmartDashboard.putBoolean("Holding Coral", true)
@@ -112,6 +115,9 @@ public class AutoGenerator {
 
         //Command intakeCoral = m_actions.intakeCoral;
         //autoSim version
+
+        
+
         SequentialCommandGroup intakeCoral = new SequentialCommandGroup(
             m_actions.intakeCoral
         );
@@ -123,7 +129,6 @@ public class AutoGenerator {
         InstantCommand autoComplete = new InstantCommand(() -> SmartDashboard.putBoolean("autoSim autoComplete", true));
 
         Command releaseRamp = m_actions.releaseRamp;
-
         defineCommands(simIntakeCoral, simIntakeAlgae, simScoreCoral, simDropAlgae, toReef1, toReef2, toReef3, toReef4, toIntake, driveToReefWall, driveToIntakeWall, intakeCoral, spitCoral,
         checkForCoralAuto, autoComplete, releaseRamp);
 

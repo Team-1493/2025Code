@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -54,7 +55,7 @@ public class RobotContainer {
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
 
-    private final Telemetry logger = new Telemetry(MaxSpeed);
+//    private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final RobotJoystick stickDriver = new RobotJoystick(0);
     private final RobotJoystick stickOperator = new RobotJoystick(1);
@@ -173,7 +174,7 @@ public class RobotContainer {
 
         stickOperator.button(11).onTrue(new IntakeReverse(claw));
 
-        drivetrain.registerTelemetry(logger::telemeterize);
+//        drivetrain.registerTelemetry(logger::telemeterize);
     }
 
     public Command getAutonomousCommand() {
@@ -195,6 +196,9 @@ public class RobotContainer {
 
      public Command releaseRamp(){
         return (new ReleaseRamp(rearIntake));     }
+
+   
+
 
 
 
