@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 0.9766695205479452,
-        "y": 6.955008561643836
+        "y": 6.955
       },
       "prevControl": null,
       "nextControl": {
         "x": 1.7452256944444433,
-        "y": 4.863541666666666
+        "y": 4.86353310502283
       },
       "isLocked": false,
       "linkedName": "Coral_Intake_1"

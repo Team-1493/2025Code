@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.177140410958904,
-        "y": 3.0783818493150683
+        "x": 4.172,
+        "y": 3.0690000000000004
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.292674964875308,
-        "y": 2.6162482876712327
+        "x": 3.4526601996613486,
+        "y": 2.3743416295410036
       },
       "isLocked": false,
       "linkedName": "Coral_Score_D"
     },
     {
       "anchor": {
-        "x": 1.096875,
-        "y": 1.0048373287671233
+        "x": 0.977,
+        "y": 1.096
       },
       "prevControl": {
-        "x": 2.087240735862312,
-        "y": 1.0787260273972614
+        "x": 2.2605257463416444,
+        "y": 2.2929071219096846
       },
       "nextControl": null,
       "isLocked": false,
@@ -35,8 +35,8 @@
       "minWaypointRelativePos": 0.7999999999999998,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.5,
-        "maxAcceleration": 2.0,
+        "maxVelocity": 2.0,
+        "maxAcceleration": 2.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,

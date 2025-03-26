@@ -4,24 +4,24 @@
     {
       "anchor": {
         "x": 0.9766695205479452,
-        "y": 6.955008561643836
+        "y": 6.955
       },
       "prevControl": null,
       "nextControl": {
         "x": 1.90826198630137,
-        "y": 6.50423801369863
+        "y": 6.504229452054794
       },
       "isLocked": false,
       "linkedName": "Coral_Intake_1"
     },
     {
       "anchor": {
-        "x": 4.1470890410958905,
-        "y": 4.956592465753425
+        "x": 4.071960616438356,
+        "y": 4.986643835616438
       },
       "prevControl": {
-        "x": 3.6963184931506845,
-        "y": 5.783005136986301
+        "x": 3.62119006849315,
+        "y": 5.813056506849314
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +48,7 @@
   "eventMarkers": [
     {
       "name": "toReef4",
-      "waypointRelativePos": 0.2,
+      "waypointRelativePos": 0.15,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

@@ -7,109 +7,97 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4C-Path1"
+            "pathName": "1. Start to J"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "simIntakeAlgae"
+            "name": "spitCoral"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "4C-Path2"
+            "pathName": "2. J to Human"
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "simIntakeAlgae"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4C-Path3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "simScoreCoral"
+            "waitTime": 0.3
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "4C-Path4"
+            "pathName": "3. Human to K"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.15
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "simIntakeCoral"
+            "name": "spitCoral"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.15
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "4C-Path5"
+            "pathName": "4. K to Human"
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "simScoreCoral"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4C-Path6"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "simIntakeCoral"
+            "waitTime": 0.5
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "4C-Path7"
+            "pathName": "5. Human to L"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.15
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "simScoreCoral"
+            "name": "spitCoral"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.15
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "4C-Path8"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "simIntakeCoral"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4C-Path9"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "simScoreCoral"
+            "pathName": "LtoHuman"
           }
         }
       ]

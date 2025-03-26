@@ -5,15 +5,27 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "1. Start to J"
+            "name": "toReef4"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Center_To_H"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.3
           }
         },
         {
@@ -25,25 +37,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2. J to Human"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "3. Human to K"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
+            "pathName": "Back_From_Center"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "spitCoral"
+            "name": "toIntake"
           }
         }
       ]

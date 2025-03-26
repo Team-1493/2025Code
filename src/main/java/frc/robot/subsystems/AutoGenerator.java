@@ -33,7 +33,7 @@ public class AutoGenerator {
         NamedCommands.registerCommand("simDropAlgae", simDropAlgae);
 
         NamedCommands.registerCommand("toReef1", toReef1);
-        NamedCommands.registerCommand("toReef2", toReef2);
+        NamedCommands.registerCommand("toReeff2", toReef2);
         NamedCommands.registerCommand("toReef3", toReef3);
         NamedCommands.registerCommand("toReef4", toReef4);
         NamedCommands.registerCommand("toIntake", toIntake);
@@ -46,7 +46,7 @@ public class AutoGenerator {
     }
 
     private void autoChooserInit(){
-        autoChooser = AutoBuilder.buildAutoChooser("Auto1");
+        autoChooser = AutoBuilder.buildAutoChooser("None");
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
@@ -96,9 +96,7 @@ public class AutoGenerator {
         //SequentialCommandGroup toReef4 = m_actions.elevatorToReef4;
         //autoSim version
         SequentialCommandGroup toReef4 = new SequentialCommandGroup(
-            m_actions.elevatorToReef4,
-            new InstantCommand(() -> SmartDashboard.putString("autoSim elevatorGoal", "endTo4"))
-        );
+            m_actions.elevatorToReef4        );
 
 
         //SequentialCommandGroup toIntake = m_actions.elevatorToIntake;
@@ -115,7 +113,6 @@ public class AutoGenerator {
         //Command intakeCoral = m_actions.intakeCoral;
         //autoSim version
         SequentialCommandGroup intakeCoral = new SequentialCommandGroup(
-            new InstantCommand(() -> SmartDashboard.putBoolean("autoSim holdingCoral", true)),
             m_actions.intakeCoral
         );
 
@@ -149,15 +146,7 @@ public class AutoGenerator {
   }
 
 
-  public Command IntakeR_DR() {
-   return new PathPlannerAuto("IntakeR_DR");
-  }
-
-
   
-  public Command Straight2m() {
-    return new PathPlannerAuto("Straight2m");
-   }
  
 
 }

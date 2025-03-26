@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.658,
-        "y": 3.079
+        "x": 4.838,
+        "y": 3.139
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.156782490340711,
-        "y": 2.282224315068494
+        "x": 5.108440395949438,
+        "y": 1.7266593922715698
       },
       "isLocked": false,
       "linkedName": "Coral_Score_E"
     },
     {
       "anchor": {
-        "x": 1.096875,
-        "y": 1.0048373287671233
+        "x": 0.977,
+        "y": 1.096
       },
       "prevControl": {
-        "x": 1.861855461889709,
-        "y": 1.3642140410958907
+        "x": 1.7522349237163208,
+        "y": 1.8189182616662485
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,10 +33,10 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0.8033898305084748,
-      "maxWaypointRelativePos": 0.28135593220338984,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.5,
-        "maxAcceleration": 2.0,
+        "maxVelocity": 2.0,
+        "maxAcceleration": 2.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,

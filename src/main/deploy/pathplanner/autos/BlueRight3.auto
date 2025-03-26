@@ -7,61 +7,103 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of 1. Start to J"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "spitCoral"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Copy of 2. J to Human"
+            "pathName": "BR_Start_To_E"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.6
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Copy of 3. Human to K"
+            "waitTime": 0.15
           }
         },
         {
           "type": "named",
           "data": {
             "name": "spitCoral"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Copy of 4. K to Human"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.6
+            "waitTime": 0.15
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of 5. Human to L"
+            "pathName": "BR_E_To_Human"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.4
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BR_Human_To_D"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.15
           }
         },
         {
           "type": "named",
           "data": {
             "name": "spitCoral"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.15
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BR_D_To_Human"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.4
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BR_Human_To_C"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.15
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "spitCoral"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.15
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BR_C_To_Human"
           }
         }
       ]

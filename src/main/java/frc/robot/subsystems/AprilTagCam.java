@@ -232,7 +232,7 @@ import com.ctre.phoenix6.Utils;
                  // One or more tags visible, run the full heuristic.
                  avgDist /= numTags;
                  // Decrease std devs if multiple targets are visible
-                 if(avgDist>2.5 ) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+                 if(avgDist>1.5 ) estStdDevs = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
                  else if (numTags > 1) estStdDevs = VisionSystem.kMultiTagStdDevs;
                  else    estStdDevs=VisionSystem.kSingleTagStdDevs;
 //                 else estStdDevs = estStdDevs.times(1 + (avgDist * avgDist / VisionSystem.stdFactor));//30

@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "1. Start to J"
+            "pathName": "Copy of 1. Start to J"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
           }
         },
         {
@@ -19,7 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2. J to Human"
+            "pathName": "Copy of 2. J to Human"
           }
         },
         {
@@ -31,7 +37,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "3. Human to K"
+            "pathName": "Copy of 3. Human to K"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.15
           }
         },
         {
@@ -43,7 +55,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4. K to Human"
+            "pathName": "Copy of 4. K to Human"
           }
         },
         {
@@ -55,37 +67,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "5. Human to L"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "spitCoral"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "6. L to Human"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "7. Human to L"
+            "pathName": "Copy of 5. Human to L"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.4
+            "waitTime": 0.15
           }
         },
         {
           "type": "named",
           "data": {
             "name": "spitCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Copy of LtoHuman"
           }
         }
       ]
