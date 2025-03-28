@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.8369999999999997,
-        "y": 4.721
+        "x": 3.846575342465753,
+        "y": 4.8363869863013695
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.216023972602738,
-        "y": 5.592996289954338
+        "x": 3.2255993150684916,
+        "y": 5.708383276255708
       },
       "isLocked": false,
       "linkedName": "Coral_Score_L"
@@ -71,7 +71,7 @@
     "rotation": -52.50130060603152
   },
   "reversed": false,
-  "folder": "2 Coral Auto L Paths",
+  "folder": "3 Coral Auto L Paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -58.642999999999994

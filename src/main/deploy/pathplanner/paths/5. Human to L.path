@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 3.8369999999999997,
-        "y": 4.721
+        "x": 3.846575342465753,
+        "y": 4.8363869863013695
       },
       "prevControl": {
-        "x": 2.9504845890410953,
-        "y": 5.893003424657535
+        "x": 2.9600599315068488,
+        "y": 6.008390410958905
       },
       "nextControl": null,
       "isLocked": false,
@@ -35,8 +35,8 @@
       "minWaypointRelativePos": 0.8,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.5,
-        "maxAcceleration": 2.0,
+        "maxVelocity": 1.1,
+        "maxAcceleration": 1.6,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -71,7 +71,7 @@
     "rotation": -58.642999999999994
   },
   "reversed": false,
-  "folder": "2 Coral Auto L Paths",
+  "folder": "3 Coral Auto L Paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -52.50130060603152

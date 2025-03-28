@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.846575342465753,
-        "y": 3.21361301369863
+        "x": 4.172,
+        "y": 3.0690000000000004
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.9812240997670547,
-        "y": 2.5586647317814695
+        "x": 3.4526601996613486,
+        "y": 2.3743416295410036
       },
       "isLocked": false,
-      "linkedName": "BlueRightToC"
+      "linkedName": "Coral_Score_D"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 1.096
       },
       "prevControl": {
-        "x": 2.1328636080667045,
-        "y": 1.9675724679752258
+        "x": 2.2605257463416444,
+        "y": 2.2929071219096846
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,7 +29,21 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.7999999999999998,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 0.75,
+        "maxAcceleration": 1.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
@@ -45,8 +59,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.25,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 1.75,
+    "maxAcceleration": 2.25,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -57,10 +71,10 @@
     "rotation": 53.86209721040541
   },
   "reversed": false,
-  "folder": null,
+  "folder": "3 Coral Auto R Paths ",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 58.72524904845734
+    "rotation": 57.28423361458608
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

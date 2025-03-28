@@ -35,8 +35,8 @@
       "minWaypointRelativePos": 0.75,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.5,
-        "maxAcceleration": 2.25,
+        "maxVelocity": 1.1,
+        "maxAcceleration": 1.6,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -71,7 +71,7 @@
     "rotation": 57.28423361458608
   },
   "reversed": false,
-  "folder": "2 Coral Auto R Paths ",
+  "folder": "3 Coral Auto R Paths ",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 53.86209721040541

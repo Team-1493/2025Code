@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 4.032,
-        "y": 3.375
+        "x": 3.847,
+        "y": 3.215
       },
       "prevControl": {
-        "x": 3.6327529855988767,
-        "y": 2.8620976027397265
+        "x": 3.4477529855988767,
+        "y": 2.7020976027397263
       },
       "nextControl": null,
       "isLocked": false,
@@ -35,8 +35,8 @@
       "minWaypointRelativePos": 0.8,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.5,
-        "maxAcceleration": 2.0,
+        "maxVelocity": 1.1,
+        "maxAcceleration": 1.6,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -71,7 +71,7 @@
     "rotation": 58.72524904845734
   },
   "reversed": false,
-  "folder": "2 Coral Auto R Paths ",
+  "folder": "3 Coral Auto R Paths ",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 53.86209721040541

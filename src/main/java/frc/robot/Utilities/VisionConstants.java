@@ -13,18 +13,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class VisionConstants {
     public static boolean blue=true;
     public static List<AprilTag> aprilTagList;
+    public static List<AprilTag> aprilTagListRed;
+    public static List<AprilTag> aprilTagListBlue;
     public static AprilTagFieldLayout FieldLayout;
-    double fieldLength=16.54,fieldWidth=8.21;
+    static double fieldLength=16.54,fieldWidth=8.21;
   
 
     public VisionConstants(){
 
-    getAlliance();
-    if(blue)    
-    {
-    System.out.println("*************************  BLUE");
+// *** Make blue = true for blue side,  false for red side
 
-    aprilTagList =  new ArrayList<AprilTag>(Arrays.asList(
+    blue = true;
+
+    aprilTagListBlue =  new ArrayList<AprilTag>(Arrays.asList(
 
     new AprilTag(1, new Pose3d(16.697,	0.655, 1.486, new Rotation3d(0.000, 0.000, 2.199))),
     new AprilTag(2, new Pose3d(16.697,	7.396, 1.486, new Rotation3d(0.000, 0.000, 4.084))),
@@ -49,14 +50,12 @@ public class VisionConstants {
     new AprilTag(21, new Pose3d(5.321,	4.026, 0.308, new Rotation3d(0.000, 0.000, 0.000))),
     new AprilTag(22, new Pose3d(4.905,	3.306, 0.308, new Rotation3d(0.000, 0.000, 5.236)))
     ));
-    }
+    
 
 
-    else{   
 
-        System.out.println("*************************  RED");
         double pi = Math.PI;
-    aprilTagList = new ArrayList<AprilTag>(Arrays.asList(
+    aprilTagListRed = new ArrayList<AprilTag>(Arrays.asList(
 
     new AprilTag(1, new Pose3d(17.55-16.697,	8.051-0.655, 1.486, new Rotation3d(0.000, 0.000, 2.199+pi))),
     new AprilTag(2, new Pose3d(17.55-16.697,	8.051-7.396, 1.486, new Rotation3d(0.000, 0.000, 4.084-pi))),
@@ -81,31 +80,12 @@ public class VisionConstants {
     new AprilTag(21, new Pose3d(17.55-5.321,	8.051-4.026, 0.308, new Rotation3d(0.000, 0.000, 0.000+pi))),
     new AprilTag(22, new Pose3d(17.55-4.905,	8.051-3.306, 0.308, new Rotation3d(0.000, 0.000, 5.236-pi)))
     ));
-    }
-  
-
-
-   FieldLayout  = new AprilTagFieldLayout(aprilTagList, fieldLength, fieldWidth);
-}
-
-
-
-public void getAlliance(){
-  
     
-    while(DriverStation.getAlliance().isEmpty()){
-        SmartDashboard.putString("Alliance", "Not Yet!");
-    }
-    DriverStation.getAlliance().ifPresent(allianceColor -> {
-            if (allianceColor == Alliance.Red) {
-                blue=false;
-                SmartDashboard.putString("Alliance", "red");
-            }
-            else {
-                blue=true;
-                SmartDashboard.putString("Alliance", "blue");
-            }
-    });
+  if (blue) aprilTagList=aprilTagListBlue;  
+  else aprilTagList=aprilTagListRed;     
+
+  FieldLayout  = new AprilTagFieldLayout(aprilTagList, fieldLength, fieldWidth);
+
 
 
 }

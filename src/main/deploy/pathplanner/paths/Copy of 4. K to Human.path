@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.4526601996613486,
-        "y": 2.3743416295410036
+        "x": 3.1553938356164384,
+        "y": 2.462328767123288
       },
       "isLocked": false,
       "linkedName": "Coral_Score_D"
@@ -20,8 +20,8 @@
         "y": 1.096
       },
       "prevControl": {
-        "x": 2.2605257463416444,
-        "y": 2.2929071219096846
+        "x": 2.3139554794520545,
+        "y": 2.086686643835617
       },
       "nextControl": null,
       "isLocked": false,
@@ -71,7 +71,7 @@
     "rotation": 53.86209721040541
   },
   "reversed": false,
-  "folder": "2 Coral Auto R Paths ",
+  "folder": "3 Coral Auto R Paths ",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 57.28423361458608

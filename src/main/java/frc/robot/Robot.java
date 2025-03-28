@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Utilities.VisionConstants;
 import frc.robot.subsystems.LED;
 
 public class Robot extends TimedRobot {
@@ -44,6 +45,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+//    VisionConstants.getAlliance();
+//    VisionConstants.setColor();
     LED.enabled=true;
     m_robotContainer.releaseRamp().schedule();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();

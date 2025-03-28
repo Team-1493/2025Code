@@ -55,7 +55,7 @@ public class RobotContainer {
 
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
 
-//    private final Telemetry logger = new Telemetry(MaxSpeed);
+    private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final RobotJoystick stickDriver = new RobotJoystick(0);
     private final RobotJoystick stickOperator = new RobotJoystick(1);
@@ -174,7 +174,7 @@ public class RobotContainer {
 
         stickOperator.button(11).onTrue(new IntakeReverse(claw));
 
-//        drivetrain.registerTelemetry(logger::telemeterize);
+        drivetrain.registerTelemetry(logger::telemeterize);
     }
 
     public Command getAutonomousCommand() {

@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of 1. Start to J"
+            "pathName": "Slow Copy of 1. Start to J"
           }
         },
         {
@@ -25,49 +25,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of 2. J to Human"
+            "pathName": "Slow Copy of 2. J to Human"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.3
+            "waitTime": 0.4
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of 3. Human to K"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.15
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "spitCoral"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Copy of 4. K to Human"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Copy of 5. Human to L"
+            "pathName": "Slow Copy of 3. Human to K"
           }
         },
         {
@@ -85,7 +55,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of LtoHuman"
+            "pathName": "Slow Copy of 4. K to Human"
           }
         }
       ]

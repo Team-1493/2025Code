@@ -3,45 +3,40 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.181,
-        "y": 1.913
+        "x": 4.838,
+        "y": 4.912
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.796398118460356,
-        "y": 2.083007734050181
+        "x": 5.108462328767123,
+        "y": 6.324414383561644
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Coral_Score_J"
     },
     {
       "anchor": {
-        "x": 4.838,
-        "y": 3.139
+        "x": 0.9766695205479452,
+        "y": 6.955
       },
       "prevControl": {
-        "x": 5.150668060815404,
-        "y": 2.5509569031559547
+        "x": 1.7580051369863015,
+        "y": 6.233767123287671
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Coral_Score_E"
+      "linkedName": "Coral_Intake_1"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.6604278074866314,
-      "rotationDegrees": 119.99999999999999
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.75,
+      "minWaypointRelativePos": 0.7999999999999992,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.25,
-        "maxAcceleration": 1.5,
+        "maxVelocity": 0.75,
+        "maxAcceleration": 1.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -52,20 +47,20 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "toReef4",
+      "name": "toIntake",
       "waypointRelativePos": 0.05,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "toReef4"
+          "name": "toIntake"
         }
       }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.25,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 1.75,
+    "maxAcceleration": 2.25,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -73,13 +68,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 119.99999999999999
+    "rotation": -52.50130060603152
   },
   "reversed": false,
-  "folder": "3 Coral Auto R Paths ",
+  "folder": "3 Coral Auto L Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -119.99999999999999
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
