@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.838,
-        "y": 3.139
+        "x": 4.816,
+        "y": 3.1517
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.108440395949438,
-        "y": 1.7266593922715698
+        "x": 5.086440395949438,
+        "y": 1.73935939227157
       },
       "isLocked": false,
       "linkedName": "Coral_Score_E"

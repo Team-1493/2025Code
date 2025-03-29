@@ -23,7 +23,7 @@ public class VisionConstants {
 
 // *** Make blue = true for blue side,  false for red side
 
-    blue = true;
+    blue = true; //CHANGE THIS BEFORE MATCH
 
     aprilTagListBlue =  new ArrayList<AprilTag>(Arrays.asList(
 
